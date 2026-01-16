@@ -165,10 +165,8 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
-  <script
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
-  type="text/javascript"></script>
 </head>
 <body>
 <header id="title-block-header">
@@ -182,49 +180,45 @@ changing quantities.<br />
 An equation relating an unknown function and one or more of its
 derivatives is called a <em>differential equation</em>.</p>
 </div>
-<section id="my-favorite-page-in-strogatz-nonlinear-dynamics-and-chaos"
-class="frame">
-<h3>My favorite page in Strogatz’ <em>Nonlinear Dynamics and
-Chaos</em></h3>
-<p><embed src="DEs_everywhere.pdf" /></p>
-</section>
 <section id="examples-of-differential-equations" class="frame">
 <h3>Examples of differential equations</h3>
 <ul>
-<li><p>The DE <span class="math display">\[\frac{dy}{dx} = y^2 +
-x^2\]</span> involves the unknown function <span
-class="math inline">\(y(x)\)</span> and its derivative <span
-class="math inline">\(y&#39;(x)=\frac{dy}{dx}\)</span>.</p></li>
+<li><p>The DE <span class="math display">$$\frac{dy}{dx} = y^2 +
+x^2$$</span> involves the unknown function <span
+class="math inline"><em>y</em>(<em>x</em>)</span> and its derivative
+<span class="math inline">$y'(x)=\frac{dy}{dx}$</span>.</p></li>
 </ul>
 </section>
 <section id="examples-of-differential-equations-1" class="frame">
 <h3>Examples of differential equations</h3>
 <ul>
-<li><p>The DE <span class="math display">\[m\frac{d^2y}{dt^2} + b
-\frac{dy}{dt} + ky = 0\]</span> involves the unknown function <span
-class="math inline">\(y(t)\)</span> and its first and second derivatives
-<span class="math inline">\(y&#39;(t)\)</span> and <span
-class="math inline">\(y&#39;&#39;(t)\)</span>.</p></li>
+<li><p>The DE <span class="math display">$$m\frac{d^2y}{dt^2} + b
+\frac{dy}{dt} + ky = 0$$</span> involves the unknown function <span
+class="math inline"><em>y</em>(<em>t</em>)</span> and its first and
+second derivatives <span
+class="math inline"><em>y</em>′(<em>t</em>)</span> and <span
+class="math inline"><em>y</em>″(<em>t</em>)</span>.</p></li>
 </ul>
 </section>
 <section id="examples-of-differential-equations-2" class="frame">
 <h3>Examples of differential equations</h3>
 <ul>
-<li><p>The DE <span class="math display">\[\frac{\partial u}{\partial t
-} = k \frac{\partial^2 u}{\partial x^2}\]</span> involves the unknown
-function <span class="math inline">\(u(x,t)\)</span> and its <em>partial
-derivatives</em> <span class="math inline">\(\frac{\partial u}{\partial
-t}\)</span> and <span class="math inline">\(\frac{\partial^2 u}{\partial
-x^2}.\)</span></p></li>
+<li><p>The DE <span class="math display">$$\frac{\partial u}{\partial t
+} = k \frac{\partial^2 u}{\partial x^2}$$</span> involves the unknown
+function <span
+class="math inline"><em>u</em>(<em>x</em>, <em>t</em>)</span> and its
+<em>partial derivatives</em> <span class="math inline">$\frac{\partial
+u}{\partial t}$</span> and <span class="math inline">$\frac{\partial^2
+u}{\partial x^2}.$</span></p></li>
 </ul>
 </section>
 <section id="some-vocabulary" class="frame">
 <h3>Some vocabulary</h3>
 <p>The <em>order</em> is the order of the highest derivative appearing
-in the equation. An <span class="math inline">\(n\)</span>th order ODE
-for <span class="math inline">\(y(x)\)</span> takes the form <span
-class="math inline">\(F(x,y,y&#39;, y&#39;&#39;,
-...,y^{(n)})=0.\)</span><br />
+in the equation. An <span class="math inline"><em>n</em></span>th order
+ODE for <span class="math inline"><em>y</em>(<em>x</em>)</span> takes
+the form <span
+class="math inline"><em>F</em>(<em>x</em>, <em>y</em>, <em>y</em>′, <em>y</em>″, ..., <em>y</em><sup>(<em>n</em>)</sup>) = 0.</span><br />
 An <em>ordinary differential equation</em> (ODE) involves an unknown
 function of <em>one</em> input/independent variable.<br />
 A <em>partial differential equation</em> (PDE) involves an unknown
@@ -243,28 +237,30 @@ we will discuss how useful units are in helping is formulate models!</p>
 <h3>Checking/verifying solutions</h3>
 <p>There is a difference between <em>checking</em> or <em>verifying</em>
 whether an equation is satisfied versus <em>solving</em> it.</p>
-<p>To check/verify whether <span class="math inline">\(x=3\)</span> is a
-solution of <span class="math inline">\(2x+5 = 11\)</span>, we
-substitute to see: <span class="math display">\[2(3) + 5 \overset{?}{=}
-11, \qquad 11 \overset{\checkmark}{=} 11.\]</span> Solving would be
-doing <span class="math display">\[\begin{aligned}
+<p>To check/verify whether <span
+class="math inline"><em>x</em> = 3</span> is a solution of <span
+class="math inline">2<em>x</em> + 5 = 11</span>, we substitute to see:
+<span class="math display">$$2(3) + 5 \overset{?}{=} 11, \qquad 11
+\overset{\checkmark}{=} 11.$$</span> Solving would be doing <span
+class="math display">$$\begin{aligned}
 2x+5 &amp;= 11, \\
 2x &amp;= 6, \\
 x &amp;= 3.
-\end{aligned}\]</span></p>
+\end{aligned}$$</span></p>
 </section>
 <section id="some-more-vocab" class="frame">
 <h3>Some more vocab</h3>
 <p><strong>Example.</strong> Verify that <span
-class="math inline">\(y(x) = Ce^{x^2}\)</span> <em>satisfies</em>/
-<em>solves</em> the DE <span class="math display">\[\frac{dy}{dx} =
-2xy\]</span> for any constant <span
-class="math inline">\(C\)</span>.<br />
-We say that, for example, <span class="math inline">\(y(x) =
-5e^{x^2}\)</span> is a <em>particular solution</em> while <span
-class="math inline">\(y(x) = Ce^{x^2}\)</span> is the <em>general
-solution</em>. The <em>general solution</em> will contain
-<em>integration constant(s)</em>.</p>
+class="math inline"><em>y</em>(<em>x</em>) = <em>C</em><em>e</em><sup><em>x</em><sup>2</sup></sup></span>
+<em>satisfies</em>/ <em>solves</em> the DE <span
+class="math display">$$\frac{dy}{dx} = 2xy$$</span> for any constant
+<span class="math inline"><em>C</em></span>.<br />
+We say that, for example, <span
+class="math inline"><em>y</em>(<em>x</em>) = 5<em>e</em><sup><em>x</em><sup>2</sup></sup></span>
+is a <em>particular solution</em> while <span
+class="math inline"><em>y</em>(<em>x</em>) = <em>C</em><em>e</em><sup><em>x</em><sup>2</sup></sup></span>
+is the <em>general solution</em>. The <em>general solution</em> will
+contain <em>integration constant(s)</em>.</p>
 </section>
 <div class="frame">
 <p>We’ll spend most of this course studying ordinary differential
@@ -294,63 +290,67 @@ approximately).</p></li>
 <section id="newtons-law-of-cooling" class="frame">
 <h3>Newton’s law of cooling</h3>
 <p>A small object with variable temperature <span
-class="math inline">\(T(t)\)</span> (as a function of time <span
-class="math inline">\(t\)</span>) sits inside a large surrounding medium
-maintained at a constant temperature <span
-class="math inline">\(A\)</span>. The rate of change of <span
-class="math inline">\(T(t)\)</span> is proportional to the temperature
-difference between the object and the surrounding medium. That is, <span
-class="math display">\[\frac{dT}{dt} = k (A- T)\]</span> for some
-constant <span class="math inline">\(k &gt; 0\)</span>.</p>
+class="math inline"><em>T</em>(<em>t</em>)</span> (as a function of time
+<span class="math inline"><em>t</em></span>) sits inside a large
+surrounding medium maintained at a constant temperature <span
+class="math inline"><em>A</em></span>. The rate of change of <span
+class="math inline"><em>T</em>(<em>t</em>)</span> is proportional to the
+temperature difference between the object and the surrounding medium.
+That is, <span class="math display">$$\frac{dT}{dt} = k (A- T)$$</span>
+for some constant <span
+class="math inline"><em>k</em> &gt; 0</span>.</p>
 </section>
 <section id="torricellis-law" class="frame">
 <h3>Torricelli’s law</h3>
-<p>The volume rate <span class="math inline">\(\frac{dV}{dt}\)</span>
-that water leaks from a tank is proportional to the square root of the
-depth of water <span class="math inline">\(y(t)\)</span> in the tank:
-<span class="math display">\[\frac{dV}{dt} = -k \sqrt{y}\]</span> for
-some constant <span class="math inline">\(k&gt;0\)</span>.<br />
+<p>The volume rate <span class="math inline">$\frac{dV}{dt}$</span> that
+water leaks from a tank is proportional to the square root of the depth
+of water <span class="math inline"><em>y</em>(<em>t</em>)</span> in the
+tank: <span class="math display">$$\frac{dV}{dt} = -k \sqrt{y}$$</span>
+for some constant <span
+class="math inline"><em>k</em> &gt; 0</span>.<br />
 If the tank has vertical sides and constant cross-sectional area <span
-class="math inline">\(A\)</span>, then <span
-class="math display">\[\frac{dy}{dt} = -h \sqrt{y}\]</span> for some
-constant <span class="math inline">\(h=\frac k A &gt; 0\)</span>.</p>
+class="math inline"><em>A</em></span>, then <span
+class="math display">$$\frac{dy}{dt} = -h \sqrt{y}$$</span> for some
+constant <span class="math inline">$h=\frac k A &gt; 0$</span>.</p>
 </section>
 <section id="simple-population-growthdecay" class="frame">
 <h3>Simple population growth/decay</h3>
-<p>The time rate of change of <span class="math inline">\(P(t)\)</span>,
-the population at time <span class="math inline">\(t\)</span>, is
-proportional to the population: <span
-class="math display">\[\frac{dP}{dt} = kP\]</span> for some constant
-<span class="math inline">\(k\)</span>. It turns out the general
-solution is given by <span class="math display">\[P(t) = C
-e^{kt},\]</span> which you can easily verify.</p>
+<p>The time rate of change of <span
+class="math inline"><em>P</em>(<em>t</em>)</span>, the population at
+time <span class="math inline"><em>t</em></span>, is proportional to the
+population: <span class="math display">$$\frac{dP}{dt} = kP$$</span> for
+some constant <span class="math inline"><em>k</em></span>. It turns out
+the general solution is given by <span
+class="math display"><em>P</em>(<em>t</em>) = <em>C</em><em>e</em><sup><em>k</em><em>t</em></sup>,</span>
+which you can easily verify.</p>
 </section>
 <section id="simple-population-growthdecay-1" class="frame">
 <h3>Simple population growth/decay</h3>
-<p>The time rate of change of <span class="math inline">\(P(t)\)</span>,
-the population at time <span class="math inline">\(t\)</span>, is
-proportional to the population: <span
-class="math display">\[\frac{dP}{dt} = kP\]</span> for some constant
-<span class="math inline">\(k\)</span>. It turns out the general
-solution is given by <span class="math display">\[P(t) = C
-e^{kt},\]</span> which you can easily verify.</p>
+<p>The time rate of change of <span
+class="math inline"><em>P</em>(<em>t</em>)</span>, the population at
+time <span class="math inline"><em>t</em></span>, is proportional to the
+population: <span class="math display">$$\frac{dP}{dt} = kP$$</span> for
+some constant <span class="math inline"><em>k</em></span>. It turns out
+the general solution is given by <span
+class="math display"><em>P</em>(<em>t</em>) = <em>C</em><em>e</em><sup><em>k</em><em>t</em></sup>,</span>
+which you can easily verify.</p>
 </section>
 <div class="frame">
 <p><strong>Example.</strong> Knowing that the general solution is <span
-class="math inline">\(P(t) = Ce^{kt}\)</span>, suppose that the
-population took one hour to double from its <em>initial value</em> (at
-<span class="math inline">\(t=0\)</span>) <span
-class="math inline">\(P(0) = 1000.\)</span> Find the <em>particular
+class="math inline"><em>P</em>(<em>t</em>) = <em>C</em><em>e</em><sup><em>k</em><em>t</em></sup></span>,
+suppose that the population took one hour to double from its <em>initial
+value</em> (at <span class="math inline"><em>t</em> = 0</span>) <span
+class="math inline"><em>P</em>(0) = 1000.</span> Find the <em>particular
 solution</em> in this case.</p>
 </div>
 <section id="more-vocabulary" class="frame">
 <h3>More vocabulary</h3>
 <p><img src="popcurves.png" alt="image" /><br />
 This <em>general solution</em> to a <em>first order ODE</em> <span
-class="math inline">\(\dfrac{dP}{dt} = (\ln 2)P\)</span> is a
+class="math inline">$\dfrac{dP}{dt} = (\ln 2)P$</span> is a
 <em>one-parameter family of functions</em> <span
-class="math inline">\(P(t) = Ce^{t \ln 2}\)</span> indexed by <span
-class="math inline">\(C\)</span>.</p>
+class="math inline"><em>P</em>(<em>t</em>) = <em>C</em><em>e</em><sup><em>t</em>ln 2</sup></span>
+indexed by <span class="math inline"><em>C</em></span>.</p>
 </section>
 <section id="more-vocabulary-1" class="frame">
 <h3>More vocabulary</h3>
@@ -362,36 +362,39 @@ condition(s).</p>
 <section id="different-rates-of-change" class="frame">
 <h3>Different “rates of change"</h3>
 <p>Instead of the “standard" time rate of change <span
-class="math inline">\(P&#39;(t)\)</span>, we could consider the
-<em>relative rate of change</em> (that is, normalized by population) :
-<span class="math display">\[\frac{P&#39;(t)}{P(t)} = \frac 1 P
-\frac{dP}{dt}.\]</span></p>
+class="math inline"><em>P</em>′(<em>t</em>)</span>, we could consider
+the <em>relative rate of change</em> (that is, normalized by population)
+: <span class="math display">$$\frac{P'(t)}{P(t)} = \frac 1 P
+\frac{dP}{dt}.$$</span></p>
 </section>
 <section id="logistic-population-model" class="frame">
 <h3>Logistic population model</h3>
-<p>Let <span class="math inline">\(M&gt;0\)</span> represent the
+<p>Let <span class="math inline"><em>M</em> &gt; 0</span> represent the
 <em>carrying capacity</em>. The <em>relative rate of change</em> of
-<span class="math inline">\(P(t)\)</span>, the population at time <span
-class="math inline">\(t\)</span>, is proportional to the “available
-space": <span class="math display">\[\frac{1}{P} \frac{dP}{dt} = k(M-P)
-\qquad \mbox{ and so } \frac{dP}{dt} = kP(M-P)\]</span> for some
-constant <span class="math inline">\(k&gt;0\)</span>.</p>
+<span class="math inline"><em>P</em>(<em>t</em>)</span>, the population
+at time <span class="math inline"><em>t</em></span>, is proportional to
+the “available space": <span class="math display">$$\frac{1}{P}
+\frac{dP}{dt} = k(M-P) \qquad \mbox{ and so } \frac{dP}{dt} =
+kP(M-P)$$</span> for some constant <span
+class="math inline"><em>k</em> &gt; 0</span>.</p>
 </section>
 <div class="frame">
 <p><strong>Example.</strong> Show that the <em>two-parameter family of
-functions</em> <span class="math inline">\(y(x) = A \cos(3x) +
-B\sin(3x)\)</span> indexed by <span class="math inline">\(A,B\)</span>
-solves the ODE <span class="math inline">\(y&#39;&#39; + 9y =
-0.\)</span></p>
+functions</em> <span
+class="math inline"><em>y</em>(<em>x</em>) = <em>A</em>cos (3<em>x</em>) + <em>B</em>sin (3<em>x</em>)</span>
+indexed by <span class="math inline"><em>A</em>, <em>B</em></span>
+solves the ODE <span
+class="math inline"><em>y</em>″ + 9<em>y</em> = 0.</span></p>
 </div>
 <section id="some-more-vocabulary" class="frame">
 <h3>Some more vocabulary</h3>
 <p>The <em>normal form</em> of an <span
-class="math inline">\(n\)</span>th order ODE is <span
-class="math display">\[y^{(n)} = G(x,y,y&#39;,...,y^{(n-1)}) .\]</span>
+class="math inline"><em>n</em></span>th order ODE is <span
+class="math display"><em>y</em><sup>(<em>n</em>)</sup> = <em>G</em>(<em>x</em>, <em>y</em>, <em>y</em>′, ..., <em>y</em><sup>(<em>n</em> − 1)</sup>).</span>
 Typically, the general solution will be an <span
-class="math inline">\(n\)</span>-parameter family of solutions, indexed
-by <span class="math inline">\(n\)</span> “integration constants".</p>
+class="math inline"><em>n</em></span>-parameter family of solutions,
+indexed by <span class="math inline"><em>n</em></span> “integration
+constants".</p>
 </section>
 <section id="big-course-goal" class="frame">
 <h3>Big course goal</h3>
