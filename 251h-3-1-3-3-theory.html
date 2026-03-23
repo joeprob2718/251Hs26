@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 251H — 3.1, 3.2, 3.3: Theory for Linear DEs of Higher Order</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #faf8f5;
+    --fg: #1a1a1a;
+    --accent: #3a3ac4;
+    --accent-light: #ebebfa;
+    --muted: #6b6b6b;
+    --border: #ddd8d0;
+    --highlight: #fff7e0;
+    --note-green: #f0f7f0;
+    --note-green-border: #3a8a3a;
+    --note-green-text: #2a6a2a;
+    --section-gap: 3rem;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.75;
+    font-size: 18px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+
+  header {
+    text-align: center;
+    padding-bottom: var(--section-gap);
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: var(--section-gap);
+  }
+
+  header .course {
+    font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-bottom: 0.5rem;
+  }
+
+  header h1 { font-size: 1.9rem; font-weight: 700; line-height: 1.25; color: var(--fg); }
+
+  section { margin-bottom: var(--section-gap); }
+
+  h2 {
+    font-size: 1.5rem; font-weight: 700; color: var(--accent);
+    margin-bottom: 1rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border);
+  }
+
+  h3 { font-size: 1.15rem; font-weight: 600; margin-top: 1.8rem; margin-bottom: 0.6rem; }
+
+  p { margin-bottom: 1rem; }
+
+  .definition {
+    background: var(--accent-light); border-left: 4px solid var(--accent);
+    padding: 1.25rem 1.5rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0;
+  }
+  .definition .label {
+    font-weight: 700; color: var(--accent); font-size: 0.9rem;
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;
+  }
+
+  .example {
+    background: var(--highlight); border-left: 4px solid #c9a227;
+    padding: 1.25rem 1.5rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0;
+  }
+  .example .label {
+    font-weight: 700; color: #8a6d15; font-size: 0.9rem;
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;
+  }
+
+  .note {
+    background: var(--note-green); border-left: 4px solid var(--note-green-border);
+    padding: 1.25rem 1.5rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0;
+  }
+  .note .label {
+    font-weight: 700; color: var(--note-green-text); font-size: 0.9rem;
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;
+  }
+
+  .proof {
+    background: #f8f5ff; border-left: 4px solid #8a6ac4;
+    padding: 1.25rem 1.5rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0;
+  }
+  .proof .label {
+    font-weight: 700; color: #6a4a9e; font-size: 0.9rem;
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;
+  }
+
+  .math-display { margin: 1.2rem 0; overflow-x: auto; }
+
+  .skip-link {
+    position: absolute; top: -100%; left: 0; background: var(--accent);
+    color: #fff; padding: 0.5rem 1rem; z-index: 100; font-size: 0.9rem;
+  }
+  .skip-link:focus { top: 0; }
+
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    header h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.25rem; }
+    .container { padding: 2rem 1rem 4rem; }
+  }
+
+  @media print {
+    body { font-size: 12pt; background: #fff; }
+    .container { max-width: 100%; padding: 0; }
+    header { border-bottom-color: #000; }
+    h2 { color: #000; }
+    .definition, .example, .note, .proof { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<div class="container">
+  <header>
+    <div class="course">Math 251H</div>
+    <h1>3.1, 3.2, 3.3: Theory for Linear DEs of Higher Order, Extending the 2nd Order Techniques</h1>
+  </header>
+
+  <main id="main">
+
+    <!-- Higher Order Equations -->
+    <section aria-labelledby="sec-higher">
+      <h2 id="sec-higher">Higher Order Equations</h2>
+
+      <p>
+        Everything we discussed for the second order case extends to higher order. An \(n\)th order ODE requires \(n\) linearly independent solutions to build the general solution.
+      </p>
+
+      <p>
+        Repeated complex roots are possible and treated similarly to repeated real roots. For roots with multiplicity greater than 2, we "keep multiplying by enough \(x\)'s to get enough linearly independent solutions." The Clairaut's theorem argument from the second order case can be adapted to explain why this works.
+      </p>
+
+      <div class="note">
+        <div class="label">Fact — Factoring Real Polynomials</div>
+        <p>
+          Polynomials with real coefficients can always be factored into a product of simple linear, repeated linear, irreducible quadratic, and repeated irreducible quadratic factors. Finding these factors exactly may not be possible for degree 5 or higher (no quintic formula!), but numerical approximations can be done on a computer. Nonreal roots only arise from irreducible quadratic factors, and they always come in conjugate pairs.
+        </p>
+      </div>
+    </section>
+
+    <!-- Big Example -->
+    <section aria-labelledby="sec-big-example">
+      <h2 id="sec-big-example">Example: A 13th Order Equation</h2>
+
+      <div class="example">
+        <div class="label">Example</div>
+        <p>Write the general solution for the equation whose characteristic polynomial is</p>
+        \[ (r-1)(r-2)(r-3)^2(r-4)^3\bigl[(r-1)^2+1\bigr]\bigl[(r-1)^2+4\bigr]^2 = 0. \]
+      </div>
+
+      <p>This is a 13th order constant coefficient linear homogeneous ODE. Let's read off the roots from each factor:</p>
+
+      <p>
+        \(r = 1\) (simple root), \(r = 2\) (simple root), \(r = 3\) (double root), \(r = 4\) (triple root).
+      </p>
+      <p>
+        From \((r-1)^2 + 1 = 0\): \(r = 1 \pm i\) (simple complex pair).
+      </p>
+      <p>
+        From \([(r-1)^2 + 4]^2 = 0\): \(r = 1 \pm 2i\) (double complex pair).
+      </p>
+
+      <p>The general solution is:</p>
+      <div class="math-display">
+        \[
+          \begin{aligned}
+            y &= c_1 e^{x} + c_2 e^{2x} \\
+            &\quad + c_3 e^{3x} + c_4\, x\,e^{3x} \\
+            &\quad + c_5 e^{4x} + c_6\, x\,e^{4x} + c_7\, x^2 e^{4x} \\
+            &\quad + c_8\, e^{x}\cos(x) + c_9\, e^{x}\sin(x) \\
+            &\quad + c_{10}\, e^{x}\cos(2x) + c_{11}\, e^{x}\sin(2x) \\
+            &\quad + c_{12}\, x\,e^{x}\cos(2x) + c_{13}\, x\,e^{x}\sin(2x).
+          \end{aligned}
+        \]
+      </div>
+      <p>
+        Notice the pattern: each root of multiplicity \(m\) contributes \(m\) solutions, obtained by multiplying the base solution by \(1, x, x^2, \ldots, x^{m-1}\). For complex pairs, each power of \(x\) appears with both the cosine and sine terms.
+      </p>
+    </section>
+
+    <!-- Example: 3rd order -->
+    <section aria-labelledby="sec-ex-3rd">
+      <h2 id="sec-ex-3rd">Example: Third Order Equation</h2>
+
+      <div class="example">
+        <div class="label">Example</div>
+        <p>Find the general solution of \(\;9y^{(3)} + 12y'' + 4y' = 0\).</p>
+      </div>
+
+      <p>Characteristic polynomial: \(9r^3 + 12r^2 + 4r = 0\). Factor out \(r\):</p>
+      <div class="math-display">
+        \[ r(9r^2 + 12r + 4) = 0 \quad\Longrightarrow\quad r(3r+2)^2 = 0. \]
+      </div>
+      <p>
+        Roots: \(r = 0\) (simple) and \(r = -\tfrac{2}{3}\) (double).
+      </p>
+      <p>Note that \(e^{0 \cdot x} = 1\), so the general solution is:</p>
+      <div class="math-display">
+        \[ \boxed{y = c_1 + c_2\, e^{-\frac{2}{3}x} + c_3\, x\, e^{-\frac{2}{3}x}.} \]
+      </div>
+    </section>
+
+    <!-- Example: 4th order -->
+    <section aria-labelledby="sec-ex-4th-a">
+      <h2 id="sec-ex-4th-a">Example: Fourth Order — Double Roots</h2>
+
+      <div class="example">
+        <div class="label">Example</div>
+        <p>Find the general solution of \(\;y^{(4)} - 8y'' + 16y = 0\).</p>
+      </div>
+
+      <p>Characteristic polynomial: \(r^4 - 8r^2 + 16 = 0\). This is a quadratic in \(r^2\):</p>
+      <div class="math-display">
+        \[ (r^2 - 4)^2 = 0 \quad\Longrightarrow\quad \bigl[(r-2)(r+2)\bigr]^2 = 0 \quad\Longrightarrow\quad (r-2)^2(r+2)^2 = 0. \]
+      </div>
+      <p>Roots: \(r = 2\) (double) and \(r = -2\) (double).</p>
+      <div class="math-display">
+        \[ \boxed{y = c_1\, e^{2x} + c_2\, x\, e^{2x} + c_3\, e^{-2x} + c_4\, x\, e^{-2x}.} \]
+      </div>
+    </section>
+
+    <!-- Example: 4th order with triple root at 0 -->
+    <section aria-labelledby="sec-ex-4th-b">
+      <h2 id="sec-ex-4th-b">Example: Fourth Order — Triple Root at Zero</h2>
+
+      <div class="example">
+        <div class="label">Example</div>
+        <p>Find the general solution of \(\;5y^{(4)} + 4y^{(3)} = 0\).</p>
+      </div>
+
+      <p>Characteristic polynomial: \(5r^4 + 4r^3 = 0\). Factor out \(r^3\):</p>
+      <div class="math-display">
+        \[ r^3(5r + 4) = 0. \]
+      </div>
+      <p>Roots: \(r = 0\) (triple) and \(r = -\tfrac{4}{5}\) (simple). Since \(e^{0 \cdot x} = 1\), \(x\,e^{0 \cdot x} = x\), and \(x^2 e^{0 \cdot x} = x^2\):</p>
+      <div class="math-display">
+        \[ \boxed{y = c_1 + c_2\, x + c_3\, x^2 + c_4\, e^{-\frac{4}{5}x}.} \]
+      </div>
+    </section>
+
+    <!-- nth order form -->
+    <section aria-labelledby="sec-nth-form">
+      <h2 id="sec-nth-form">The General \(n\)th Order Linear DE</h2>
+
+      <p>An \(n\)th order linear DE has the form</p>
+      <div class="math-display">
+        \[ y^{(n)} + p_1(x)\,y^{(n-1)} + \cdots + p_{n-1}(x)\,y' + p_n(x)\,y = f(x), \]
+      </div>
+      <p>with the <strong>homogeneous</strong> case being</p>
+      <div class="math-display">
+        \[ y^{(n)} + p_1(x)\,y^{(n-1)} + \cdots + p_{n-1}(x)\,y' + p_n(x)\,y = 0. \]
+      </div>
+    </section>
+
+    <!-- Superposition for nth order -->
+    <section aria-labelledby="sec-superposition">
+      <h2 id="sec-superposition">Superposition Principle for \(n\)th Order</h2>
+
+      <div class="definition">
+        <div class="label">Principle of Superposition</div>
+        <p>If \(y_1, y_2, \ldots, y_n\) are solutions to a <strong>homogeneous</strong> linear DE, then any linear combination</p>
+        \[ y = c_1 y_1 + c_2 y_2 + \cdots + c_n y_n \]
+        <p>(where \(c_1, c_2, \ldots\) are constants) is also a solution.</p>
+      </div>
+
+      <p>
+        This works for the same reasons as in the second order case: derivative rules are linear, the equation is linear, and the right-hand side is zero.
+      </p>
+    </section>
+
+    <!-- Existence and Uniqueness -->
+    <section aria-labelledby="sec-eu">
+      <h2 id="sec-eu">Existence and Uniqueness for Linear DEs</h2>
+
+      <div class="definition">
+        <div class="label">Existence and Uniqueness Theorem</div>
+        <p>Consider the IVP</p>
+        \[ y^{(n)} + p_1(x)\,y^{(n-1)} + \cdots + p_{n-1}(x)\,y' + p_n(x)\,y = f(x), \]
+        <p>with initial conditions</p>
+        \[ y(a) = b_0, \quad y'(a) = b_1, \quad \ldots, \quad y^{(n-1)}(a) = b_{n-1}. \]
+        <p>
+          Provided \(p_1, p_2, \ldots, p_n\) and \(f\) are continuous on an open interval \(I\) containing \(a\), then there <strong>exists a unique solution</strong> to the initial value problem on that entire interval \(I\).
+        </p>
+      </div>
+
+      <p>
+        This is stronger than the general existence and uniqueness theorem for nonlinear equations. For nonlinear equations, finite-time blowup is possible, so the earlier theorem (from Section 1.3) only guaranteed existence on a possibly small interval. Linear equations are better behaved — the dependence on \(y\) and its derivatives is linear, so partial derivatives with respect to them are well controlled, and solutions exist on the entire interval of continuity of the coefficient functions.
+      </p>
+
+      <p>
+        Note: the leading coefficient of \(y^{(n)}\) is written as 1 (we divide through by \(P_0(x)\) if needed). If \(P_0(x) = 0\) at some point, that point is a "singular point" where the order of the equation changes and bad behavior can occur. In the constant coefficient homogeneous case, all coefficients are continuous for all \(x\), so solutions exist for all \(x\).
+      </p>
+    </section>
+
+    <!-- Linear Dependence / Independence -->
+    <section aria-labelledby="sec-lindep">
+      <h2 id="sec-lindep">Linear Dependence and Independence of Functions</h2>
+
+      <div class="definition">
+        <div class="label">Linear Dependence</div>
+        <p>
+          The \(n\) functions \(f_1, f_2, \ldots, f_n\) are <strong>linearly dependent</strong> on an interval \(I\) if there exist constants \(c_1, c_2, \ldots, c_n\), <em>not all zero</em>, such that
+        </p>
+        \[ c_1 f_1(x) + c_2 f_2(x) + \cdots + c_n f_n(x) \equiv 0 \quad \text{for all } x \in I. \]
+      </div>
+
+      <div class="definition">
+        <div class="label">Linear Independence</div>
+        <p>
+          The \(n\) functions \(f_1, f_2, \ldots, f_n\) are <strong>linearly independent</strong> on \(I\) if the only linear combination that is identically zero is the trivial one:
+        </p>
+        \[ c_1 f_1 + c_2 f_2 + \cdots + c_n f_n \equiv 0 \;\text{ on } I \quad\Longrightarrow\quad c_1 = c_2 = \cdots = c_n = 0. \]
+      </div>
+
+      <p>
+        The symbol \(\equiv 0\) means "identically zero" — the function is zero for <em>all</em> \(x\) in \(I\), not just at particular points. For two functions, linear independence simply means they are not constant multiples of each other.
+      </p>
+    </section>
+
+    <!-- Wronskian -->
+    <section aria-labelledby="sec-wronskian">
+      <h2 id="sec-wronskian">The Wronskian</h2>
+
+      <p>
+        Recall from Math 220 (linear algebra): to test whether \(n\) vectors are linearly independent, we check whether the determinant of the matrix formed by placing them as columns is nonzero. The Wronskian is the analogous tool for functions.
+      </p>
+
+      <div class="definition">
+        <div class="label">Wronskian</div>
+        <p>The <strong>Wronskian</strong> of \(f_1, f_2, \ldots, f_n\) is the determinant</p>
+        \[
+          W(x) = \begin{vmatrix}
+            f_1 & f_2 & \cdots & f_n \\
+            f_1' & f_2' & \cdots & f_n' \\
+            \vdots & \vdots & & \vdots \\
+            f_1^{(n-1)} & f_2^{(n-1)} & \cdots & f_n^{(n-1)}
+          \end{vmatrix}.
+        \]
+        <p>Each column contains a function and its first \(n-1\) derivatives; all entries are evaluated at \(x\).</p>
+      </div>
+
+      <h3>Wronskian and Linear Dependence</h3>
+
+      <p>
+        If \(f_1, \ldots, f_n\) are linearly dependent on \(I\), then one function can be written as a linear combination of the others. By linearity of differentiation, the corresponding column of the Wronskian matrix is a linear combination of the other columns, which forces the determinant to be zero. Therefore:
+      </p>
+      <p style="text-align:center;"><em>Linearly dependent on \(I\) \(\;\Longrightarrow\;\) \(W(x) \equiv 0\) on \(I\).</em></p>
+    </section>
+
+    <!-- Powerful consequence -->
+    <section aria-labelledby="sec-powerful">
+      <h2 id="sec-powerful">The Wronskian Dichotomy for Solutions</h2>
+
+      <p>
+        For arbitrary functions, the converse of the above statement is not true in general. However, when the functions are <em>solutions to the same homogeneous linear DE with continuous coefficients</em>, something much stronger holds:
+      </p>
+
+      <div class="definition">
+        <div class="label">Theorem — Wronskian Dichotomy</div>
+        <p>
+          Suppose \(y_1, y_2, \ldots, y_n\) are solutions to the homogeneous \(n\)th order linear DE
+        </p>
+        \[ y^{(n)} + p_1(x)\,y^{(n-1)} + \cdots + p_n(x)\,y = 0 \]
+        <p>on an open interval \(I\) where each \(p_i\) is continuous. Then there are only two possibilities:</p>
+        <p>(a) \(y_1, \ldots, y_n\) are linearly dependent and \(W(x) \equiv 0\) on \(I\), OR</p>
+        <p>(b) \(y_1, \ldots, y_n\) are linearly independent and \(W(x) \neq 0\) for <strong>all</strong> \(x\) in \(I\).</p>
+      </div>
+
+      <p>
+        In other words, for solutions of a linear homogeneous ODE, the Wronskian is either <em>always zero</em> or <em>never zero</em>. There is no in-between. This means you only need to check \(W\) at a single convenient point (e.g. \(x = 0\)) to determine independence.
+      </p>
+
+      <h3>Why Does This Hold?</h3>
+
+      <div class="proof">
+        <div class="label">Proof Sketch</div>
+        <p>
+          We already know that linear dependence implies \(W \equiv 0\). For the other direction, suppose \(W(a) = 0\) for some \(a \in I\). Then the system
+        </p>
+        \[
+          \begin{cases}
+            c_1 y_1(a) + c_2 y_2(a) + \cdots + c_n y_n(a) = 0 \\
+            c_1 y_1'(a) + c_2 y_2'(a) + \cdots + c_n y_n'(a) = 0 \\
+            \qquad\vdots \\
+            c_1 y_1^{(n-1)}(a) + c_2 y_2^{(n-1)}(a) + \cdots + c_n y_n^{(n-1)}(a) = 0
+          \end{cases}
+        \]
+        <p>
+          has a nontrivial solution \(c_1, \ldots, c_n\) (since \(\det = 0\) means the matrix is singular — a standard linear algebra fact). Build the function
+        </p>
+        \[ Y(x) = c_1 y_1(x) + c_2 y_2(x) + \cdots + c_n y_n(x). \]
+        <p>
+          By superposition, \(Y(x)\) solves the ODE. By construction, \(Y(a) = Y'(a) = \cdots = Y^{(n-1)}(a) = 0\). But the zero function also solves the ODE with these same initial conditions. By the <strong>uniqueness</strong> part of the existence and uniqueness theorem, \(Y(x) \equiv 0\) on \(I\). Therefore \(y_1, \ldots, y_n\) are linearly dependent.
+        </p>
+      </div>
+    </section>
+
+    <!-- General Solution Theorem -->
+    <section aria-labelledby="sec-gen-soln">
+      <h2 id="sec-gen-soln">General Solution Theorem</h2>
+
+      <div class="definition">
+        <div class="label">Theorem</div>
+        <p>
+          Suppose \(y_1, y_2, \ldots, y_n\) are linearly independent solutions to the homogeneous \(n\)th order linear DE on an open interval \(I\) (with continuous coefficients). Then
+        </p>
+        \[ y = c_1 y_1 + c_2 y_2 + \cdots + c_n y_n \]
+        <p>
+          is the <strong>general solution</strong> — that is, <em>every</em> solution \(Y(x)\) on \(I\) can be expressed in this form for some choice of constants.
+        </p>
+      </div>
+
+      <div class="proof">
+        <div class="label">Proof</div>
+        <p>
+          Let \(Y(x)\) be any solution. Pick any \(a \in I\) and compute \(Y(a) = b_0,\; Y'(a) = b_1,\; \ldots,\; Y^{(n-1)}(a) = b_{n-1}\). Since \(W(a) \neq 0\) (by linear independence), the "Wronskian matrix" is invertible, and we can find unique \(c_1, \ldots, c_n\) such that
+        </p>
+        \[ Z(x) = c_1 y_1 + c_2 y_2 + \cdots + c_n y_n \]
+        <p>
+          satisfies the same initial conditions as \(Y(x)\). Both \(Y\) and \(Z\) solve the same ODE with the same initial data. By the existence and uniqueness theorem, \(Y(x) \equiv Z(x)\) on \(I\). Therefore \(Y\) is a linear combination of \(y_1, \ldots, y_n\). \(\square\)
+        </p>
+      </div>
+    </section>
+
+    <!-- Satisfying Initial Conditions -->
+    <section aria-labelledby="sec-ic">
+      <h2 id="sec-ic">Satisfying Initial Conditions</h2>
+
+      <p>
+        Given initial data \(y(a) = b_0,\; y'(a) = b_1,\; \ldots,\; y^{(n-1)}(a) = b_{n-1}\), we need to solve
+      </p>
+      <div class="math-display">
+        \[
+          \begin{bmatrix}
+            y_1(a) & y_2(a) & \cdots & y_n(a) \\
+            y_1'(a) & y_2'(a) & \cdots & y_n'(a) \\
+            \vdots & \vdots & & \vdots \\
+            y_1^{(n-1)}(a) & y_2^{(n-1)}(a) & \cdots & y_n^{(n-1)}(a)
+          \end{bmatrix}
+          \begin{bmatrix} c_1 \\ c_2 \\ \vdots \\ c_n \end{bmatrix}
+          =
+          \begin{bmatrix} b_0 \\ b_1 \\ \vdots \\ b_{n-1} \end{bmatrix}.
+        \]
+      </div>
+
+      <p>
+        Since \(W(a) \neq 0\), this matrix is invertible and the system has a <strong>unique</strong> solution. This guarantees we will never encounter an inconsistent system (no solutions) or a redundant system (infinitely many solutions) when matching initial conditions — as long as we built our general solution from linearly independent solutions.
+      </p>
+    </section>
+
+    <!-- Hyperbolic Trig -->
+    <section aria-labelledby="sec-hyp">
+      <h2 id="sec-hyp">Hyperbolic Trigonometric Functions</h2>
+
+      <div class="definition">
+        <div class="label">Definitions</div>
+        \[
+          \sinh(x) := \frac{e^x - e^{-x}}{2}, \qquad \cosh(x) := \frac{e^x + e^{-x}}{2}.
+        \]
+      </div>
+
+      <p>Key properties:</p>
+      <p>
+        \(\sinh(x)\) is odd and \(\cosh(x)\) is even. At zero: \(\sinh(0) = 0\) and \(\cosh(0) = 1\). Their derivatives are \(\frac{d}{dx}\sinh(x) = \cosh(x)\) and \(\frac{d}{dx}\cosh(x) = \sinh(x)\). They satisfy the identity \(\cosh^2(x) - \sinh^2(x) = 1\).
+      </p>
+
+      <h3>Hyperbolic Trig as an Alternative Basis</h3>
+
+      <p>Suppose \(k > 0\). There is a nice parallel between two fundamental equations:</p>
+
+      <p>
+        For \(y'' + k^2 y = 0\), the roots are \(r = \pm ki\) and the general solution is \(y = c_1\cos(kx) + c_2\sin(kx)\).
+      </p>
+
+      <p>
+        For \(y'' - k^2 y = 0\), the roots are \(r = \pm k\) and the general solution can be written as either \(y = d_1 e^{kx} + d_2 e^{-kx}\) or equivalently
+      </p>
+      <div class="math-display">
+        \[ y = c_1\cosh(kx) + c_2\sinh(kx). \]
+      </div>
+
+      <p>
+        This is a "change of basis" — instead of using \(e^{kx}\) and \(e^{-kx}\) as our two linearly independent solutions, we use the linear combinations \(\cosh(kx)\) and \(\sinh(kx)\). These can be a more convenient basis, particularly when evaluating initial conditions at \(x = 0\), since \(\cosh(0) = 1\), \(\sinh(0) = 0\), \(\cosh'(0) = 0\), and \(\sinh'(0) = 1\).
+      </p>
+    </section>
+
+    <!-- Summary -->
+    <section aria-labelledby="sec-summary">
+      <h2 id="sec-summary">Summary</h2>
+
+      <div class="note">
+        <div class="label">Key Takeaways</div>
+        <p>
+          (1) An \(n\)th order constant coefficient linear homogeneous ODE requires \(n\) linearly independent solutions. Each root of the characteristic polynomial of multiplicity \(m\) contributes \(m\) solutions (multiplied by \(1, x, \ldots, x^{m-1}\)).
+        </p>
+        <p>
+          (2) The <strong>Wronskian</strong> provides a test for linear independence of solutions: for solutions of the same homogeneous linear ODE, \(W \neq 0\) at one point implies \(W \neq 0\) everywhere, which implies independence.
+        </p>
+        <p>
+          (3) The <strong>existence and uniqueness theorem</strong> for linear DEs guarantees solutions exist on the entire interval of continuity of the coefficients — no finite-time blowup.
+        </p>
+        <p>
+          (4) The <strong>general solution theorem</strong> ensures that \(y = c_1 y_1 + \cdots + c_n y_n\) captures <em>all</em> solutions, and initial conditions can always be uniquely satisfied.
+        </p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+</body>
+</html>

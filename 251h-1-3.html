@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 251H — Section 1.3: Slope Fields and Solution Curves, Existence and Uniqueness Theorem</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(','\\)']],
+      displayMath: [['\\[','\\]']],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        addMenu: []
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600;8..60,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400&display=swap');
+
+  :root {
+    --bg: #faf8f5;
+    --text: #2c2825;
+    --heading: #1a1614;
+    --accent: #2b4acb;
+    --accent-light: #e8ecfa;
+    --section-bg: #fff;
+    --border: #e0dcd6;
+    --note-bg: #fff8e1;
+    --note-border: #f0d060;
+    --example-bg: #f0f4ff;
+    --example-border: #7b9cf5;
+    --boxed-bg: #f7f5f2;
+    --pink-note: #fce4ec;
+    --pink-border: #e91e63;
+    --theorem-bg: #f3e8ff;
+    --theorem-border: #7c3aed;
+    --warn-bg: #fff3e0;
+    --warn-border: #ef6c00;
+    --max-w: 820px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.72;
+    color: var(--text);
+    background: var(--bg);
+    padding: 2rem 1.25rem 6rem;
+  }
+
+  main {
+    max-width: var(--max-w);
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    padding: 2.5rem 1.5rem 2rem;
+    margin-bottom: 2.5rem;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 6px;
+  }
+  header .course { font-family: 'Source Sans 3', sans-serif; font-weight: 600; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.85; margin-bottom: 0.3rem; }
+  header h1 { font-size: 1.65rem; font-weight: 700; line-height: 1.3; }
+  header .meta { font-family: 'Source Sans 3', sans-serif; font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.75; }
+
+  section {
+    background: var(--section-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2rem 2.25rem;
+    margin-bottom: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--heading);
+    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--heading);
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  .boxed {
+    background: var(--boxed-bg);
+    border: 2px solid var(--border);
+    border-radius: 5px;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    overflow-x: auto;
+  }
+
+  .theorem {
+    background: var(--theorem-bg);
+    border-left: 4px solid var(--theorem-border);
+    border-radius: 4px;
+    padding: 1.5rem 1.75rem;
+    margin: 1.5rem 0;
+  }
+  .theorem-label {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 600;
+    color: var(--theorem-border);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+  }
+
+  .example {
+    background: var(--example-bg);
+    border-left: 4px solid var(--example-border);
+    border-radius: 4px;
+    padding: 1.5rem 1.75rem;
+    margin: 1.5rem 0;
+  }
+  .example-label {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+  }
+
+  .note {
+    background: var(--note-bg);
+    border-left: 4px solid var(--note-border);
+    border-radius: 4px;
+    padding: 0.85rem 1.1rem;
+    margin: 1rem 0;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.95rem;
+    color: #5d4e00;
+  }
+  .note strong { color: #7a6400; }
+
+  .remark {
+    background: var(--pink-note);
+    border-left: 4px solid var(--pink-border);
+    border-radius: 4px;
+    padding: 0.85rem 1.1rem;
+    margin: 1rem 0;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.95rem;
+    color: #6e1030;
+  }
+
+  .warning {
+    background: var(--warn-bg);
+    border-left: 4px solid var(--warn-border);
+    border-radius: 4px;
+    padding: 0.85rem 1.1rem;
+    margin: 1rem 0;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.95rem;
+    color: #5d3200;
+  }
+
+  ol, ul { margin: 0.75rem 0 1rem 1.75rem; }
+  li { margin-bottom: 0.5rem; }
+
+  a { color: var(--accent); }
+  a:visited { color: #5a3d9e; }
+
+  .step { margin-bottom: 1.25rem; }
+
+  .skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    z-index: 100;
+    font-family: 'Source Sans 3', sans-serif;
+  }
+  .skip-link:focus { top: 0; }
+
+  @media (max-width: 600px) {
+    body { font-size: 16px; padding: 1rem 0.75rem 4rem; }
+    section { padding: 1.25rem 1rem; }
+    header h1 { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#content">Skip to main content</a>
+
+<main id="content" role="main">
+
+<header>
+  <div class="course">Math 251H</div>
+  <h1>Section 1.3: Slope Fields and Solution Curves, Existence and Uniqueness Theorem</h1>
+  <div class="meta">Annotated Lecture Notes</div>
+</header>
+
+<!-- ============ SLOPE FIELDS ============ -->
+<section aria-labelledby="sec-slope-fields">
+  <h2 id="sec-slope-fields">Slope Fields</h2>
+
+  <p>We consider a first-order ODE</p>
+  \[\frac{dy}{dx} = f(x, y).\]
+
+  <p>For a solution passing through \((x, y)\) in the plane, the DE gives the <strong>slope of that solution</strong> at that point. This is the key interpretation: \(f(x,y)\) is the rule for the slope of any solution passing through \((x,y)\).</p>
+
+  <p>Therefore, a graphical way to visualize and approximate various solution curves is to indicate the DE-provided slope at various points in the plane.</p>
+
+  <p>Through a representative collection of points \((x, y)\) in the \(xy\)-plane, we draw a short segment with the appropriate slope through each. This provides a <strong>slope field</strong> (or <strong>direction field</strong>), and solution curves will be tangent to these segments.</p>
+
+  <div class="note">
+    <strong>How it works:</strong> At each sample point \((x,y)\), evaluate \(f(x,y)\) to get a slope, then draw a short line segment with that slope. For example, at \((1,1)\) draw a segment with slope \(f(1,1)\); at \((2,1)\) draw a segment with slope \(f(2,1)\); and so on across the plane.
+  </div>
+</section>
+
+<!-- ============ EXAMPLES OF SLOPE FIELDS ============ -->
+<section aria-labelledby="sec-slope-examples">
+  <h2 id="sec-slope-examples">Slope Field Examples</h2>
+
+  <p>The textbook (Figures 1.3.2 a–d) shows slope fields and solution curves for several autonomous ODEs:</p>
+
+  <ul>
+    <li>\(y' = 2y\) — exponential growth</li>
+    <li>\(y' = 0.5\,y\) — slower exponential growth</li>
+    <li>\(y' = -y\) — exponential decay</li>
+    <li>\(y' = -3y\) — faster exponential decay</li>
+  </ul>
+
+  <div class="note">
+    <strong>Key observation:</strong> Solution curves are tangent to slope field segments. For autonomous ODEs (where \(f\) depends on \(y\) only), the slope stays constant along horizontal lines — the slope depends only on the dependent variable.
+  </div>
+
+  <p>A table of slopes can help with hand-drawing: for \(y' = 2y\), at \((0,1)\) the slope is \(2(1) = 2\); at \((1,1)\) the slope is still \(2\); at \((2,1)\) the slope is still \(2\). The slope is the same at every point with the same \(y\)-value.</p>
+</section>
+
+<!-- ============ ONLINE TOOLS ============ -->
+<section aria-labelledby="sec-tools">
+  <h2 id="sec-tools">Online Tools for Plotting Slope Fields</h2>
+
+  <p>Here are some online tools to plot slope fields:</p>
+
+  <ul>
+    <li><strong>Wolfram Cloud notebook:</strong> <a href="https://www.wolframcloud.com/obj/jpr223/Published/SlopeField.nb">https://www.wolframcloud.com/obj/jpr223/Published/SlopeField.nb</a> — You can activate your Wolfram Cloud account using PSU single sign-on, then save a copy of this notebook to use it.</li>
+    <li><strong>Google Colab notebook:</strong> <a href="https://colab.research.google.com/drive/1RX6rG3zo2gbs1MVK9dDCKOuqk8j8Hf1n?usp=sharing">https://colab.research.google.com/drive/1RX6rG3zo2gbs1MVK9dDCKOuqk8j8Hf1n?usp=sharing</a> — You'll need to be signed in with Google. You can link your PSU account if you don't want to use a personal Google account: <a href="https://www.it.psu.edu/services/google/">https://www.it.psu.edu/services/google/</a></li>
+  </ul>
+</section>
+
+<!-- ============ MODEL EQUATIONS ============ -->
+<section aria-labelledby="sec-models">
+  <h2 id="sec-models">Slope Fields for Physical Models</h2>
+
+  <p>Recall some of the models we introduced earlier. Try visualizing their slope fields using the tools above (you'll need to choose values for the constants).</p>
+
+  <h3>Newton's Cooling (constant ambient temperature \(A\))</h3>
+  \[\frac{dT}{dt} = k(A - T), \quad k > 0\]
+  <div class="note"><strong>Example values:</strong> \(k = 0.1\), \(A = 72\), giving \(\dfrac{dy}{dx} = 0.1(72 - y)\).</div>
+
+  <h3>Torricelli's Law (leaking barrel; \(y(t)\) = depth of water)</h3>
+  \[\frac{dy}{dt} = -h\sqrt{y}, \quad h > 0\]
+  <div class="note"><strong>Example values:</strong> \(h = 1\), giving \(\dfrac{dy}{dx} = -\sqrt{y}\).</div>
+
+  <h3>Logistic Population Model (\(M\) = carrying capacity)</h3>
+  \[\frac{dP}{dt} = kP(M - P), \quad k > 0\]
+  <div class="note"><strong>Example values:</strong> \(k = 0.01\), \(M = 100\), giving \(\dfrac{dy}{dx} = 0.01\,y(100 - y)\).</div>
+
+  <div class="remark">
+    <strong>Note:</strong> The solution curves drawn by the plotting tools are generated by numerical ODE schemes (e.g., Euler's method), which we will discuss in Sections 2.4–2.6.
+  </div>
+</section>
+
+<!-- ============ MOTIVATION FOR E&U ============ -->
+<section aria-labelledby="sec-motivation">
+  <h2 id="sec-motivation">Motivation: Why Existence and Uniqueness Matter</h2>
+
+  <p>For modeling, we want our ODEs to reflect physical reality:</p>
+  <ul>
+    <li>When we set up an experiment, <em>something happens</em> — so we want our ODEs to <strong>have solutions</strong> (existence).</li>
+    <li>Experiments are repeatable — nature "knows" what happens. In deterministic systems there is no randomness, so we want <strong>exactly one solution</strong> for each initial condition (uniqueness).</li>
+  </ul>
+</section>
+
+<!-- ============ E&U THEOREM ============ -->
+<section aria-labelledby="sec-eu-theorem">
+  <h2 id="sec-eu-theorem">Existence and Uniqueness Theorem</h2>
+
+  <div class="theorem">
+    <div class="theorem-label">Theorem (Existence and Uniqueness)</div>
+    <p>Suppose that both the function \(f(x, y)\) and its partial derivative \(\dfrac{\partial f}{\partial y}(x, y)\) are continuous on some rectangle in the \(xy\)-plane that contains the point \((a, b)\) in its interior.</p>
+    <p>Then, for some open interval \(I\) containing the point \(a\), the initial value problem</p>
+    \[\frac{dy}{dx} = f(x, y), \qquad y(a) = b\]
+    <p>has <strong>one and only one</strong> solution that is defined on the interval \(I\).</p>
+  </div>
+
+  <div class="note">
+    <strong>What the theorem tells us:</strong> When we're in this "good situation" (both \(f\) and \(\frac{\partial f}{\partial y}\) continuous near \((a,b)\)), there is only one solution through \((a,b)\). Different solution curves cannot cross at that point.
+  </div>
+
+  <div class="note">
+    <strong>Computing \(\frac{\partial f}{\partial y}\):</strong> Treat \(x\) as a constant and use the usual derivative rules to differentiate with respect to \(y\).
+  </div>
+
+  <p>The hypotheses require <em>both</em> conditions:</p>
+  <ol>
+    <li>\(f(x,y)\) is continuous on a rectangle containing \((a,b)\), and</li>
+    <li>\(\dfrac{\partial f}{\partial y}(x,y)\) is continuous on that same rectangle.</li>
+  </ol>
+  <p>If either condition fails at the initial point, the theorem makes no guarantee — existence or uniqueness (or both) may fail.</p>
+</section>
+
+<!-- ============ REMARK ON INTERVAL ============ -->
+<section aria-labelledby="sec-remark">
+  <h2 id="sec-remark">Remark: The Interval May Be Small</h2>
+
+  <p>The interval \(I\) on which the solution is guaranteed to exist can be small — we don't ever expect globally defined solutions \(y(x)\) defined for all \(-\infty < x < \infty\).</p>
+
+  <p>There are cases of <strong>"finite time blowup"</strong> where \(\displaystyle\lim_{x \to c} |y(x)| \to \infty\) for finite \(c\). (See the blowup example at the end of these notes.)</p>
+</section>
+
+<!-- ============ NONEXISTENCE EXAMPLE ============ -->
+<section aria-labelledby="sec-nonexistence">
+  <h2 id="sec-nonexistence">Nonexistence Example</h2>
+
+  <div class="example">
+    <div class="example-label">Example</div>
+    <p>Show that the IVP</p>
+    \[x\,\frac{dy}{dx} = 4y, \qquad y(0) = 3\]
+    <p>has <strong>no solutions</strong>. Why doesn't the existence and uniqueness theorem apply?</p>
+  </div>
+
+  <h3>Why there is no solution</h3>
+  <p>Rewrite the ODE in standard form by dividing both sides by \(x\):</p>
+  \[\frac{dy}{dx} = \frac{4y}{x}\]
+  <p>Ask: what would the slope of a solution through \((0, 3)\) be? Substituting gives</p>
+  \[0 \cdot \frac{dy}{dx} = 4(3) = 12 \quad \Longrightarrow \quad 0 = 12,\]
+  <p>which is a contradiction. We cannot even draw a slope field segment through \((0, 3)\) — there is no solution through this point.</p>
+
+  <h3>Why the theorem doesn't apply</h3>
+  <p>In standard form, \(f(x,y) = \dfrac{4y}{x}\) and \(\dfrac{\partial f}{\partial y} = \dfrac{4}{x}\). Neither is defined at \(x = 0\), so neither is continuous on any rectangle containing \((0, 3)\). The hypotheses of the existence and uniqueness theorem are not satisfied.</p>
+</section>
+
+<!-- ============ NONUNIQUENESS EXAMPLE 1 ============ -->
+<section aria-labelledby="sec-nonunique1">
+  <h2 id="sec-nonunique1">Nonuniqueness Example: \(xy' = 4y\), \(y(0) = 0\)</h2>
+
+  <div class="example">
+    <div class="example-label">Example</div>
+    <p>Show that the IVP</p>
+    \[x\,\frac{dy}{dx} = 4y, \qquad y(0) = 0\]
+    <p>has a <strong>2-parameter family</strong> of solutions:</p>
+    \[y = \begin{cases} C\,x^4 & x < 0 \\ D\,x^4 & x \ge 0 \end{cases}\]
+    <p>Why doesn't the existence and uniqueness theorem apply?</p>
+  </div>
+
+  <h3>Verification</h3>
+  <p><strong>For \(x < 0\):</strong> If \(y = Cx^4\), then \(\dfrac{dy}{dx} = 4Cx^3\), and \(x \cdot 4Cx^3 = 4Cx^4 = 4y\). ✓</p>
+  <p><strong>For \(x \ge 0\):</strong> If \(y = Dx^4\), then \(\dfrac{dy}{dx} = 4Dx^3\), and \(x \cdot 4Dx^3 = 4Dx^4 = 4y\). ✓</p>
+
+  <p>The piecewise function is differentiable at \(x = 0\) because \(\dfrac{dy}{dx}\bigg|_{x=0} = 0\) from both sides (the slopes match), and \(y(0) = 0\). So this gives a valid solution for <em>any</em> choice of \(C\) and \(D\) — a 2-parameter family of solutions all passing through \((0, 0)\).</p>
+
+  <h3>Why the theorem doesn't apply</h3>
+  <p>Again, \(f(x,y) = \dfrac{4y}{x}\) and \(\dfrac{\partial f}{\partial y} = \dfrac{4}{x}\), and neither is continuous on any rectangle containing \((0, 0)\). The theorem's hypotheses fail.</p>
+
+  <div class="warning">
+    <strong>Local vs. global uniqueness:</strong> Consider the related IVP with \(y(1) = 1\). Here the existence and uniqueness theorem <em>does</em> apply near \((1,1)\), since both \(f\) and \(\frac{\partial f}{\partial y}\) are continuous on any rectangle containing \((1,1)\) that avoids \(x = 0\). The initial condition \(y(1) = 1\) forces \(D = 1\), so locally near \(x = 1\) there is a unique solution \(y = x^4\). However, \(C\) is still free, so there are infinitely many <em>global</em> solutions. This is not a contradiction — the theorem only promises uniqueness on some <em>small interval</em> containing \(x = 1\).
+  </div>
+</section>
+
+<!-- ============ NONUNIQUENESS EXAMPLE 2 ============ -->
+<section aria-labelledby="sec-nonunique2">
+  <h2 id="sec-nonunique2">Nonuniqueness Example: \(y' = y^{1/3}\), \(y(0) = 0\)</h2>
+
+  <div class="example">
+    <div class="example-label">Example</div>
+    <p>Consider the IVP</p>
+    \[\frac{dy}{dx} = y^{1/3}, \qquad y(0) = 0.\]
+  </div>
+
+  <h3>The trivial solution</h3>
+  <p>Notice that \(y(x) = 0\) for all \(x\) is a solution, since \(\dfrac{dy}{dx} = 0\) and \(0^{1/3} = 0\). ✓</p>
+
+  <h3>A nontrivial solution</h3>
+  <p>Using separable-variable techniques (Section 1.4), one can find that</p>
+  \[y(x) = \left(\frac{2}{3}\,x + C\right)^{3/2}\]
+  <p>is also a family of solutions. Applying \(y(0) = 0\) gives \(C = 0\), so</p>
+  <div class="boxed">
+    \[y(x) = \left(\frac{2}{3}\,x\right)^{3/2}\]
+  </div>
+  <p>also solves the IVP (on the interval \(x \ge 0\)).</p>
+
+  <p>We can verify: \(\dfrac{dy}{dx} = \dfrac{3}{2}\left(\dfrac{2}{3}x\right)^{1/2} \cdot \dfrac{2}{3} = \left(\dfrac{2}{3}x\right)^{1/2}\), and \(y^{1/3} = \left[\left(\dfrac{2}{3}x\right)^{3/2}\right]^{1/3} = \left(\dfrac{2}{3}x\right)^{1/2}\). ✓</p>
+
+  <h3>Infinitely many solutions</h3>
+  <p>The situation is even worse. For any \(a \ge 0\),</p>
+  <div class="boxed">
+    \[y(x) = \begin{cases} 0 & x \le a \\ \pm\left(\dfrac{2}{3}(x - a)\right)^{3/2} & x > a \end{cases}\]
+  </div>
+  <p>also solves the initial value problem. Uniqueness has <strong>failed catastrophically</strong> — we have infinitely many solutions satisfying the initial condition.</p>
+
+  <h3>Why the theorem doesn't apply</h3>
+  <p>Here \(f(x,y) = y^{1/3}\), which <em>is</em> continuous for all \(x\) and \(y\). However,</p>
+  \[\frac{\partial f}{\partial y} = \frac{\partial}{\partial y}\!\left(y^{1/3}\right) = \frac{1}{3}\,y^{-2/3} = \frac{1}{3\,y^{2/3}},\]
+  <p>which is <strong>not continuous at \(y = 0\)</strong> (it blows up). Since the initial condition has \(y(0) = 0\), there is no rectangle containing \((0, 0)\) on which \(\frac{\partial f}{\partial y}\) is continuous. The uniqueness part of the theorem does not apply.</p>
+
+  <div class="remark">
+    <strong>Physical relevance:</strong> This sort of nonuniqueness also occurs in Torricelli's law for leaking tanks. On the homework, you'll think about how nonuniqueness actually makes sense in this modeling situation.
+  </div>
+</section>
+
+<!-- ============ FINITE TIME BLOWUP ============ -->
+<section aria-labelledby="sec-blowup">
+  <h2 id="sec-blowup">Finite Time Blowup Example</h2>
+
+  <div class="example">
+    <div class="example-label">Example (Problem 1.1.47 on Written HW 1)</div>
+    <p>Consider the IVP</p>
+    \[\frac{dy}{dx} = y^2, \qquad y(0) = y_0.\]
+  </div>
+
+  <p>We'll learn that the solutions are:</p>
+  <ul>
+    <li>If \(y_0 = 0\): \(y(x) = 0\) for all \(x\) (constant function).</li>
+    <li>If \(y_0 \ne 0\):
+      <div class="boxed">
+        \[y(x) = \frac{1}{\dfrac{1}{y_0} - x}\]
+      </div>
+    </li>
+  </ul>
+
+  <p>When \(y_0 > 0\), this solution has a <strong>vertical asymptote</strong> at the positive \(x\)-value \(x = \dfrac{1}{y_0}\). The solution blows up in finite time.</p>
+
+  <h3>Concrete example: \(y' = y^2\), \(y(0) = 1\)</h3>
+  <p>The solution is \(y = \dfrac{1}{1 - x}\), which is only defined (and differentiable) on \(-\infty < x < 1\). The solution to the IVP cannot be defined for all \(x\).</p>
+
+  <h3>Concrete example: \(y' = y^2\), \(y(0) = 1000\)</h3>
+  <p>The solution is \(y = \dfrac{1}{\frac{1}{1000} - x}\), which blows up at \(x = \dfrac{1}{1000} = 0.001\).</p>
+
+  <div class="warning">
+    <strong>Takeaway:</strong> The interval of existence promised by the theorem may not extend very far at all. Even for "nice" ODEs satisfying the theorem's hypotheses, solutions can blow up at a finite value of \(x\).
+  </div>
+</section>
+
+</main>
+</body>
+</html>

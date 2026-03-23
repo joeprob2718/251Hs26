@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 251H — 3.1, 3.2, 3.3: Second Order Constant Coefficient Homogeneous ODE</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #faf8f5;
+    --fg: #1a1a1a;
+    --accent: #3a3ac4;
+    --accent-light: #ebebfa;
+    --muted: #6b6b6b;
+    --border: #ddd8d0;
+    --highlight: #fff7e0;
+    --code-bg: #f0ede8;
+    --section-gap: 3rem;
+    --note-green: #f0f7f0;
+    --note-green-border: #3a8a3a;
+    --note-green-text: #2a6a2a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.75;
+    font-size: 18px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+
+  header {
+    text-align: center;
+    padding-bottom: var(--section-gap);
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: var(--section-gap);
+  }
+
+  header .course {
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--fg);
+  }
+
+  section { margin-bottom: var(--section-gap); }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-top: 1.8rem;
+    margin-bottom: 0.6rem;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  .definition {
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .definition .label {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+
+  .example {
+    background: var(--highlight);
+    border-left: 4px solid #c9a227;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .example .label {
+    font-weight: 700;
+    color: #8a6d15;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+
+  .note {
+    background: var(--note-green);
+    border-left: 4px solid var(--note-green-border);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .note .label {
+    font-weight: 700;
+    color: var(--note-green-text);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+
+  .warning {
+    background: #fdf0f0;
+    border-left: 4px solid #c44;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .warning .label {
+    font-weight: 700;
+    color: #a33;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+
+  .math-display {
+    margin: 1.2rem 0;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+  }
+
+  th, td {
+    padding: 0.65rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    background: var(--accent-light);
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    z-index: 100;
+    font-size: 0.9rem;
+  }
+  .skip-link:focus { top: 0; }
+
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    header h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.25rem; }
+    .container { padding: 2rem 1rem 4rem; }
+  }
+
+  @media print {
+    body { font-size: 12pt; background: #fff; }
+    .container { max-width: 100%; padding: 0; }
+    header { border-bottom-color: #000; }
+    h2 { color: #000; }
+    .definition, .example, .note, .warning { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<div class="container">
+  <header>
+    <div class="course">Math 251H</div>
+    <h1>3.1, 3.2, 3.3: Intro and Computations for Second Order Constant Coefficient Homogeneous ODE</h1>
+  </header>
+
+  <main id="main">
+
+    <!-- Review of First Order -->
+    <section aria-labelledby="sec-review">
+      <h2 id="sec-review">Review: First Order DEs</h2>
+
+      <p>So far we have focused on solving certain special kinds of first order DEs — namely <strong>separable equations</strong> of the form</p>
+      <div class="math-display">
+        \[ \frac{dy}{dx} = g(x)\,h(y), \]
+      </div>
+      <p>and <strong>first order linear equations</strong> of the form</p>
+      <div class="math-display">
+        \[ \frac{dy}{dx} + P(x)\,y = Q(x). \]
+      </div>
+      <p>In a first order linear equation, the dependent variable \(y\) and its derivative \(\frac{dy}{dx}\) appear "linearly" — you won't see terms like \(y^2\), \(e^y\), or \(y \cdot \frac{dy}{dx}\).</p>
+    </section>
+
+    <!-- Second Order Linear DEs -->
+    <section aria-labelledby="sec-2nd-order">
+      <h2 id="sec-2nd-order">Second Order Linear Differential Equations</h2>
+
+      <p>The most general 2nd order differential equation has the form</p>
+      <div class="math-display">
+        \[ G(x,\, y,\, y',\, y'') = 0. \]
+      </div>
+
+      <p>A <strong>2nd order linear differential equation</strong> has the more specific form</p>
+      <div class="math-display">
+        \[ A(x)\,y'' + B(x)\,y' + C(x)\,y = F(x). \]
+      </div>
+
+      <p>
+        Just as in the first order case, "linear" means the dependent variable and its derivatives \(y, y', y''\) appear linearly. The coefficient functions \(A(x), B(x), C(x)\) and the source term \(F(x)\) can be nonlinear functions of the independent variable \(x\). The term \(F(x)\) on the right-hand side is called the <em>source term</em> and does not involve \(y, y', y''\).
+      </p>
+    </section>
+
+    <!-- Mass-Spring-Dashpot -->
+    <section aria-labelledby="sec-spring">
+      <h2 id="sec-spring">Motivating Application: Mass-Spring-Dashpot</h2>
+
+      <p>
+        Consider a mass \(m\) attached to a spring and a dashpot (shock absorber). Let \(x(t)\) denote the displacement of the mass from its equilibrium position at time \(t\).
+      </p>
+
+      <p>
+        The <strong>dashpot</strong> converts mechanical energy into heat/sound. It exerts a resistive force proportional to the mass's speed, opposing the direction of motion, with damping constant \(c > 0\):
+      </p>
+      <div class="math-display">
+        \[ F_R = -c\,\frac{dx}{dt}. \]
+      </div>
+
+      <p>
+        The <strong>spring</strong> follows Hooke's law: it exerts a restoring force proportional to displacement, directed back toward equilibrium, with spring constant \(k > 0\):
+      </p>
+      <div class="math-display">
+        \[ F_S = -k\,x. \]
+      </div>
+
+      <p>By Newton's second law \(ma = F\), we get</p>
+      <div class="math-display">
+        \[ m\,\frac{d^2x}{dt^2} = F_R + F_S = -c\,\frac{dx}{dt} - k\,x, \]
+      </div>
+      <p>which we rearrange as the <strong>homogeneous</strong> equation (no external forcing):</p>
+
+      <div class="definition">
+        <div class="label">Damped Harmonic Oscillator</div>
+        \[ m\,\frac{d^2x}{dt^2} + c\,\frac{dx}{dt} + k\,x = 0. \]
+      </div>
+
+      <p>If there is an external driving force \(F(t)\) (e.g. a motor or speaker), we instead have the <strong>non-homogeneous</strong> (driven) equation:</p>
+      <div class="math-display">
+        \[ m\,\frac{d^2x}{dt^2} + c\,\frac{dx}{dt} + k\,x = F(t). \]
+      </div>
+
+      <p>For electrical engineers: this is the same equation governing current \(I(t)\) in an LRC circuit:</p>
+      <div class="math-display">
+        \[ L\,\frac{d^2I}{dt^2} + R\,\frac{dI}{dt} + \frac{1}{C}\,I = F(t), \]
+      </div>
+      <p>where \(F(t) = V'(t)\) is the derivative of the input voltage.</p>
+    </section>
+
+    <!-- Superposition Principle -->
+    <section aria-labelledby="sec-superposition">
+      <h2 id="sec-superposition">Principle of Superposition</h2>
+
+      <p>Write a second order homogeneous equation in the standard form (dividing through by \(A(x)\)):</p>
+      <div class="math-display">
+        \[ y'' + p(x)\,y' + q(x)\,y = 0. \]
+      </div>
+
+      <div class="definition">
+        <div class="label">Superposition Principle</div>
+        <p>If \(y_1\) and \(y_2\) are two solutions to a homogeneous linear equation, then any <strong>linear combination</strong></p>
+        \[ y = c_1\,y_1 + c_2\,y_2 \]
+        <p>is also a solution, for any constants \(c_1, c_2\).</p>
+      </div>
+
+      <h3>Why does superposition work?</h3>
+
+      <p>Two key facts make this work:</p>
+      <p>
+        First, derivative rules "respect linear combinations": if \(y = c_1 y_1 + c_2 y_2\), then \(y' = c_1 y_1' + c_2 y_2'\) and \(y'' = c_1 y_1'' + c_2 y_2''\).
+      </p>
+      <p>
+        Second, the equation is linear and homogeneous (equals zero). Substituting \(y = c_1 y_1 + c_2 y_2\) into the left side:
+      </p>
+      <div class="math-display">
+        \[
+          \begin{aligned}
+            &(c_1 y_1'' + c_2 y_2'') + p(x)(c_1 y_1' + c_2 y_2') + q(x)(c_1 y_1 + c_2 y_2) \\
+            &= c_1\!\underbrace{\left(y_1'' + p(x)y_1' + q(x)y_1\right)}_{=\,0} + c_2\!\underbrace{\left(y_2'' + p(x)y_2' + q(x)y_2\right)}_{=\,0} \\
+            &= c_1(0) + c_2(0) = 0. \;\checkmark
+          \end{aligned}
+        \]
+      </div>
+      <p>
+        This is analogous to the fact from Math 220 (linear algebra) that the null space of a matrix is closed under linear combinations — the solution space of a homogeneous linear ODE forms a subspace/vector space.
+      </p>
+    </section>
+
+    <!-- General Solution Structure -->
+    <section aria-labelledby="sec-gen-soln">
+      <h2 id="sec-gen-soln">General Solution Structure</h2>
+
+      <div class="definition">
+        <div class="label">Fact</div>
+        <p>
+          Once you find two <strong>linearly independent</strong> solutions \(y_1(x)\) and \(y_2(x)\) to the equation \(y'' + p(x)y' + q(x)y = 0\) (provided \(p\) and \(q\) are continuous), the <strong>general solution</strong> is
+        </p>
+        \[ y(x) = c_1\,y_1(x) + c_2\,y_2(x). \]
+      </div>
+
+      <p>
+        Two functions \(y_1\) and \(y_2\) are <em>linearly independent</em> when they are NOT constant multiples of each other. For example, \(y_1 = e^{2x}\) and \(y_2 = 12\,e^{2x}\) are linearly <em>dependent</em> (since \(y_2 = 12\,y_1\)), but \(y_1 = e^{2x}\) and \(y_2 = 10\,e^{3x}\) are linearly <em>independent</em> (since \(y_2/y_1 = 10\,e^x\) is not a constant).
+      </p>
+    </section>
+
+    <!-- Euler Ansatz -->
+    <section aria-labelledby="sec-ansatz">
+      <h2 id="sec-ansatz">The Euler Ansatz for Constant Coefficient DEs</h2>
+
+      <p>For a constant coefficient homogeneous equation</p>
+      <div class="math-display">
+        \[ Ay'' + By' + Cy = 0, \]
+      </div>
+      <p>
+        we make an educated guess (ansatz) that solutions have the form \(y = e^{rx}\). Substituting:
+      </p>
+      <div class="math-display">
+        \[
+          y = e^{rx}, \quad y' = r\,e^{rx}, \quad y'' = r^2 e^{rx}.
+        \]
+      </div>
+      <p>Plugging into the DE:</p>
+      <div class="math-display">
+        \[
+          Ar^2 e^{rx} + Br\,e^{rx} + Ce^{rx} = 0 \quad\Longrightarrow\quad e^{rx}(Ar^2 + Br + C) = 0.
+        \]
+      </div>
+      <p>
+        Since \(e^{rx} \neq 0\) for all \(x\), we need the <strong>characteristic polynomial</strong> to vanish:
+      </p>
+      <div class="math-display">
+        \[ Ar^2 + Br + C = 0. \]
+      </div>
+      <p>
+        This is a quadratic in \(r\), and its roots determine the form of the general solution. There are three cases depending on the discriminant \(B^2 - 4AC\).
+      </p>
+    </section>
+
+    <!-- Three Cases Summary -->
+    <section aria-labelledby="sec-three-cases">
+      <h2 id="sec-three-cases">The Three Cases: Summary</h2>
+
+      <p>For the characteristic polynomial \(Ar^2 + Br + C = 0\) with roots given by \(r_{1,2} = \frac{-B \pm \sqrt{B^2 - 4AC}}{2A}\):</p>
+
+      <div class="definition">
+        <div class="label">Case 1 — Distinct Real Roots</div>
+        <p>If \(r_1 \neq r_2\) are real, two linearly independent solutions are</p>
+        \[ y_1 = e^{r_1 x} \quad\text{and}\quad y_2 = e^{r_2 x}. \]
+        <p>General solution: \(y = c_1\,e^{r_1 x} + c_2\,e^{r_2 x}\).</p>
+      </div>
+
+      <div class="definition">
+        <div class="label">Case 2 — Repeated Real Root</div>
+        <p>If \(r_1 = r_2 = r_0\) is a double root, two linearly independent solutions are</p>
+        \[ y_1 = e^{r_0 x} \quad\text{and}\quad y_2 = x\,e^{r_0 x}. \]
+        <p>General solution: \(y = c_1\,e^{r_0 x} + c_2\,x\,e^{r_0 x}\).</p>
+      </div>
+
+      <div class="definition">
+        <div class="label">Case 3 — Complex Conjugate Roots</div>
+        <p>If \(r_{1,2} = a \pm bi\) with \(b \neq 0\), two linearly independent <em>real-valued</em> solutions are</p>
+        \[ y_1 = e^{ax}\cos(bx) \quad\text{and}\quad y_2 = e^{ax}\sin(bx). \]
+        <p>General solution: \(y = c_1\,e^{ax}\cos(bx) + c_2\,e^{ax}\sin(bx)\).</p>
+      </div>
+
+      <p>
+        Note: since the characteristic polynomial has real coefficients, any non-real roots must come in conjugate pairs \(a + bi\) and \(a - bi\). This is a consequence of the quadratic formula.
+      </p>
+    </section>
+
+    <!-- Examples: Distinct Roots -->
+    <section aria-labelledby="sec-ex-distinct">
+      <h2 id="sec-ex-distinct">Examples: Distinct Real Roots</h2>
+
+      <div class="example">
+        <div class="label">Example</div>
+        <p>Find the general solution to \(y'' + 5y' + 6y = 0\).</p>
+      </div>
+
+      <p>Characteristic polynomial: \(r^2 + 5r + 6 = 0\). Factoring: \((r+2)(r+3) = 0\), so \(r = -2, -3\).</p>
+      <p>Two linearly independent solutions: \(y_1 = e^{-2x}\) and \(y_2 = e^{-3x}\).</p>
+      <div class="math-display">
+        \[ \boxed{y = c_1\,e^{-2x} + c_2\,e^{-3x}.} \]
+      </div>
+
+      <div class="example">
+        <div class="label">Example</div>
+        <p>Find the general solution to \(y'' - 4y = 0\).</p>
+      </div>
+
+      <p>Characteristic polynomial: \(r^2 - 4 = 0\), so \((r+2)(r-2) = 0\) and \(r = \pm 2\).</p>
+      <div class="math-display">
+        \[ \boxed{y = c_1\,e^{2x} + c_2\,e^{-2x}.} \]
+      </div>
+    </section>
+
+    <!-- Example: Repeated Root -->
+    <section aria-labelledby="sec-ex-repeated">
+      <h2 id="sec-ex-repeated">Example: Repeated Root</h2>
+
+      <div class="example">
+        <div class="label">Example</div>
+        <p>Find the general solution to \(y'' - 4y' + 4y = 0\).</p>
+      </div>
+
+      <p>Characteristic polynomial: \(r^2 - 4r + 4 = 0\), which factors as \((r-2)^2 = 0\). So \(r = 2\) is a double root.</p>
+      <p>Two linearly independent solutions: \(y_1 = e^{2x}\) and \(y_2 = x\,e^{2x}\).</p>
+      <div class="math-display">
+        \[ \boxed{y = c_1\,e^{2x} + c_2\,x\,e^{2x}.} \]
+      </div>
+    </section>
+
+    <!-- Example: Complex Roots -->
+    <section aria-labelledby="sec-ex-complex">
+      <h2 id="sec-ex-complex">Example: Complex Conjugate Roots</h2>
+
+      <div class="example">
+        <div class="label">Example</div>
+        <p>Find the general solution to \(y'' - 4y' + 13y = 0\).</p>
+      </div>
+
+      <p>Characteristic polynomial: \(r^2 - 4r + 13 = 0\). Completing the square:</p>
+      <div class="math-display">
+        \[ r^2 - 4r + 4 + 9 = 0 \quad\Longrightarrow\quad (r-2)^2 = -9 \quad\Longrightarrow\quad r - 2 = \pm 3i. \]
+      </div>
+      <p>So \(r = 2 \pm 3i\), giving \(a = 2\) and \(b = 3\).</p>
+      <div class="math-display">
+        \[ \boxed{y = c_1\,e^{2x}\cos(3x) + c_2\,e^{2x}\sin(3x).} \]
+      </div>
+    </section>
+
+    <!-- Initial Conditions -->
+    <section aria-labelledby="sec-ic">
+      <h2 id="sec-ic">Initial Conditions for Second Order IVPs</h2>
+
+      <p>
+        Since the general solution has two free parameters \(c_1, c_2\), knowing only \(y(0) = y_0\) is not enough. For second order DEs, a complete initial value problem specifies both the initial "position" and "velocity":
+      </p>
+
+      <div class="definition">
+        <div class="label">Second Order IVP</div>
+        \[
+          \begin{cases}
+            Ay'' + By' + Cy = 0, \\
+            y(0) = y_0, \\
+            y'(0) = v_0.
+          \end{cases}
+        \]
+      </div>
+
+      <p>These two conditions uniquely determine \(c_1\) and \(c_2\).</p>
+    </section>
+
+    <!-- IVP Examples -->
+    <section aria-labelledby="sec-ivp-examples">
+      <h2 id="sec-ivp-examples">IVP Examples</h2>
+
+      <div class="example">
+        <div class="label">Example — Distinct Roots IVP</div>
+        <p>Solve \(y'' - 5y' + 6y = 0\), \(\;y(0) = 2\), \(\;y'(0) = 5\).</p>
+      </div>
+
+      <p>
+        Characteristic polynomial: \(r^2 - 5r + 6 = (r-2)(r-3) = 0\), so \(r = 2, 3\).
+      </p>
+      <p>General solution: \(y = c_1\,e^{2x} + c_2\,e^{3x}\). Then \(y' = 2c_1\,e^{2x} + 3c_2\,e^{3x}\).</p>
+      <p>Applying initial conditions at \(x = 0\):</p>
+      <div class="math-display">
+        \[
+          \begin{cases}
+            c_1 + c_2 = 2 \\
+            2c_1 + 3c_2 = 5
+          \end{cases}
+        \]
+      </div>
+      <p>
+        Subtracting twice the first equation from the second: \(c_2 = 1\), and then \(c_1 = 1\).
+      </p>
+      <div class="math-display">
+        \[ \boxed{y = e^{2x} + e^{3x}.} \]
+      </div>
+
+      <div class="example">
+        <div class="label">Example — Complex Roots IVP</div>
+        <p>Solve \(y'' - 10y' + 29y = 0\), \(\;y(0) = 1\), \(\;y'(0) = 4\).</p>
+      </div>
+
+      <p>Characteristic polynomial: \(r^2 - 10r + 29 = 0\). Completing the square:</p>
+      <div class="math-display">
+        \[ (r - 5)^2 + 4 = 0 \quad\Longrightarrow\quad r = 5 \pm 2i. \]
+      </div>
+      <p>General solution: \(y = c_1\,e^{5x}\cos(2x) + c_2\,e^{5x}\sin(2x)\).</p>
+      <p>Differentiating (product rule):</p>
+      <div class="math-display">
+        \[ y' = 5c_1\,e^{5x}\cos(2x) - 2c_1\,e^{5x}\sin(2x) + 5c_2\,e^{5x}\sin(2x) + 2c_2\,e^{5x}\cos(2x). \]
+      </div>
+      <p>At \(x = 0\): \(\cos(0) = 1\), \(\sin(0) = 0\), \(e^0 = 1\), so:</p>
+      <div class="math-display">
+        \[
+          \begin{cases}
+            y(0) = c_1 = 1, \\
+            y'(0) = 5c_1 + 2c_2 = 4.
+          \end{cases}
+        \]
+      </div>
+      <p>From the first equation \(c_1 = 1\). Substituting: \(5 + 2c_2 = 4\), so \(c_2 = -\tfrac{1}{2}\).</p>
+      <div class="math-display">
+        \[ \boxed{y = e^{5x}\cos(2x) - \tfrac{1}{2}\,e^{5x}\sin(2x).} \]
+      </div>
+    </section>
+
+    <!-- Where do cosines and sines come from? -->
+    <section aria-labelledby="sec-euler-formula">
+      <h2 id="sec-euler-formula">Where Do the Cosines and Sines Come From?</h2>
+
+      <p>
+        When the characteristic roots are \(r_{1,2} = a \pm bi\), the "naive" solutions would be the complex-valued functions \(y_1 = e^{(a+bi)x}\) and \(y_2 = e^{(a-bi)x}\). But we want real-valued solutions.
+      </p>
+
+      <h3>Euler's Formula via Power Series</h3>
+
+      <p>Recall from calculus the power series (valid for all real \(x\)):</p>
+      <div class="math-display">
+        \[
+          e^x = \sum_{n=0}^{\infty} \frac{x^n}{n!}, \qquad
+          \cos(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n}}{(2n)!}, \qquad
+          \sin(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{(2n+1)!}.
+        \]
+      </div>
+
+      <p>
+        These series converge for complex inputs too, so we <em>define</em> \(e^z := \sum_{n=0}^{\infty} \frac{z^n}{n!}\) for all complex \(z\). Substituting \(z = ibx\) and using the fact that powers of \(i\) cycle as \(i^0 = 1,\; i^1 = i,\; i^2 = -1,\; i^3 = -i,\; i^4 = 1, \ldots\), we can separate the series into real and imaginary parts:
+      </p>
+      <div class="math-display">
+        \[
+          e^{ibx} = \sum_{n=0}^{\infty} \frac{(ibx)^n}{n!} = \underbrace{\sum_{n=0}^{\infty} \frac{(-1)^n(bx)^{2n}}{(2n)!}}_{\cos(bx)} + i\underbrace{\sum_{n=0}^{\infty} \frac{(-1)^n(bx)^{2n+1}}{(2n+1)!}}_{\sin(bx)}.
+        \]
+      </div>
+
+      <p>This gives <strong>Euler's formula</strong>:</p>
+      <div class="definition">
+        <div class="label">Euler's Formula</div>
+        \[ e^{i\theta} = \cos\theta + i\sin\theta. \]
+      </div>
+
+      <p>Therefore:</p>
+      <div class="math-display">
+        \[ e^{(a+bi)x} = e^{ax}\,e^{ibx} = e^{ax}\bigl(\cos(bx) + i\sin(bx)\bigr). \]
+      </div>
+
+      <h3>Extracting Real Solutions</h3>
+
+      <p>
+        Since the ODE has real coefficients, the real and imaginary parts of any complex solution each separately satisfy the ODE. So we take:
+      </p>
+      <div class="math-display">
+        \[
+          y_1 = \operatorname{Re}\!\left(e^{(a+bi)x}\right) = e^{ax}\cos(bx), \qquad
+          y_2 = \operatorname{Im}\!\left(e^{(a+bi)x}\right) = e^{ax}\sin(bx).
+        \]
+      </div>
+      <p>
+        These are two linearly independent real-valued solutions, and the general solution via superposition is \(y = c_1\,e^{ax}\cos(bx) + c_2\,e^{ax}\sin(bx)\).
+      </p>
+    </section>
+
+    <!-- Where does the extra x come from? -->
+    <section aria-labelledby="sec-double-root">
+      <h2 id="sec-double-root">Where Does the Extra \(x\) Come From for Double Roots?</h2>
+
+      <p>
+        Define the differential operator \(P\!\left(\frac{d}{dx}\right) = A\frac{d^2}{dx^2} + B\frac{d}{dx} + C\), so the characteristic polynomial is \(P(r) = Ar^2 + Br + C\). A key fact is:
+      </p>
+      <div class="math-display">
+        \[ P\!\left(\frac{d}{dx}\right) e^{rx} = P(r)\,e^{rx}. \]
+      </div>
+      <p>
+        We want to show that if \(r_0\) is a double root, then \(y = x\,e^{r_0 x}\) is also a solution. The trick is to notice that
+      </p>
+      <div class="math-display">
+        \[ x\,e^{r_0 x} = \frac{d}{dr}\,e^{rx}\bigg|_{r=r_0} \]
+      </div>
+      <p>since differentiating \(e^{rx}\) with respect to \(r\) (treating \(x\) as a constant) gives \(x\,e^{rx}\). Therefore:</p>
+      <div class="math-display">
+        \[
+          P\!\left(\frac{d}{dx}\right)(x\,e^{r_0 x})
+          = \frac{d}{dr}\left[P\!\left(\frac{d}{dx}\right)e^{rx}\right]\bigg|_{r=r_0}
+          = \frac{d}{dr}\left[P(r)\,e^{rx}\right]\bigg|_{r=r_0}.
+        \]
+      </div>
+      <p>Here we used Clairaut's theorem (from Math 230/231) to switch the order of the \(\frac{d}{dx}\) and \(\frac{d}{dr}\) derivatives. Applying the product rule in \(r\):</p>
+      <div class="math-display">
+        \[
+          = P'(r)\,e^{rx} + P(r)\,x\,e^{rx}\bigg|_{r=r_0}
+          = P'(r_0)\,e^{r_0 x} + P(r_0)\,x\,e^{r_0 x}.
+        \]
+      </div>
+
+      <p>
+        If \(r_0\) is a <strong>double root</strong> of \(P(r)\), then \(P(r) = A(r - r_0)^2\), so both \(P(r_0) = 0\) and \(P'(r_0) = 0\). Therefore:
+      </p>
+      <div class="math-display">
+        \[ P\!\left(\frac{d}{dx}\right)(x\,e^{r_0 x}) = 0, \]
+      </div>
+      <p>confirming that \(x\,e^{r_0 x}\) is indeed a solution.</p>
+
+      <div class="warning">
+        <div class="label">Important</div>
+        <p>
+          The "extra \(x\)" trick is specific to double roots. For instance, for \(y'' + 5y' + 6y = 0\) with distinct roots \(r = -2, -3\), the general solution is \(y = c_1 e^{-2x} + c_2 e^{-3x}\). Neither \(x\,e^{-2x}\) nor \(x\,e^{-3x}\) are solutions in this case!
+        </p>
+      </div>
+    </section>
+
+    <!-- Summary -->
+    <section aria-labelledby="sec-summary">
+      <h2 id="sec-summary">Summary</h2>
+
+      <div class="note">
+        <div class="label">Key Takeaways</div>
+        <p>To solve \(Ay'' + By' + Cy = 0\):</p>
+        <p>
+          (1) Form the characteristic polynomial \(Ar^2 + Br + C = 0\) and find its roots.
+          (2) Use the appropriate case (distinct real, repeated real, or complex conjugate) to write down two linearly independent solutions.
+          (3) The general solution is \(y = c_1 y_1 + c_2 y_2\) by superposition.
+          (4) For an IVP, use both initial conditions \(y(0) = y_0\) and \(y'(0) = v_0\) to solve for \(c_1\) and \(c_2\).
+        </p>
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>Root Type</th><th>Roots</th><th>General Solution</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Distinct real</td><td>\(r_1 \neq r_2\)</td><td>\(c_1 e^{r_1 x} + c_2 e^{r_2 x}\)</td></tr>
+          <tr><td>Repeated real</td><td>\(r_0\) (double)</td><td>\(c_1 e^{r_0 x} + c_2\, x\,e^{r_0 x}\)</td></tr>
+          <tr><td>Complex conjugate</td><td>\(a \pm bi\)</td><td>\(c_1 e^{ax}\cos(bx) + c_2 e^{ax}\sin(bx)\)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 251H — Section 1.5: Linear First Order Equations — Integrating Factors</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(','\\)']],
+      displayMath: [['\\[','\\]']],
+      tags: 'ams'
+    },
+    options: {
+      enableMenu: false
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Fira+Code:wght@400;500&display=swap');
+
+  :root {
+    --bg: #faf8f5;
+    --text: #2c2825;
+    --heading: #1a1715;
+    --accent: #3b3089;
+    --accent-light: #ebe8f4;
+    --border: #d5cfc7;
+    --note-bg: #fff7e6;
+    --note-border: #e6c44d;
+    --example-bg: #f0f4f8;
+    --example-border: #6b8fad;
+    --star-color: #c44d2b;
+    --maxw: 48rem;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 1.1rem;
+    padding: 2rem 1.25rem 5rem;
+  }
+
+  main {
+    max-width: var(--maxw);
+    margin: 0 auto;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 2.5rem 0 2rem;
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: 2.5rem;
+  }
+  header .course {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.85rem;
+    color: var(--heading);
+    line-height: 1.3;
+  }
+
+  /* Sections */
+  section {
+    margin-bottom: 2.5rem;
+  }
+  h2 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--heading);
+    margin-bottom: 1rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 {
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--heading);
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  /* Display math spacing */
+  .MathJax { font-size: 1.05em !important; }
+
+  /* Note / Key Idea boxes */
+  .note {
+    background: var(--note-bg);
+    border-left: 4px solid var(--note-border);
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .note .label {
+    font-weight: 700;
+    color: var(--star-color);
+    margin-bottom: 0.25rem;
+    display: block;
+  }
+
+  /* Example boxes */
+  .example {
+    background: var(--example-bg);
+    border-left: 4px solid var(--example-border);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .example .label {
+    font-weight: 700;
+    color: var(--example-border);
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+  }
+
+  /* Definition / formula highlight */
+  .formula-box {
+    background: var(--accent-light);
+    border: 2px solid var(--accent);
+    border-radius: 6px;
+    padding: 1rem 1.5rem;
+    margin: 1.25rem 0;
+    text-align: center;
+  }
+
+  /* Step lists */
+  ol.steps {
+    padding-left: 1.5rem;
+    margin: 0.75rem 0 1rem;
+  }
+  ol.steps li {
+    margin-bottom: 0.75rem;
+  }
+
+  /* Accessibility: skip link */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    z-index: 100;
+    border-radius: 0 0 4px 0;
+  }
+  .skip-link:focus {
+    left: 0;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 3rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #888;
+    border-top: 1px solid var(--border);
+    padding-top: 1.25rem;
+  }
+
+  /* Print styles */
+  @media print {
+    body { background: #fff; font-size: 11pt; padding: 0; }
+    .formula-box { border-color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#content">Skip to main content</a>
+
+<main id="content">
+
+<header>
+  <div class="course">Math 251H</div>
+  <h1>Section 1.5: Linear First Order Equations — Integrating Factors</h1>
+</header>
+
+<!-- ===== Recap ===== -->
+<section aria-labelledby="recap">
+  <h2 id="recap">Recap: General First Order DEs</h2>
+  <p>Recall that a general first order differential equation has the form</p>
+  \[
+    \frac{dy}{dx} = f(x, y).
+  \]
+  <p>In Section 1.4 we considered <strong>separable</strong> DEs of the form</p>
+  \[
+    \frac{dy}{dx} = g(x)\,k(y),
+  \]
+  <p>which we solved by separating variables and integrating both sides:</p>
+  \[
+    \int \frac{1}{k(y)}\,dy = \int g(x)\,dx.
+  \]
+</section>
+
+<!-- ===== Definition ===== -->
+<section aria-labelledby="definition">
+  <h2 id="definition">First Order Linear DEs</h2>
+  <p>Now we consider equations of the form</p>
+  <div class="formula-box" role="math" aria-label="Standard form of a first order linear DE">
+    \[
+      \frac{dy}{dx} + P(x)\,y = Q(x).
+    \]
+  </div>
+  <p>
+    We classify this as <strong>first order linear</strong> because \(y\) and \(\dfrac{dy}{dx}\) appear linearly — we don't have any quantities like
+    \(y^2\), \(\cos(y)\), \(y \cdot \dfrac{dy}{dx}\), \(\left(\dfrac{dy}{dx}\right)^2\), etc.
+  </p>
+  <p>
+    However, the coefficient \(P(x)\) and the "source term" \(Q(x)\) are allowed to be nonlinear functions of \(x\). For example,
+  </p>
+  \[
+    \frac{dy}{dx} - 2xy = 3x^2 e^{x^2}
+  \]
+  <p>
+    is a linear first-order DE with \(P(x) = -2x\) and \(Q(x) = 3x^2 e^{x^2}\).
+  </p>
+</section>
+
+<!-- ===== Method ===== -->
+<section aria-labelledby="method">
+  <h2 id="method">Solving First Order Linear DEs</h2>
+
+  <p>We multiply both sides of \(\dfrac{dy}{dx} + P(x)\,y = Q(x)\) by the <strong>integrating factor</strong></p>
+  <div class="formula-box" role="math" aria-label="Integrating factor formula">
+    \[
+      \mu(x) = e^{\int P(x)\,dx}.
+    \]
+  </div>
+
+  <p>This gives</p>
+  \[
+    \frac{dy}{dx}\,e^{\int P(x)\,dx} + y\,P(x)\,e^{\int P(x)\,dx} = Q(x)\,e^{\int P(x)\,dx}.
+  \]
+
+  <p>The integrating factor was cleverly chosen so that the left side is exactly the result of applying the <strong>product rule</strong> (recall from Calculus 1 that \(\frac{d}{dx}(fg) = f'g + fg'\)):</p>
+  \[
+    \frac{d}{dx}\!\left(y\,e^{\int P(x)\,dx}\right) = Q(x)\,e^{\int P(x)\,dx}.
+  \]
+
+  <p>We can then simply integrate both sides to "undo" the derivative, and solve for \(y\).</p>
+
+  <div class="note">
+    <span class="label">Key Notes</span>
+    <ul>
+      <li>There is <strong>no need</strong> for a \(+C\) inside the integrating factor (when computing \(\int P(x)\,dx\) for \(\mu\)).</li>
+      <li>You <strong>do need</strong> to include \(+C\) when you integrate both sides to undo the derivative on the left.</li>
+    </ul>
+  </div>
+
+  <h3>Summary of Steps</h3>
+  <ol class="steps">
+    <li>Write the DE in standard form: \(\dfrac{dy}{dx} + P(x)\,y = Q(x)\).</li>
+    <li>Compute the integrating factor \(\mu(x) = e^{\int P(x)\,dx}\).</li>
+    <li>Multiply both sides of the DE by \(\mu(x)\).</li>
+    <li>Recognize the left side as \(\dfrac{d}{dx}\!\bigl(y\,\mu(x)\bigr)\).</li>
+    <li>Integrate both sides with respect to \(x\), including \(+C\).</li>
+    <li>Solve for \(y\).</li>
+  </ol>
+</section>
+
+<!-- ===== Example 1 ===== -->
+<section aria-labelledby="example1">
+  <h2 id="example1">Example 1</h2>
+  <div class="example">
+    <span class="label">Problem</span>
+    Find the general solution to the differential equation
+    \[
+      \frac{dy}{dx} - 2xy = 3x^2 e^{x^2}.
+    \]
+  </div>
+
+  <h3>Solution</h3>
+  <p>The equation is already in standard form \(\dfrac{dy}{dx} + P(x)\,y = Q(x)\) with</p>
+  \[
+    P(x) = -2x, \qquad Q(x) = 3x^2 e^{x^2}.
+  \]
+
+  <p><strong>Step 1 — Integrating factor:</strong></p>
+  \[
+    \mu(x) = e^{\int (-2x)\,dx} = e^{-x^2}.
+  \]
+
+  <p><strong>Step 2 — Multiply both sides by \(e^{-x^2}\):</strong></p>
+  \[
+    \frac{dy}{dx}\,e^{-x^2} - 2xy\,e^{-x^2} = 3x^2 e^{x^2} \cdot e^{-x^2} = 3x^2.
+  \]
+
+  <p><strong>Step 3 — Recognize the product rule on the left:</strong></p>
+  \[
+    \frac{d}{dx}\!\left(y\,e^{-x^2}\right) = 3x^2.
+  \]
+  <p>(Check: by the product rule, \(\frac{d}{dx}(y\,e^{-x^2}) = \frac{dy}{dx}\,e^{-x^2} + y\cdot e^{-x^2}\cdot(-2x)\). ✓)</p>
+
+  <p><strong>Step 4 — Integrate both sides:</strong></p>
+  \[
+    y\,e^{-x^2} = \int 3x^2\,dx = x^3 + C.
+  \]
+
+  <p><strong>Step 5 — Solve for \(y\):</strong> multiply both sides by \(e^{x^2}\):</p>
+  <div class="formula-box">
+    \[
+      \boxed{y = x^3 e^{x^2} + C\,e^{x^2}.}
+    \]
+  </div>
+
+  <div class="note">
+    <span class="label">Note</span>
+    The constant \(C\) cannot be absorbed into \(e^{x^2}\) since \(e^{x^2}\) is not itself a constant.
+  </div>
+</section>
+
+<!-- ===== Example 2 ===== -->
+<section aria-labelledby="example2">
+  <h2 id="example2">Example 2</h2>
+  <div class="example">
+    <span class="label">Problem</span>
+    Consider the first order DE
+    \[
+      (13 + x)\frac{dy}{dx} = 8y.
+    \]
+    Find the general solution two ways: first by treating it as <em>separable</em>, and then by treating it as <em>linear</em>.
+  </div>
+
+  <h3>Method 1 — Separable</h3>
+  <p>Rewrite as</p>
+  \[
+    \frac{dy}{dx} = \frac{8}{13+x}\,y,
+  \]
+  <p>which has the separable form \(\dfrac{dy}{dx} = g(x)\,k(y)\) with \(g(x)=\dfrac{8}{13+x}\) and \(k(y)=y\). Separate and integrate:</p>
+  \[
+    \int \frac{1}{y}\,dy = \int \frac{8}{13+x}\,dx.
+  \]
+  \[
+    \ln|y| = 8\ln|13+x| + C_1 = \ln\!\left(|13+x|^8\right) + C_1.
+  \]
+  <p>Exponentiate both sides:</p>
+  \[
+    |y| = e^{\ln(|13+x|^8) + C_1} = e^{C_1}\,|13+x|^8.
+  \]
+  <p>Setting \(C_2 = e^{C_1}\) and noting that 8 is even (so \(|13+x|^8 = (13+x)^8\)):</p>
+  <div class="formula-box">
+    \[
+      \boxed{y = C(13+x)^8}
+    \]
+  </div>
+  <p>where \(C = \pm C_2\) is an arbitrary constant.</p>
+
+  <h3>Method 2 — First Order Linear (Integrating Factor)</h3>
+  <p>Rewrite the DE in standard form \(\dfrac{dy}{dx} + P(x)\,y = Q(x)\):</p>
+  \[
+    \frac{dy}{dx} - \frac{8}{13+x}\,y = 0.
+  \]
+  <p>So \(P(x) = -\dfrac{8}{13+x}\) and \(Q(x) = 0\).</p>
+
+  <p><strong>Integrating factor:</strong></p>
+  \[
+    \mu(x) = e^{\int -\frac{8}{13+x}\,dx} = e^{-8\ln|13+x|} = e^{\ln(|13+x|^{-8})} = |13+x|^{-8} = \frac{1}{(13+x)^8}.
+  \]
+
+  <p><strong>Multiply the ODE by the integrating factor:</strong></p>
+  \[
+    \frac{dy}{dx}\cdot\frac{1}{(13+x)^8} - \frac{8}{(13+x)^9}\,y = 0.
+  \]
+
+  <p><strong>Recognize the product rule:</strong></p>
+  \[
+    \frac{d}{dx}\!\left(\frac{y}{(13+x)^8}\right) = 0.
+  \]
+  <p>(Check: \(\frac{d}{dx}\bigl(y\cdot(13+x)^{-8}\bigr) = \frac{dy}{dx}\,(13+x)^{-8} + y\bigl[-8(13+x)^{-9}\bigr]\). ✓)</p>
+
+  <p><strong>Integrate both sides:</strong></p>
+  \[
+    \frac{y}{(13+x)^8} = C.
+  \]
+
+  <p><strong>Solve for \(y\):</strong></p>
+  <div class="formula-box">
+    \[
+      \boxed{y = C(13+x)^8}
+    \]
+  </div>
+  <p>Same answer as Method 1. ✓</p>
+</section>
+
+<!-- ===== Example 3: Mixing ===== -->
+<section aria-labelledby="example3">
+  <h2 id="example3">Example 3 — Tank Mixing Problem</h2>
+  <div class="example">
+    <span class="label">Problem</span>
+    A 120-gallon tank initially contains 90 lb of salt dissolved in 90 gal of water.
+    Brine containing 2 lb/gal of salt flows into the tank at a rate of 4 gal/min,
+    and the well-stirred mixture flows out at a rate of 3 gal/min.
+    How much salt does the tank contain when it is full?
+  </div>
+
+  <h3>Setting Up the IVP</h3>
+  <p>
+    Let \(A(t)\) denote the amount (in pounds) of salt in the tank at time \(t\) (in minutes).
+    The basic balance equation is
+  </p>
+  \[
+    \frac{dA}{dt} = \text{(rate in)} - \text{(rate out)}.
+  \]
+
+  <div class="note">
+    <span class="label">Units guide</span>
+    Each rate has units \(\dfrac{\text{lb}}{\text{min}} = \dfrac{\text{lb}}{\text{gal}} \times \dfrac{\text{gal}}{\text{min}}\), i.e.&nbsp; concentration × flow rate.
+  </div>
+
+  <p><strong>Rate in:</strong> The incoming brine has concentration 2 lb/gal and flows at 4 gal/min:</p>
+  \[
+    \text{rate in} = 2 \times 4 = 8 \;\frac{\text{lb}}{\text{min}}.
+  \]
+
+  <p><strong>Rate out:</strong> The outgoing concentration equals the tank concentration \(\dfrac{A}{V}\), and the outflow is 3 gal/min. The volume of liquid in the tank is</p>
+  \[
+    V(t) = 90 + (4 - 3)t = 90 + t \quad\text{gal}
+  \]
+  <p>(since we gain a net 1 gal/min). Therefore</p>
+  \[
+    \text{rate out} = \frac{A}{90+t}\cdot 3 = \frac{3A}{90+t}\;\frac{\text{lb}}{\text{min}}.
+  \]
+
+  <p>The tank is full (120 gal) when \(90 + t = 120\), i.e.&nbsp;\(t = 30\) min. So the IVP is:</p>
+  <div class="formula-box">
+    \[
+      \frac{dA}{dt} = 8 - \frac{3A}{90+t}, \qquad A(0) = 90.
+    \]
+    Find \(A(30)\).
+  </div>
+
+  <h3>Solving the Linear ODE</h3>
+  <p>Put into standard form \(\dfrac{dA}{dt} + P(t)\,A = Q(t)\):</p>
+  \[
+    \frac{dA}{dt} + \frac{3}{90+t}\,A = 8.
+  \]
+  <p>Here \(P(t) = \dfrac{3}{90+t}\) and \(Q(t) = 8\).</p>
+
+  <p><strong>Integrating factor:</strong></p>
+  \[
+    \mu(t) = e^{\int \frac{3}{90+t}\,dt} = e^{3\ln|90+t|} = |90+t|^3.
+  \]
+  <p>Since we only care about \(0 \le t \le 30\), we have \(90+t > 0\), so \(\mu(t) = (90+t)^3\).</p>
+
+  <p><strong>Multiply the ODE by \((90+t)^3\):</strong></p>
+  \[
+    (90+t)^3\,\frac{dA}{dt} + 3(90+t)^2\,A = 8(90+t)^3.
+  \]
+
+  <p><strong>Recognize the product rule:</strong></p>
+  \[
+    \frac{d}{dt}\!\left[(90+t)^3\,A\right] = 8(90+t)^3.
+  \]
+  <p>(Check: \(\frac{d}{dt}\bigl((90+t)^3 A\bigr) = (90+t)^3\frac{dA}{dt} + 3(90+t)^2 A\). ✓)</p>
+
+  <p><strong>Integrate both sides</strong> (using the substitution \(u = 90+t\)):</p>
+  \[
+    (90+t)^3\,A = \int 8(90+t)^3\,dt = 2(90+t)^4 + C.
+  \]
+
+  <p><strong>Solve for \(A\):</strong></p>
+  \[
+    A = 2(90+t) + \frac{C}{(90+t)^3}.
+  \]
+
+  <p><strong>Apply the initial condition</strong> \(A(0) = 90\):</p>
+  \[
+    90 = 2(90) + \frac{C}{90^3} = 180 + \frac{C}{90^3}.
+  \]
+  \[
+    C = (90 - 180)\cdot 90^3 = -90^4.
+  \]
+
+  <p>So the particular solution is</p>
+  \[
+    A(t) = 2(90+t) - \frac{90^4}{(90+t)^3}.
+  \]
+
+  <p><strong>Find \(A(30)\):</strong></p>
+  \[
+    A(30) = 2(120) - \frac{90^4}{120^3} = 240 - \frac{90^4}{120^3}.
+  \]
+  <p>Computing: \(90^4 = 65{,}610{,}000\) and \(120^3 = 1{,}728{,}000\), so</p>
+  \[
+    A(30) = 240 - \frac{65{,}610{,}000}{1{,}728{,}000} = 240 - \frac{6561}{172.8} \approx 240 - 37.97 \approx 202.03.
+  \]
+
+  <div class="formula-box">
+    \[
+      \boxed{A(30) = 240 - \frac{90^4}{120^3} \approx 202 \text{ lb of salt.}}
+    \]
+  </div>
+</section>
+
+<!-- ===== Tank Mixing Key Ideas ===== -->
+<section aria-labelledby="tankideas">
+  <h2 id="tankideas">Key Ideas for Tank Mixing Problems</h2>
+  <div class="note">
+    <span class="label">Remember</span>
+    <ul>
+      <li>These problems lead to <strong>first order linear ODEs</strong>.</li>
+      <li>The fundamental equation is \(\dfrac{dA}{dt} = \text{rate in} - \text{rate out}\).</li>
+      <li>Use <strong>units</strong> to guide the setup: each rate should have units of (amount)/(time).</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  Math 251H — Section 1.5 Lecture Notes
+</footer>
+
+</main>
+</body>
+</html>

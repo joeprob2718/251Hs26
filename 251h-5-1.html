@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 251H — Section 5.1: Matrices and Linear Systems</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        tags: 'ams'
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf8f5;
+      --fg: #2a2520;
+      --accent: #8b3a3a;
+      --accent-light: #c06050;
+      --muted: #6b6560;
+      --border: #ddd5cc;
+      --highlight-bg: #f0ebe4;
+      --case-bg: #eef2f7;
+      --case-border: #b0c0d8;
+      --example-bg: #f7f0e8;
+      --example-border: #d4b896;
+      --note-bg: #e8f0e8;
+      --note-border: #96b896;
+      --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+      --sans: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--serif);
+      font-size: 1.125rem;
+      line-height: 1.75;
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--accent-light); }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+    .skip-link {
+      position: absolute; top: -100%; left: 1rem;
+      background: var(--accent); color: #fff; padding: 0.5rem 1rem;
+      border-radius: 4px; font-family: var(--sans); font-size: 0.9rem; z-index: 100;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    header {
+      background: linear-gradient(135deg, #2c3e6b 0%, #3a1f5e 100%);
+      color: #fff;
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+    }
+    header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.3rem;
+    }
+    header .subtitle {
+      font-family: var(--sans);
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      font-weight: 400;
+      opacity: 0.85;
+    }
+    header .course {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      opacity: 0.65;
+      margin-bottom: 0.5rem;
+    }
+
+    nav[aria-label="Table of Contents"] {
+      max-width: 48rem;
+      margin: 2rem auto;
+      padding: 1.5rem 2rem;
+      background: var(--highlight-bg);
+      border-radius: 8px;
+      border-left: 4px solid var(--accent);
+    }
+    nav[aria-label="Table of Contents"] h2 {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    nav[aria-label="Table of Contents"] ol {
+      padding-left: 1.25rem;
+      list-style: decimal;
+    }
+    nav[aria-label="Table of Contents"] li {
+      font-family: var(--sans);
+      font-size: 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    main {
+      max-width: 48rem;
+      margin: 0 auto;
+      padding: 1rem 2rem 4rem;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 3rem 0 1rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid var(--border);
+    }
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 2rem 0 0.75rem;
+    }
+
+    p { margin-bottom: 1rem; }
+
+    .definition {
+      background: #f5f0fa;
+      border-left: 4px solid #7a5aaa;
+      border-radius: 0 6px 6px 0;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .definition .def-label {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #5a3a8a;
+      margin-bottom: 0.5rem;
+    }
+
+    .fact-box {
+      background: var(--case-bg);
+      border: 1px solid var(--case-border);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .fact-box .fact-label {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #3a5a8a;
+      margin-bottom: 0.5rem;
+    }
+
+    .example-box {
+      background: var(--example-bg);
+      border: 1px solid var(--example-border);
+      border-left: 4px solid var(--example-border);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .example-box .example-label {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #8a6a3a;
+      margin-bottom: 0.5rem;
+    }
+
+    .warning-box {
+      background: #fdf0f0;
+      border: 1px solid #e0a0a0;
+      border-left: 4px solid #c05050;
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .warning-box .warning-label {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #a03030;
+      margin-bottom: 0.5rem;
+    }
+
+    .note-box {
+      background: var(--note-bg);
+      border: 1px solid var(--note-border);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .note-box .note-label {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #3a6a3a;
+      margin-bottom: 0.5rem;
+    }
+
+    .display-eq {
+      overflow-x: auto;
+      padding: 0.75rem 0;
+    }
+
+    .solution-steps { margin: 1rem 0; }
+    .solution-steps h4 {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin: 1.25rem 0 0.5rem;
+      color: var(--fg);
+    }
+
+    strong { font-weight: 700; }
+    em { font-style: italic; }
+
+    footer {
+      max-width: 48rem;
+      margin: 0 auto;
+      padding: 2rem;
+      border-top: 2px solid var(--border);
+      text-align: center;
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 640px) {
+      main, nav[aria-label="Table of Contents"] { padding-left: 1rem; padding-right: 1rem; }
+      header { padding: 2rem 1rem; }
+      .definition, .fact-box, .example-box, .warning-box, .note-box { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<header role="banner">
+  <p class="course">Math 251H</p>
+  <h1>Section 5.1</h1>
+  <p class="subtitle">Matrices and Linear Systems</p>
+</header>
+
+<nav aria-label="Table of Contents">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#motivation">Motivation: From Higher-Order DEs to First-Order Systems</a></li>
+    <li><a href="#first-order-systems">First-Order Homogeneous Constant-Coefficient Systems</a></li>
+    <li><a href="#matrix-size">Matrix Size and Entries</a></li>
+    <li><a href="#scalar-mult">Scalar Multiplication and the Zero Matrix/Vector</a></li>
+    <li><a href="#addition">Matrix Addition</a></li>
+    <li><a href="#multiplication">Matrix Multiplication</a></li>
+    <li><a href="#determinants-2x2">Determinants and Invertibility (2×2)</a></li>
+    <li><a href="#determinants-general">Determinants and Invertibility (General)</a></li>
+    <li><a href="#example-homogeneous">Example: Writing a System in Matrix Form (Homogeneous)</a></li>
+    <li><a href="#example-inhomogeneous">Example: Writing a System in Matrix Form (Inhomogeneous)</a></li>
+    <li><a href="#general-solution">General Solution to 2×2 Homogeneous Systems</a></li>
+    <li><a href="#wronskian">Test for Linear Independence: The Wronskian</a></li>
+    <li><a href="#nxn">The n×n Case</a></li>
+    <li><a href="#example-verify">Worked Example: Verifying Solutions and Solving an IVP</a></li>
+  </ol>
+</nav>
+
+<main id="main-content">
+
+  <!-- ===== Section 1: Motivation ===== -->
+  <h2 id="motivation">1. Motivation: From Higher-Order DEs to First-Order Systems</h2>
+
+  <p>
+    In Chapters 1–2, we studied a single unknown function \(y(x)\) solving a first-order ODE. In Chapter 3, we studied \(y(x)\) solving an \(n\)th-order ODE. Now we shift to <strong>first-order systems of ODEs</strong>, where there are <strong>multiple unknown functions</strong>.
+  </p>
+
+  <p>Physical motivations include:</p>
+  <ul style="margin:0.5rem 0 1rem 1.25rem;">
+    <li>\(A_1(t)\) and \(A_2(t)\) — amounts of substance in 2 tanks</li>
+    <li>\(A_1(t), A_2(t), A_3(t)\) — 3 chemicals in one tank</li>
+    <li>\(x_1(t), x_2(t)\) — 2 different populations (predator–prey, competition)</li>
+  </ul>
+
+  <p>
+    It turns out that a higher-order DE can always be rewritten as a <em>first-order system</em> of DEs by defining new dependent variables.
+  </p>
+
+  <div class="example-box">
+    <p class="example-label">Example: Mass–Spring System</p>
+    <p>Consider the unforced mass–spring system (a 2nd-order ODE for \(x(t)\)):</p>
+    <div class="display-eq">
+      \[
+        mx'' + cx' + kx = 0.
+      \]
+    </div>
+    <p>Define \(v = x'\) (velocity). Then \(x' = v\) and \(v' = x'' = \frac{1}{m}(-cv - kx)\), giving the first-order system of 2 ODEs for \(x(t)\) and \(v(t)\):</p>
+    <div class="display-eq">
+      \[
+        \begin{cases}
+          x' = v \\[4pt]
+          v' = -\dfrac{k}{m}\,x - \dfrac{c}{m}\,v
+        \end{cases}
+      \]
+    </div>
+    <p>In matrix/vector form:</p>
+    <div class="display-eq">
+      \[
+        \frac{d}{dt}\begin{bmatrix} x \\ v \end{bmatrix}
+        = \begin{bmatrix} 0 & 1 \\[4pt] -\frac{k}{m} & -\frac{c}{m} \end{bmatrix}
+          \begin{bmatrix} x \\ v \end{bmatrix}.
+      \]
+    </div>
+    <p>Here the coefficient matrix is \(2 \times 2\), the state vector is \(2 \times 1\), and the product is \(2 \times 1\).</p>
+  </div>
+
+  <!-- ===== Section 2: First-Order Systems ===== -->
+  <h2 id="first-order-systems">2. First-Order Homogeneous Constant-Coefficient Systems</h2>
+
+  <div class="definition">
+    <p class="def-label">Definition</p>
+    <p>A <strong>first-order homogeneous constant-coefficient system</strong> of 2 DEs has the form</p>
+    <div class="display-eq">
+      \[
+        \begin{cases}
+          x' = ax + by \\
+          y' = cx + dy
+        \end{cases}
+      \]
+    </div>
+    <p>where \(a, b, c, d\) are constants and \(x(t), y(t)\) are two unknown functions. In matrix/vector form:</p>
+    <div class="display-eq">
+      \[
+        \frac{d}{dt}\begin{bmatrix} x \\ y \end{bmatrix}
+        = \begin{bmatrix} a & b \\ c & d \end{bmatrix}
+          \begin{bmatrix} x \\ y \end{bmatrix},
+        \qquad\text{i.e.,}\quad \mathbf{x}' = A\mathbf{x}.
+      \]
+    </div>
+  </div>
+
+  <p>We'll solve equations of this form using the <strong>eigenvalue method</strong>. First, here is a quick review of relevant linear algebra from Math 220.</p>
+
+  <!-- ===== Section 3: Matrix Size ===== -->
+  <h2 id="matrix-size">3. Matrix Size and Entries</h2>
+
+  <p>
+    We'll mostly work with \(n \times n\) square matrices and \(n \times 1\) column vectors. In general, an \(n \times m\) matrix \(\mathbf{A}\) has \(n\) rows and \(m\) columns, and the entry \(a_{ij}\) sits in the \(i\)th row, \(j\)th column.
+  </p>
+
+  <p>For example, \(\mathbf{A}\) is \(2 \times 3\) and \(\mathbf{B}\) is \(4 \times 2\):</p>
+  <div class="display-eq">
+    \[
+      \mathbf{A} = \begin{bmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \end{bmatrix},
+      \qquad
+      \mathbf{B} = \begin{bmatrix} b_{11} & b_{12} \\ b_{21} & b_{22} \\ b_{31} & b_{32} \\ b_{41} & b_{42} \end{bmatrix}.
+    \]
+  </div>
+
+  <!-- ===== Section 4: Scalar Mult ===== -->
+  <h2 id="scalar-mult">4. Scalar Multiplication and the Zero Matrix/Vector</h2>
+
+  <p>Given any scalar \(c\), we can multiply any matrix \(\mathbf{A}\) by \(c\) element by element:</p>
+  <div class="display-eq">
+    \[
+      c\mathbf{A} = c\begin{bmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} \end{bmatrix}
+      = \begin{bmatrix} ca_{11} & ca_{12} \\ ca_{21} & ca_{22} \end{bmatrix}.
+    \]
+  </div>
+
+  <p>The <strong>zero matrix</strong> of any size has all entries equal to zero. For example, the \(2 \times 2\) zero matrix and the \(2 \times 1\) zero vector are:</p>
+  <div class="display-eq">
+    \[
+      \mathbf{0} = \begin{bmatrix} 0 & 0 \\ 0 & 0 \end{bmatrix},
+      \qquad
+      \mathbf{0} = \begin{bmatrix} 0 \\ 0 \end{bmatrix}.
+    \]
+  </div>
+  <p>(You'll need to use context to determine whether \(\mathbf{0}\) refers to the zero matrix or the zero vector.)</p>
+
+  <!-- ===== Section 5: Addition ===== -->
+  <h2 id="addition">5. Matrix Addition</h2>
+
+  <p>
+    Provided \(\mathbf{A}\) and \(\mathbf{B}\) are of the same dimension \(n \times m\), we define \(\mathbf{A} + \mathbf{B}\) entry by entry:
+  </p>
+  <div class="display-eq">
+    \[
+      \mathbf{A} + \mathbf{B}
+      = \begin{bmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} \end{bmatrix}
+      + \begin{bmatrix} b_{11} & b_{12} \\ b_{21} & b_{22} \end{bmatrix}
+      = \begin{bmatrix} a_{11}+b_{11} & a_{12}+b_{12} \\ a_{21}+b_{21} & a_{22}+b_{22} \end{bmatrix}.
+    \]
+  </div>
+  <p>The result is again an \(n \times m\) matrix. Addition is only defined when both matrices have the same dimensions.</p>
+
+  <!-- ===== Section 6: Multiplication ===== -->
+  <h2 id="multiplication">6. Matrix Multiplication</h2>
+
+  <p>
+    If \(\mathbf{A}\) is \(m \times n\) and \(\mathbf{B}\) is \(n \times k\), then the product \(\mathbf{AB}\) is defined and is an \(m \times k\) matrix.
+  </p>
+
+  <div class="warning-box">
+    <p class="warning-label">Warning</p>
+    <p>
+      If \(k \neq m\) then \(\mathbf{BA}\) is not defined! And in general, <strong>\(\mathbf{AB} \neq \mathbf{BA}\)</strong> for matrices, even when both products are defined.
+    </p>
+  </div>
+
+  <p>The simplest nontrivial cases involve \(2 \times 2\) matrices:</p>
+  <div class="display-eq">
+    \[
+      \begin{bmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} \end{bmatrix}
+      \begin{bmatrix} b_{11} & b_{12} \\ b_{21} & b_{22} \end{bmatrix}
+      = \begin{bmatrix}
+        a_{11}b_{11}+a_{12}b_{21} & a_{11}b_{12}+a_{12}b_{22} \\
+        a_{21}b_{11}+a_{22}b_{21} & a_{21}b_{12}+a_{22}b_{22}
+      \end{bmatrix},
+    \]
+  </div>
+  <p>and for a matrix–vector product:</p>
+  <div class="display-eq">
+    \[
+      \begin{bmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} \end{bmatrix}
+      \begin{bmatrix} x \\ y \end{bmatrix}
+      = \begin{bmatrix} a_{11}x + a_{12}y \\ a_{21}x + a_{22}y \end{bmatrix}.
+    \]
+  </div>
+
+  <div class="fact-box">
+    <p class="fact-label">Identity Matrix</p>
+    <p>The identity matrix \(\mathbf{I} = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}\) satisfies \(\mathbf{AI} = \mathbf{IA} = \mathbf{A}\) for all \(2\times 2\) matrices \(\mathbf{A}\), and similarly \(\mathbf{I}\mathbf{v} = \mathbf{v}\) for any column vector \(\mathbf{v}\).</p>
+  </div>
+
+  <!-- ===== Section 7: Determinants 2x2 ===== -->
+  <h2 id="determinants-2x2">7. Determinants and Invertibility (2×2)</h2>
+
+  <p>For a \(2 \times 2\) matrix, the <strong>determinant</strong> is defined as:</p>
+  <div class="display-eq">
+    \[
+      \det \mathbf{A} = \begin{vmatrix} a & b \\ c & d \end{vmatrix} = ad - bc.
+    \]
+  </div>
+
+  <div class="fact-box">
+    <p class="fact-label">Fact</p>
+    <p>If \(\det \mathbf{A} \neq 0\), then \(\mathbf{A}\mathbf{v} = \mathbf{0} \implies \mathbf{v} = \mathbf{0}\). That is, the only vector in the null space is the zero vector.</p>
+  </div>
+
+  <p>
+    Additionally, when \(\det \mathbf{A} \neq 0\), the matrix \(\mathbf{A}\) is <strong>invertible</strong> — there exists a matrix \(\mathbf{A}^{-1}\) such that \(\mathbf{A}\mathbf{A}^{-1} = \mathbf{A}^{-1}\mathbf{A} = \mathbf{I}\).
+  </p>
+
+  <p>The formula for the inverse of a \(2 \times 2\) matrix is:</p>
+  <div class="display-eq">
+    \[
+      \begin{bmatrix} a & b \\ c & d \end{bmatrix}^{-1}
+      = \frac{1}{ad - bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix}.
+    \]
+  </div>
+
+  <!-- ===== Section 8: Determinants general ===== -->
+  <h2 id="determinants-general">8. Determinants and Invertibility (General)</h2>
+
+  <p>For a \(3 \times 3\) matrix, the determinant is defined via cofactor expansion along the first row as a combination of \(2 \times 2\) determinants:</p>
+  <div class="display-eq">
+    \[
+      \det \mathbf{A}
+      = \begin{vmatrix} a_1 & a_2 & a_3 \\ b_1 & b_2 & b_3 \\ c_1 & c_2 & c_3 \end{vmatrix}
+      = a_1 \begin{vmatrix} b_2 & b_3 \\ c_2 & c_3 \end{vmatrix}
+      - a_2 \begin{vmatrix} b_1 & b_3 \\ c_1 & c_3 \end{vmatrix}
+      + a_3 \begin{vmatrix} b_1 & b_2 \\ c_1 & c_2 \end{vmatrix}.
+    \]
+  </div>
+
+  <p>
+    You can expand across any row or column (with an appropriate sign pattern). This is especially handy when a row or column has multiple zeros. The pattern continues: \(4 \times 4\) determinants are defined in terms of \(3 \times 3\) determinants, and so on.
+  </p>
+
+  <div class="fact-box">
+    <p class="fact-label">Fact (General Invertibility)</p>
+    <p>
+      For an \(n \times n\) square matrix \(\mathbf{A}\): if \(\det \mathbf{A} \neq 0\), then there exists an inverse \(\mathbf{A}^{-1}\) with \(\mathbf{A}\mathbf{A}^{-1} = \mathbf{A}^{-1}\mathbf{A} = \mathbf{I}\). Moreover, for any \(n \times 1\) column vector \(\mathbf{v}\):
+    </p>
+    <div class="display-eq">
+      \[
+        \mathbf{A}\mathbf{v} = \mathbf{0} \implies \mathbf{v} = \mathbf{0}.
+      \]
+    </div>
+  </div>
+
+  <!-- ===== Section 9: Example Homogeneous ===== -->
+  <h2 id="example-homogeneous">9. Example: Writing a System in Matrix Form (Homogeneous)</h2>
+
+  <div class="example-box">
+    <p class="example-label">Example</p>
+    <p>Write the system</p>
+    <div class="display-eq">
+      \[
+        x' = -3y, \qquad y' = 3x
+      \]
+    </div>
+    <p>in the form \(\mathbf{x}' = \mathbf{P}(t)\,\mathbf{x} + \mathbf{f}(t)\), where \(\mathbf{P}(t)\) is a matrix and \(\mathbf{f}(t)\) is a vector.</p>
+  </div>
+
+  <p>Setting \(\mathbf{x} = \begin{bmatrix} x \\ y \end{bmatrix}\), we have:</p>
+  <div class="display-eq">
+    \[
+      \begin{bmatrix} x' \\ y' \end{bmatrix}
+      = \begin{bmatrix} -3y \\ 3x \end{bmatrix}
+      = \begin{bmatrix} 0 & -3 \\ 3 & 0 \end{bmatrix}
+        \begin{bmatrix} x \\ y \end{bmatrix}
+      + \begin{bmatrix} 0 \\ 0 \end{bmatrix}.
+    \]
+  </div>
+  <p>
+    So \(\mathbf{P} = \begin{bmatrix} 0 & -3 \\ 3 & 0 \end{bmatrix}\) (a <strong>constant</strong> matrix) and \(\mathbf{f}(t) = \mathbf{0}\) (the system is <strong>homogeneous</strong>). This is the type of constant-coefficient homogeneous system we will solve using eigenvalues.
+  </p>
+
+  <!-- ===== Section 10: Example Inhomogeneous ===== -->
+  <h2 id="example-inhomogeneous">10. Example: Writing a System in Matrix Form (Inhomogeneous)</h2>
+
+  <div class="example-box">
+    <p class="example-label">Example</p>
+    <p>Write the system</p>
+    <div class="display-eq">
+      \[
+        x' = tx - e^t y + \cos t, \qquad y' = e^{-t}x + t^2 y - \sin t
+      \]
+    </div>
+    <p>in the form \(\mathbf{x}' = \mathbf{P}(t)\,\mathbf{x} + \mathbf{f}(t)\).</p>
+  </div>
+
+  <p>With \(\mathbf{x} = \begin{bmatrix} x \\ y \end{bmatrix}\):</p>
+  <div class="display-eq">
+    \[
+      \begin{bmatrix} x' \\ y' \end{bmatrix}
+      = \begin{bmatrix} t & -e^t \\ e^{-t} & t^2 \end{bmatrix}
+        \begin{bmatrix} x \\ y \end{bmatrix}
+      + \begin{bmatrix} \cos t \\ -\sin t \end{bmatrix}.
+    \]
+  </div>
+  <p>
+    Here \(\mathbf{P}(t) = \begin{bmatrix} t & -e^t \\ e^{-t} & t^2 \end{bmatrix}\) is a <strong>variable-coefficient</strong> matrix (entries depend on \(t\)), and \(\mathbf{f}(t) = \begin{bmatrix} \cos t \\ -\sin t \end{bmatrix} \neq \mathbf{0}\), so the system is <strong>inhomogeneous</strong>.
+  </p>
+
+  <!-- ===== Section 11: General Solution ===== -->
+  <h2 id="general-solution">11. General Solution to 2×2 Homogeneous Systems</h2>
+
+  <p>For the system \(\mathbf{x}' = \mathbf{A}\mathbf{x}\), if we can find two <strong>linearly independent</strong> solutions</p>
+  <div class="display-eq">
+    \[
+      \mathbf{x}_1(t) = \begin{bmatrix} x_1(t) \\ y_1(t) \end{bmatrix}
+      \quad\text{and}\quad
+      \mathbf{x}_2(t) = \begin{bmatrix} x_2(t) \\ y_2(t) \end{bmatrix},
+    \]
+  </div>
+  <p>then the <strong>general solution</strong> is</p>
+  <div class="display-eq">
+    \[
+      \mathbf{x}(t) = c_1\,\mathbf{x}_1(t) + c_2\,\mathbf{x}_2(t),
+    \]
+  </div>
+  <p>where \(c_1, c_2\) are arbitrary scalars.</p>
+
+  <p>
+    This works because the same <strong>superposition principle</strong> from higher-order linear homogeneous DEs applies: linear combinations of solutions are solutions. For the matrix system, this follows from the linearity of matrix multiplication:
+  </p>
+  <div class="display-eq">
+    \[
+      \frac{d}{dt}(c_1\mathbf{x}_1 + c_2\mathbf{x}_2)
+      = c_1\mathbf{x}_1' + c_2\mathbf{x}_2'
+      = c_1\mathbf{A}\mathbf{x}_1 + c_2\mathbf{A}\mathbf{x}_2
+      = \mathbf{A}(c_1\mathbf{x}_1 + c_2\mathbf{x}_2).
+    \]
+  </div>
+
+  <!-- ===== Section 12: Wronskian ===== -->
+  <h2 id="wronskian">12. Test for Linear Independence: The Wronskian</h2>
+
+  <p>If \(\mathbf{x}_1(t)\) and \(\mathbf{x}_2(t)\) are solutions to a homogeneous system, the <strong>Wronskian</strong> \(W(t)\) is defined as the determinant of the matrix whose columns are the two solution vectors:</p>
+  <div class="display-eq">
+    \[
+      W(t) = \begin{vmatrix} x_1(t) & x_2(t) \\ y_1(t) & y_2(t) \end{vmatrix}
+      = x_1(t)\,y_2(t) - x_2(t)\,y_1(t).
+    \]
+  </div>
+
+  <div class="fact-box">
+    <p class="fact-label">Fact</p>
+    <p>
+      For solutions to a homogeneous constant-coefficient system, either \(W(t) \neq 0\) for <em>all</em> \(t\), or \(W(t) = 0\) for <em>all</em> \(t\).
+    </p>
+    <p>
+      When \(W(t) \neq 0\) for all \(t\), the solutions \(\mathbf{x}_1(t)\) and \(\mathbf{x}_2(t)\) are <strong>linearly independent</strong>, and the general solution is \(\mathbf{x} = c_1\mathbf{x}_1 + c_2\mathbf{x}_2\).
+    </p>
+  </div>
+
+  <!-- ===== Section 13: nxn ===== -->
+  <h2 id="nxn">13. The \(n \times n\) Case</h2>
+
+  <p>For the general \(n \times n\) system \(\mathbf{x}' = \mathbf{A}\mathbf{x}\), where \(\mathbf{A}\) is an \(n \times n\) matrix and \(\mathbf{x}\) is an \(n \times 1\) column vector of dependent variables:</p>
+  <div class="display-eq">
+    \[
+      \mathbf{x} = \begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix},
+    \]
+  </div>
+  <p>
+    you can form the <strong>Wronskian matrix</strong> from \(n\) column vector solutions \(\mathbf{x}_1, \mathbf{x}_2, \ldots, \mathbf{x}_n\) by using them as columns, and the Wronskian \(W(t)\) is its determinant.
+  </p>
+  <p>
+    If \(W(t) \neq 0\) for all \(t\), the solutions are linearly independent and the general solution is:
+  </p>
+  <div class="display-eq">
+    \[
+      \mathbf{x} = c_1\mathbf{x}_1 + c_2\mathbf{x}_2 + \cdots + c_n\mathbf{x}_n.
+    \]
+  </div>
+
+  <!-- ===== Section 14: Worked Example ===== -->
+  <h2 id="example-verify">14. Worked Example: Verifying Solutions and Solving an IVP</h2>
+
+  <div class="example-box">
+    <p class="example-label">Example</p>
+    <p>Verify that the given vectors are solutions of the system. Then use the Wronskian to show they are linearly independent. Finally, write the general solution and find the constants so that \(\mathbf{x}(0) = \begin{bmatrix} 1 \\ 1 \end{bmatrix}\).</p>
+    <div class="display-eq">
+      \[
+        \mathbf{x}' = \begin{bmatrix} 4 & 2 \\ -3 & -1 \end{bmatrix}\mathbf{x},
+        \qquad
+        \mathbf{x}_1 = \begin{bmatrix} 2e^t \\ -3e^t \end{bmatrix},
+        \quad
+        \mathbf{x}_2 = \begin{bmatrix} e^{2t} \\ -e^{2t} \end{bmatrix}.
+      \]
+    </div>
+  </div>
+
+  <div class="solution-steps">
+    <h4>Step 1: Verify \(\mathbf{x}_1\) is a solution</h4>
+    <p>Compute the left-hand side (derivative):</p>
+    <div class="display-eq">
+      \[
+        \mathbf{x}_1' = \begin{bmatrix} \frac{d}{dt}(2e^t) \\[4pt] \frac{d}{dt}(-3e^t) \end{bmatrix}
+        = \begin{bmatrix} 2e^t \\ -3e^t \end{bmatrix}.
+      \]
+    </div>
+    <p>Compute the right-hand side (\(\mathbf{A}\mathbf{x}_1\)):</p>
+    <div class="display-eq">
+      \[
+        \begin{bmatrix} 4 & 2 \\ -3 & -1 \end{bmatrix}
+        \begin{bmatrix} 2e^t \\ -3e^t \end{bmatrix}
+        = \begin{bmatrix} 8e^t - 6e^t \\ -6e^t + 3e^t \end{bmatrix}
+        = \begin{bmatrix} 2e^t \\ -3e^t \end{bmatrix}.
+        \quad\checkmark
+      \]
+    </div>
+
+    <h4>Step 2: Verify \(\mathbf{x}_2\) is a solution</h4>
+    <p>Derivative:</p>
+    <div class="display-eq">
+      \[
+        \mathbf{x}_2' = \begin{bmatrix} 2e^{2t} \\ -2e^{2t} \end{bmatrix}.
+      \]
+    </div>
+    <p>Matrix product:</p>
+    <div class="display-eq">
+      \[
+        \begin{bmatrix} 4 & 2 \\ -3 & -1 \end{bmatrix}
+        \begin{bmatrix} e^{2t} \\ -e^{2t} \end{bmatrix}
+        = \begin{bmatrix} 4e^{2t} - 2e^{2t} \\ -3e^{2t} + e^{2t} \end{bmatrix}
+        = \begin{bmatrix} 2e^{2t} \\ -2e^{2t} \end{bmatrix}.
+        \quad\checkmark
+      \]
+    </div>
+
+    <h4>Step 3: Wronskian (linear independence)</h4>
+    <div class="display-eq">
+      \[
+        W(t) = \begin{vmatrix} 2e^t & e^{2t} \\ -3e^t & -e^{2t} \end{vmatrix}
+        = (2e^t)(-e^{2t}) - (e^{2t})(-3e^t)
+        = -2e^{3t} + 3e^{3t}
+        = e^{3t}.
+      \]
+    </div>
+    <p>Since \(W(t) = e^{3t} \neq 0\) for all \(t\), the solutions are <strong>linearly independent</strong>.</p>
+
+    <h4>Step 4: General solution</h4>
+    <div class="display-eq">
+      \[
+        \mathbf{x}(t)
+        = c_1\begin{bmatrix} 2e^t \\ -3e^t \end{bmatrix}
+        + c_2\begin{bmatrix} e^{2t} \\ -e^{2t} \end{bmatrix}
+        = \begin{bmatrix} 2c_1 e^t + c_2 e^{2t} \\ -3c_1 e^t - c_2 e^{2t} \end{bmatrix}.
+      \]
+    </div>
+    <p>Equivalently, as a system of scalar equations:</p>
+    <div class="display-eq">
+      \[
+        \begin{cases}
+          x = 2c_1 e^t + c_2 e^{2t} \\
+          y = -3c_1 e^t - c_2 e^{2t}
+        \end{cases}
+      \]
+    </div>
+
+    <h4>Step 5: Apply the initial condition \(\mathbf{x}(0) = \begin{bmatrix} 1 \\ 1 \end{bmatrix}\)</h4>
+    <p>Setting \(t = 0\):</p>
+    <div class="display-eq">
+      \[
+        \begin{bmatrix} 1 \\ 1 \end{bmatrix}
+        = \begin{bmatrix} 2c_1 + c_2 \\ -3c_1 - c_2 \end{bmatrix}
+        = \begin{bmatrix} 2 & 1 \\ -3 & -1 \end{bmatrix}
+          \begin{bmatrix} c_1 \\ c_2 \end{bmatrix}.
+      \]
+    </div>
+    <p>Using the \(2 \times 2\) inverse formula with \(\det = (2)(-1) - (1)(-3) = -2 + 3 = 1\):</p>
+    <div class="display-eq">
+      \[
+        \begin{bmatrix} 2 & 1 \\ -3 & -1 \end{bmatrix}^{-1}
+        = \frac{1}{1}\begin{bmatrix} -1 & -1 \\ 3 & 2 \end{bmatrix}
+        = \begin{bmatrix} -1 & -1 \\ 3 & 2 \end{bmatrix}.
+      \]
+    </div>
+    <p>Therefore:</p>
+    <div class="display-eq">
+      \[
+        \begin{bmatrix} c_1 \\ c_2 \end{bmatrix}
+        = \begin{bmatrix} -1 & -1 \\ 3 & 2 \end{bmatrix}
+          \begin{bmatrix} 1 \\ 1 \end{bmatrix}
+        = \begin{bmatrix} -2 \\ 5 \end{bmatrix}.
+      \]
+    </div>
+    <p>So \(c_1 = -2\) and \(c_2 = 5\), and the solution to the IVP is:</p>
+    <div class="display-eq">
+      \[
+        \boxed{\;\mathbf{x}(t)
+        = -2\begin{bmatrix} 2e^t \\ -3e^t \end{bmatrix}
+        + 5\begin{bmatrix} e^{2t} \\ -e^{2t} \end{bmatrix}
+        = \begin{bmatrix} -4e^t + 5e^{2t} \\ 6e^t - 5e^{2t} \end{bmatrix}.\;}
+      \]
+    </div>
+  </div>
+
+  <div class="note-box">
+    <p class="note-label">Looking ahead</p>
+    <p>
+      Note that the eigenvalues of \(\mathbf{A} = \begin{bmatrix} 4 & 2 \\ -3 & -1 \end{bmatrix}\) are \(\lambda_1 = 1\) with eigenvector \(\begin{bmatrix} 2 \\ -3 \end{bmatrix}\) and \(\lambda_2 = 2\) with eigenvector \(\begin{bmatrix} 1 \\ -1 \end{bmatrix}\). This is no coincidence — in Section 5.2 we will develop the <strong>eigenvalue method</strong> to systematically find these solutions.
+    </p>
+  </div>
+
+</main>
+
+<footer>
+  <p>Math 251H — Section 5.1: Matrices and Linear Systems</p>
+</footer>
+
+</body>
+</html>

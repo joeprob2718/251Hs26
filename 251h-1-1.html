@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 251H — Section 1.1: Differential Equations and Mathematical Models</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        tags: 'ams'
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf8f4;
+      --bg-accent: #f0ece4;
+      --text: #2c2a26;
+      --text-muted: #6b6760;
+      --heading: #1a1816;
+      --accent: #3d5a80;
+      --accent-light: #e8eef4;
+      --border: #d4cfc6;
+      --example-bg: #f6f9fc;
+      --example-border: #3d5a80;
+      --note-bg: #fef9ec;
+      --note-border: #d4a843;
+      --vocab-bg: #f0f7f0;
+      --vocab-border: #5a8a5a;
+      --radius: 6px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a1a1e;
+        --bg-accent: #24242a;
+        --text: #d8d5ce;
+        --text-muted: #9a968e;
+        --heading: #eae7e0;
+        --accent: #7ba3cc;
+        --accent-light: #252d38;
+        --border: #3a3834;
+        --example-bg: #1e2530;
+        --example-border: #7ba3cc;
+        --note-bg: #2a2518;
+        --note-border: #d4a843;
+        --vocab-bg: #1e2a1e;
+        --vocab-border: #6a9a6a;
+      }
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 19px;
+      line-height: 1.72;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 10px;
+      background: var(--accent);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      z-index: 1000;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .skip-link:focus { top: 10px; }
+
+    header {
+      background: var(--accent);
+      color: #fff;
+      padding: 3rem 1.5rem 2.5rem;
+      text-align: center;
+    }
+    header h1 {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.3rem;
+    }
+    header .subtitle {
+      font-size: 1.1rem;
+      font-weight: 300;
+      opacity: 0.85;
+    }
+
+    nav.toc {
+      max-width: 740px;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem;
+    }
+    nav.toc details {
+      background: var(--bg-accent);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.4rem;
+    }
+    nav.toc summary {
+      font-weight: 600;
+      font-size: 1.05rem;
+      cursor: pointer;
+      color: var(--heading);
+    }
+    nav.toc ol {
+      margin-top: 0.8rem;
+      padding-left: 1.4rem;
+    }
+    nav.toc li {
+      margin-bottom: 0.35rem;
+    }
+    nav.toc a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    nav.toc a:hover, nav.toc a:focus { border-bottom-color: var(--accent); }
+
+    main {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+    }
+
+    h2 {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--heading);
+      margin: 3rem 0 1rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 2px solid var(--border);
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--heading);
+      margin: 2rem 0 0.8rem;
+    }
+
+    p { margin-bottom: 1rem; }
+
+    .definition, .example, .note, .vocab {
+      border-left: 4px solid;
+      border-radius: var(--radius);
+      padding: 1.1rem 1.4rem;
+      margin: 1.5rem 0;
+    }
+
+    .definition {
+      background: var(--vocab-bg);
+      border-color: var(--vocab-border);
+    }
+    .definition strong { color: var(--vocab-border); }
+
+    .example {
+      background: var(--example-bg);
+      border-color: var(--example-border);
+    }
+    .example strong { color: var(--example-border); }
+
+    .note {
+      background: var(--note-bg);
+      border-color: var(--note-border);
+    }
+    .note strong { color: var(--note-border); }
+
+    .display-math {
+      overflow-x: auto;
+      padding: 0.5rem 0;
+    }
+
+    ul, ol {
+      margin: 0.5rem 0 1rem 1.4rem;
+    }
+    li { margin-bottom: 0.4rem; }
+
+    .annotation {
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 0.92em;
+    }
+
+    figure {
+      margin: 2rem 0;
+      text-align: center;
+    }
+    figure svg {
+      max-width: 100%;
+      height: auto;
+    }
+    figcaption {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.6rem;
+    }
+
+    .course-roadmap {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .roadmap-card {
+      background: var(--bg-accent);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+    }
+    .roadmap-card h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .roadmap-card p {
+      font-size: 0.92rem;
+      margin-bottom: 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      max-width: 740px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 600px) {
+      body { font-size: 17px; }
+      header { padding: 2rem 1rem 1.8rem; }
+      main { padding: 1.5rem 1rem 4rem; }
+      .definition, .example, .note { padding: 0.9rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="#content" class="skip-link">Skip to main content</a>
+
+<header>
+  <h1>Math 251H — Section 1.1</h1>
+  <p class="subtitle">Differential Equations and Mathematical Models</p>
+</header>
+
+<nav class="toc" aria-label="Table of Contents">
+  <details open>
+    <summary>Contents</summary>
+    <ol>
+      <li><a href="#intro">Introduction</a></li>
+      <li><a href="#examples">Examples of Differential Equations</a></li>
+      <li><a href="#vocabulary">Key Vocabulary</a></li>
+      <li><a href="#checking">Checking vs. Solving</a></li>
+      <li><a href="#verifying-example">Verifying a Solution</a></li>
+      <li><a href="#course-overview">Course Overview</a></li>
+      <li><a href="#applied-math">Goals of Applied Math</a></li>
+      <li><a href="#cooling">Newton's Law of Cooling</a></li>
+      <li><a href="#torricelli">Torricelli's Law</a></li>
+      <li><a href="#population">Simple Population Growth/Decay</a></li>
+      <li><a href="#relative-rate">Relative Rate of Change</a></li>
+      <li><a href="#logistic">Logistic Population Model</a></li>
+      <li><a href="#second-order-example">Second-Order Example</a></li>
+      <li><a href="#normal-form">Normal Form and General Solutions</a></li>
+      <li><a href="#goals">Big Course Goal</a></li>
+    </ol>
+  </details>
+</nav>
+
+<main id="content">
+
+  <!-- 1. Introduction -->
+  <section id="intro">
+    <h2>1. Introduction</h2>
+    <p>
+      Most interesting natural phenomena involve change, and the laws governing these phenomena are written in mathematical equations relating changing quantities.
+    </p>
+    <div class="definition" role="note" aria-label="Definition: Differential Equation">
+      <strong>Definition.</strong> An equation relating an unknown function and one or more of its derivatives is called a <em>differential equation</em>.
+    </div>
+    <p class="annotation">
+      In this course we will study linear and nonlinear equations, progressing from first-order ODEs through higher-order ODEs, systems of ODEs, and finally PDEs. Nonlinear equations tend to be more complicated — and more interesting.
+    </p>
+  </section>
+
+  <!-- 2. Examples -->
+  <section id="examples">
+    <h2>2. Examples of Differential Equations</h2>
+
+    <h3>A first-order ODE</h3>
+    <p>The differential equation</p>
+    <div class="display-math">
+      \[
+        \frac{dy}{dx} = y^2 + x^2
+      \]
+    </div>
+    <p>
+      involves the unknown function \(y(x)\) and its derivative \(y'(x) = \tfrac{dy}{dx}\). This is a <strong>first-order ODE</strong>. Because the independent variable \(x\) appears explicitly on the right-hand side, the equation is <em>not autonomous</em>. It has no parameters.
+    </p>
+
+    <h3>A second-order ODE (mass–spring–dashpot)</h3>
+    <p>The differential equation</p>
+    <div class="display-math">
+      \[
+        m\,\frac{d^2 y}{dt^2} + b\,\frac{dy}{dt} + k\,y = 0
+      \]
+    </div>
+    <p>
+      involves the unknown function \(y(t)\) — the displacement from equilibrium of a mass attached to a spring — together with its first and second derivatives \(y'(t)\) and \(y''(t)\). This is a <strong>second-order ODE</strong>.
+    </p>
+    <p>
+      Here \(m\), \(b\), and \(k\) are physical parameters: \(m\) is the mass, \(b\) is the damping constant (from a shock absorber/dashpot), and \(k\) is the spring constant (measuring stiffness). The restoring force from the spring satisfies \(F = -ky\), and the resistive force from the dashpot is proportional to velocity.
+    </p>
+    <p class="annotation">
+      When \(y &gt; 0\) the spring is stretched; when \(y &lt; 0\) it is compressed. This equation is autonomous (no explicit \(t\) on the right-hand side). We will study it in detail in Sections 3.4 and 3.6, including the case of a sinusoidal driving force and the phenomenon of resonance.
+    </p>
+
+    <h3>A second-order PDE (heat/diffusion equation)</h3>
+    <p>The differential equation</p>
+    <div class="display-math">
+      \[
+        \frac{\partial u}{\partial t} = k\,\frac{\partial^2 u}{\partial x^2}
+      \]
+    </div>
+    <p>
+      involves the unknown function \(u(x,t)\) and its partial derivatives \(\tfrac{\partial u}{\partial t}\) and \(\tfrac{\partial^2 u}{\partial x^2}\). This is the <strong>heat (diffusion) equation</strong> for a thin, one-dimensional rod occupying \(0 \le x \le L\). It models the transfer of heat energy by conduction. Here \(k\) is the thermal diffusivity, and \(u(x,t)\) represents the temperature at position \(x\) at time \(t\).
+    </p>
+    <p class="annotation">
+      This is a second-order PDE. We will study it in Chapter 9, along with the wave equation.
+    </p>
+  </section>
+
+  <!-- 3. Key Vocabulary -->
+  <section id="vocabulary">
+    <h2>3. Key Vocabulary</h2>
+
+    <div class="definition" role="note" aria-label="Definition: Order">
+      <strong>Order.</strong> The <em>order</em> of a differential equation is the order of the highest derivative appearing in the equation. An \(n\)th-order ODE for \(y(x)\) takes the form
+      \[
+        F\!\bigl(x,\, y,\, y',\, y'',\, \ldots,\, y^{(n)}\bigr) = 0.
+      \]
+    </div>
+
+    <div class="definition" role="note" aria-label="Definition: ODE vs PDE">
+      <strong>ODE vs. PDE.</strong>
+      An <em>ordinary differential equation</em> (ODE) involves an unknown function of <strong>one</strong> independent variable. Most of this course (Chapters 1–7) focuses on ODEs.
+      A <em>partial differential equation</em> (PDE) involves an unknown function of <strong>multiple</strong> independent variables (Chapter 9).
+    </div>
+
+    <div class="definition" role="note" aria-label="Definition: Autonomous">
+      <strong>Autonomous.</strong> An <em>autonomous</em> ODE has no explicit dependence on the independent variable. The "laws of nature" (the DE) are static in "time."
+    </div>
+
+    <div class="note" role="note" aria-label="Note on parameters">
+      <strong>Parameters.</strong> A differential equation will often contain <em>physical constants / physical parameters</em> in addition to the independent and dependent variables. Units are very useful in helping us formulate models!
+    </div>
+  </section>
+
+  <!-- 4. Checking vs. Solving -->
+  <section id="checking">
+    <h2>4. Checking / Verifying vs. Solving</h2>
+    <p>
+      There is a difference between <strong>checking</strong> (verifying) whether a proposed function satisfies an equation versus <strong>solving</strong> the equation from scratch.
+    </p>
+
+    <div class="example" role="note" aria-label="Algebraic analogy">
+      <strong>Algebraic analogy.</strong>
+      To <em>check</em> whether \(x = 3\) is a solution of \(2x + 5 = 11\), we substitute:
+      \[
+        2(3) + 5 \stackrel{?}{=} 11 \quad\Longrightarrow\quad 11 \stackrel{\checkmark}{=} 11. \quad\text{Yes!}
+      \]
+      To <em>solve</em> from scratch means to systematically "undo" the equation without guessing:
+      \[
+        2x + 5 = 11 \;\Longrightarrow\; 2x = 6 \;\Longrightarrow\; x = 3.
+      \]
+    </div>
+  </section>
+
+  <!-- 5. Verifying a Solution -->
+  <section id="verifying-example">
+    <h2>5. Verifying a Solution</h2>
+
+    <div class="example" role="note" aria-label="Example: verifying y = Ce^{x^2}">
+      <strong>Example.</strong> Verify that \(y(x) = C\,e^{x^2}\) satisfies the DE
+      \[
+        \frac{dy}{dx} = 2xy
+      \]
+      for any constant \(C\).
+    </div>
+
+    <p>
+      Compute the derivative of the proposed solution:
+      \[
+        \frac{dy}{dx} = C\,e^{x^2}\cdot 2x.
+      \]
+      Now check: does \(\dfrac{dy}{dx} \stackrel{?}{=} 2x\,y\)?
+      \[
+        C\,e^{x^2}\cdot 2x \;=\; 2x \cdot C\,e^{x^2}. \quad\checkmark
+      \]
+      Yes — the equation holds for <strong>all</strong> \(x\) and <strong>any</strong> value of the constant \(C\). The solution makes the DE true on an interval of \(x\) (in fact, for all \(x\)).
+    </p>
+
+    <div class="definition" role="note" aria-label="Definition: general vs particular solution">
+      <strong>General vs. Particular Solution.</strong>
+      We say \(y(x) = C\,e^{x^2}\) is the <em>general solution</em> — it contains an <em>integration constant</em> \(C\) and represents all possible solutions. A specific choice such as \(y(x) = 5\,e^{x^2}\) is a <em>particular solution</em>.
+    </div>
+  </section>
+
+  <!-- 6. Course Overview -->
+  <section id="course-overview">
+    <h2>6. Course Overview</h2>
+    <p>
+      We will spend most of this course studying ordinary differential equations and systems of ODEs, using a variety of techniques: calculus-based methods, algebraic methods, linear algebra, numerical methods, power series, and "complex frequency analysis" (the Laplace transform). We will often learn several ways to solve the same type of equation.
+    </p>
+    <p>
+      Towards the end of the course we will shift to partial differential equations for unknown functions of two variables, using Fourier series as our main tool.
+    </p>
+  </section>
+
+  <!-- 7. Goals of Applied Math -->
+  <section id="applied-math">
+    <h2>7. Basic Goals of Applied Math</h2>
+    <ol>
+      <li><strong>Formulate:</strong> Discover the differential equation that describes a specified physical situation.</li>
+      <li><strong>Analyze:</strong> Find the appropriate solution of that equation (either exactly or approximately).</li>
+      <li><strong>Interpret:</strong> Interpret the solution in the applied context.</li>
+    </ol>
+    <p class="annotation">
+      The cycle is: Real-world situation → Formulation → Mathematical model → Mathematical analysis → Mathematical results → Interpretation → back to the real-world situation.
+    </p>
+    <p>
+      Recall: "proportional to" means \(y \propto x\), which is equivalent to \(y = kx\) for some constant of proportionality \(k\).
+    </p>
+  </section>
+
+  <!-- 8. Newton's Law of Cooling -->
+  <section id="cooling">
+    <h2>8. Newton's Law of Cooling</h2>
+    <p>
+      A small object with variable temperature \(T(t)\) sits inside a large surrounding medium maintained at a constant ambient temperature \(A\). The rate of change of \(T(t)\) is proportional to the temperature difference between the object and the surrounding medium:
+    </p>
+    <div class="display-math">
+      \[
+        \frac{dT}{dt} = k(A - T), \qquad k > 0.
+      \]
+    </div>
+    <div class="note" role="note" aria-label="Sanity check on the model">
+      <strong>Sanity check.</strong>
+      When \(A > T\) (cold object in warm surroundings): \(A - T > 0\), so \(\frac{dT}{dt} > 0\) — the object heats up. ✓<br>
+      When \(A < T\) (hot object in cool surroundings): \(A - T < 0\), so \(\frac{dT}{dt} < 0\) — the object cools down. ✓
+    </div>
+    <p>
+      One could alternatively write \(\frac{dT}{dt} = k(T - A)\) with \(k < 0\), but the convention above (with \(k > 0\)) is standard.
+    </p>
+    <p>
+      This "first-pass" model is an autonomous ODE (no explicit \(t\)). If the surroundings had a known, time-varying temperature \(A(t)\), we would instead write
+      \[
+        \frac{dT}{dt} = k\bigl(A(t) - T\bigr),
+      \]
+      which is a non-autonomous equation and more complicated to analyze.
+    </p>
+  </section>
+
+  <!-- 9. Torricelli's Law -->
+  <section id="torricelli">
+    <h2>9. Torricelli's Law</h2>
+    <p>
+      The volume rate \(\frac{dV}{dt}\) at which water leaks from a tank is proportional to the square root of the depth \(y(t)\) of water in the tank:
+    </p>
+    <div class="display-math">
+      \[
+        \frac{dV}{dt} = -k\sqrt{y}, \qquad k > 0.
+      \]
+    </div>
+    <p>
+      This single equation has <em>two</em> unknown functions, \(V(t)\) and \(y(t)\), so it is not a closed equation by itself. To close it, we need a relationship between \(V\) and \(y\).
+    </p>
+    <p>
+      If the tank has vertical sides and constant cross-sectional area \(A\), then \(V = Ay\) and \(\frac{dV}{dt} = A\,\frac{dy}{dt}\), giving
+    </p>
+    <div class="display-math">
+      \[
+        \frac{dy}{dt} = -h\sqrt{y}, \qquad h = \frac{k}{A} > 0.
+      \]
+    </div>
+    <p class="annotation">
+      For more complicated tank shapes, we relate \(y(t)\) and \(V(t)\) using a volume integral:
+      \(V = \int_0^y A(z)\,dz\), where \(A(z)\) is the cross-sectional area at height \(z\).
+    </p>
+  </section>
+
+  <!-- 10. Simple Population Growth/Decay -->
+  <section id="population">
+    <h2>10. Simple Population Growth / Decay</h2>
+    <p>
+      The time rate of change of \(P(t)\), the population at time \(t\), is proportional to the population:
+    </p>
+    <div class="display-math">
+      \[
+        \frac{dP}{dt} = kP
+      \]
+    </div>
+    <p>for some constant \(k\). The general solution is</p>
+    <div class="display-math">
+      \[
+        P(t) = C\,e^{kt}.
+      \]
+    </div>
+    <p>
+      To verify: \(\frac{dP}{dt} = C\,e^{kt}\cdot k\), and \(kP = k\cdot C\,e^{kt}\). These are equal. ✓
+    </p>
+
+    <div class="example" role="note" aria-label="Example: doubling population">
+      <strong>Example.</strong>
+      Suppose a population has initial value \(P(0) = 1000\) and doubles in one hour. Find the particular solution.
+
+      <p style="margin-top:0.8rem;">
+        <strong>Step 1 — Find \(C\):</strong><br>
+        \(P(0) = C\,e^{k\cdot 0} = C = 1000\), so \(P(t) = 1000\,e^{kt}\).
+      </p>
+
+      <p>
+        <strong>Step 2 — Find \(k\):</strong> (with \(t\) in hours)<br>
+        \(P(1) = 2 \cdot P(0)\) gives \(1000\,e^k = 2000\), so \(e^k = 2\) and \(k = \ln 2\).
+      </p>
+
+      <p>
+        <strong>Particular solution:</strong>
+        \[
+          P(t) = 1000\,e^{t\ln 2} = 1000 \cdot 2^t.
+        \]
+      </p>
+    </div>
+
+    <div class="note" role="note" aria-label="Limitation of the model">
+      <strong>Limitation.</strong> Notice that \(\lim_{t\to\infty} P(t) = \infty\) — this model predicts unbounded growth. In reality, populations run out of space and food. A more refined model is needed (see the logistic model below).
+    </div>
+
+    <h3>General solution as a one-parameter family</h3>
+    <p>
+      For the first-order ODE \(\frac{dP}{dt} = (\ln 2)\,P\), the general solution \(P(t) = C\,e^{t\ln 2}\) is a <em>one-parameter family</em> of functions indexed by \(C\).
+    </p>
+
+    <div class="definition" role="note" aria-label="Definition: IVP">
+      <strong>Initial Value Problem (IVP).</strong>
+      A DE "typically" has infinitely many solutions; an initial value problem "typically" has one particular solution. An <strong>initial value problem</strong> consists of a DE together with initial condition(s).
+      <p style="margin-top:0.6rem;">For example:</p>
+      \[
+        \begin{cases}
+          \dfrac{dP}{dt} = (\ln 2)\,P & \text{(DE)}\\[6pt]
+          P(0) = 1000 & \text{(IC)}
+        \end{cases}
+        \quad\Longrightarrow\quad
+        P(t) = 1000\,e^{t\ln 2} \;\text{(unique solution)}.
+      \]
+    </div>
+    <p class="annotation">
+      We will discuss conditions for existence and uniqueness of IVP solutions in Section 1.3.
+    </p>
+  </section>
+
+  <!-- 11. Relative Rate of Change -->
+  <section id="relative-rate">
+    <h2>11. Different "Rates of Change"</h2>
+    <p>
+      Instead of the "standard" time rate of change \(P'(t)\) (which has units of, say, people per year), we can consider the <em>relative rate of change</em>, normalized by population:
+    </p>
+    <div class="display-math">
+      \[
+        \frac{P'(t)}{P(t)} = \frac{1}{P}\,\frac{dP}{dt}.
+      \]
+    </div>
+    <p>
+      This is like a "percent rate of change" (without the factor of 100). In the simple population model, the relative rate of change is constant:
+      \[
+        \frac{1}{P}\,\frac{dP}{dt} = k \quad\Longleftrightarrow\quad \frac{dP}{dt} = kP.
+      \]
+    </p>
+  </section>
+
+  <!-- 12. Logistic Population Model -->
+  <section id="logistic">
+    <h2>12. Logistic Population Model</h2>
+    <p>
+      Let \(M > 0\) represent the <em>carrying capacity</em> — the maximum population the habitat can sustain. The <strong>relative</strong> rate of change of \(P(t)\) is proportional to the "available space" \((M - P)\):
+    </p>
+    <div class="display-math">
+      \[
+        \frac{1}{P}\,\frac{dP}{dt} = k(M - P),
+        \qquad\text{so}\qquad
+        \frac{dP}{dt} = kP(M - P),
+        \qquad k > 0.
+      \]
+    </div>
+    <p>
+      Unlike the simple exponential model, the logistic model predicts that solutions approach the carrying capacity \(P = M\) as \(t \to \infty\).
+    </p>
+    <p class="annotation">
+      We will explore this model further in Sections 1.3, 1.4, 2.1, and 2.2.
+    </p>
+  </section>
+
+  <!-- 13. Second-Order Example -->
+  <section id="second-order-example">
+    <h2>13. Second-Order Example</h2>
+
+    <div class="example" role="note" aria-label="Example: verifying solution of y'' + 9y = 0">
+      <strong>Example.</strong> Show that the two-parameter family
+      \[
+        y(x) = A\cos(3x) + B\sin(3x)
+      \]
+      solves the ODE \(\;y'' + 9y = 0\).
+    </div>
+
+    <p>Compute successive derivatives:</p>
+    \[
+      y = A\cos 3x + B\sin 3x,
+    \]
+    \[
+      y' = -3A\sin 3x + 3B\cos 3x,
+    \]
+    \[
+      y'' = -9A\cos 3x - 9B\sin 3x.
+    \]
+    <p>Substitute into the DE:</p>
+    \[
+      y'' + 9y
+      = \bigl(-9A\cos 3x - 9B\sin 3x\bigr)
+      + 9\bigl(A\cos 3x + B\sin 3x\bigr)
+      = 0. \quad\checkmark
+    \]
+    <p>
+      This holds for <strong>all</strong> \(x\) and any constants \(A\) and \(B\). Since the ODE is second-order, the general solution has <em>two</em> free parameters.
+    </p>
+  </section>
+
+  <!-- 14. Normal Form -->
+  <section id="normal-form">
+    <h2>14. Normal Form and General Solutions</h2>
+
+    <div class="definition" role="note" aria-label="Definition: Normal form">
+      <strong>Normal form.</strong> The <em>normal form</em> of an \(n\)th-order ODE is
+      \[
+        y^{(n)} = G\!\bigl(x,\, y,\, y',\, \ldots,\, y^{(n-1)}\bigr).
+      \]
+    </div>
+    <p>
+      Typically, the general solution of an \(n\)th-order ODE will be an <em>\(n\)-parameter family</em> of solutions, indexed by \(n\) "integration constants" — one for each of the \(n\) derivatives that must be "undone."
+    </p>
+    <p class="annotation">
+      Notation: \(y',\; y'',\; y'''\) for the first three derivatives; then \(y^{(4)}\) for the fourth derivative (not to be confused with \(y^4\), the fourth power).
+    </p>
+  </section>
+
+  <!-- 15. Big Course Goal -->
+  <section id="goals">
+    <h2>15. Big Course Goal</h2>
+    <p>
+      Given an initial value problem, how do we <strong>solve</strong> or find the particular solution "from scratch"? We have not done any of that yet! In Chapter 1, we will learn:
+    </p>
+    <div class="course-roadmap" role="list">
+      <div class="roadmap-card" role="listitem">
+        <h4>Section 1.4</h4>
+        <p>Separation of variables for first-order separable equations</p>
+      </div>
+      <div class="roadmap-card" role="listitem">
+        <h4>Section 1.5</h4>
+        <p>Integrating factors for first-order linear equations</p>
+      </div>
+    </div>
+    <p>
+      …and we will see the vast array of applications these techniques are useful for.
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <p>Math 251H — Section 1.1 Lecture Notes. Content adapted for accessible HTML with MathJax rendering.</p>
+</footer>
+
+</body>
+</html>

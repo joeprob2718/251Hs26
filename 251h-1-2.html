@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 251H — Section 1.2: Integrals as General and Particular Solutions</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(','\\)']],
+      displayMath: [['\\[','\\]']],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        addMenu: []
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600;8..60,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400&display=swap');
+
+  :root {
+    --bg: #faf8f5;
+    --text: #2c2825;
+    --heading: #1a1614;
+    --accent: #2b4acb;
+    --accent-light: #e8ecfa;
+    --section-bg: #fff;
+    --border: #e0dcd6;
+    --note-bg: #fff8e1;
+    --note-border: #f0d060;
+    --example-bg: #f0f4ff;
+    --example-border: #7b9cf5;
+    --boxed-bg: #f7f5f2;
+    --pink-note: #fce4ec;
+    --pink-border: #e91e63;
+    --max-w: 820px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.72;
+    color: var(--text);
+    background: var(--bg);
+    padding: 2rem 1.25rem 6rem;
+  }
+
+  main {
+    max-width: var(--max-w);
+    margin: 0 auto;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 2.5rem 1.5rem 2rem;
+    margin-bottom: 2.5rem;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 6px;
+  }
+  header .course { font-family: 'Source Sans 3', sans-serif; font-weight: 600; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.85; margin-bottom: 0.3rem; }
+  header h1 { font-size: 1.75rem; font-weight: 700; line-height: 1.3; }
+  header .meta { font-family: 'Source Sans 3', sans-serif; font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.75; }
+
+  /* Sections */
+  section {
+    background: var(--section-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2rem 2.25rem;
+    margin-bottom: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--heading);
+    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--heading);
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  /* Boxed equations */
+  .boxed {
+    background: var(--boxed-bg);
+    border: 2px solid var(--border);
+    border-radius: 5px;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    overflow-x: auto;
+  }
+
+  /* Examples */
+  .example {
+    background: var(--example-bg);
+    border-left: 4px solid var(--example-border);
+    border-radius: 4px;
+    padding: 1.5rem 1.75rem;
+    margin: 1.5rem 0;
+  }
+  .example-label {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Instructor notes (handwritten annotations) */
+  .note {
+    background: var(--note-bg);
+    border-left: 4px solid var(--note-border);
+    border-radius: 4px;
+    padding: 0.85rem 1.1rem;
+    margin: 1rem 0;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.95rem;
+    color: #5d4e00;
+  }
+  .note strong { color: #7a6400; }
+
+  .remark {
+    background: var(--pink-note);
+    border-left: 4px solid var(--pink-border);
+    border-radius: 4px;
+    padding: 0.85rem 1.1rem;
+    margin: 1rem 0;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.95rem;
+    color: #6e1030;
+  }
+
+  /* Lists */
+  ol, ul { margin: 0.75rem 0 1rem 1.75rem; }
+  li { margin-bottom: 0.5rem; }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 1.25rem;
+    font-size: 0.97rem;
+  }
+  th, td {
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border);
+    text-align: left;
+  }
+  th {
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 600;
+  }
+  td { background: #fff; }
+
+  /* Footnotes */
+  .footnote {
+    font-size: 0.88rem;
+    color: #666;
+    border-top: 1px solid var(--border);
+    margin-top: 1.25rem;
+    padding-top: 0.75rem;
+  }
+
+  /* Solution steps */
+  .step { margin-bottom: 1.25rem; }
+  .step-label {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+  }
+
+  /* Accessibility: skip link */
+  .skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    z-index: 100;
+    font-family: 'Source Sans 3', sans-serif;
+  }
+  .skip-link:focus { top: 0; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    body { font-size: 16px; padding: 1rem 0.75rem 4rem; }
+    section { padding: 1.25rem 1rem; }
+    header h1 { font-size: 1.35rem; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#content">Skip to main content</a>
+
+<main id="content" role="main">
+
+<header>
+  <div class="course">Math 251H</div>
+  <h1>Section 1.2: Integrals as General and Particular Solutions</h1>
+  <div class="meta">Annotated Lecture Notes</div>
+</header>
+
+<!-- ============ SECTION 1 ============ -->
+<section aria-labelledby="sec-intro">
+  <h2 id="sec-intro">Introduction</h2>
+  <p>Sometimes we get lucky and have an "easy" ODE that can be solved with simple antidifferentiation.</p>
+</section>
+
+<!-- ============ SECTION 2 ============ -->
+<section aria-labelledby="sec-special">
+  <h2 id="sec-special">Some Special Cases of First-Order ODEs</h2>
+
+  <p>The most general form of a first-order ODE is</p>
+  \[\frac{dy}{dx} = f(x, y).\]
+
+  <p>The special case where the independent variable doesn't appear in the ODE,</p>
+  \[\frac{dy}{dx} = f(y),\]
+  <p>is called <strong>autonomous</strong> — the "law of nature" (the ODE) doesn't depend on the independent variable.</p>
+
+  <div class="note">
+    <strong>Instructor notes:</strong> Examples of autonomous ODEs include Newton's cooling (constant ambient temperature), Torricelli's law, and population models. These can be solved with separable-variable steps (Section 1.4) and analyzed with phase lines (Section 2.2).
+  </div>
+
+  <p>For many phenomena, we first consider the simpler case with these "static laws of nature" since they're simpler to analyze, before considering a refined model of the form \(\dfrac{dy}{dx} = f(x, y)\).</p>
+
+  <p class="footnote"><sup>1</sup> We'll completely understand the qualitative behavior of any first-order autonomous ODE in Section 2.2.</p>
+</section>
+
+<!-- ============ SECTION 3 ============ -->
+<section aria-labelledby="sec-antideriv">
+  <h2 id="sec-antideriv">Solving by Direct Integration</h2>
+
+  <p>The "opposite" special case is</p>
+  \[\frac{dy}{dx} = f(x),\]
+  <p>where the differential equation doesn't actually involve the unknown function itself.</p>
+
+  <p>While technically still a differential equation, it's "easy" in the sense that it can be solved for \(y(x)\) by simply antidifferentiating \(f(x)\):</p>
+
+  <div class="boxed">
+    \[y(x) = \int f(x)\, dx + C.\]
+  </div>
+</section>
+
+<!-- ============ SECTION 4 ============ -->
+<section aria-labelledby="sec-example1">
+  <h2 id="sec-example1">Example: First-Order Antiderivative Equation</h2>
+
+  <div class="example">
+    <div class="example-label">Example</div>
+    <p>Consider \(\dfrac{dy}{dx} = e^{2x} + x^2\).</p>
+    <ol type="a">
+      <li>Find the general solution.</li>
+      <li>Find the particular solution satisfying \(y(1) = 3\).</li>
+      <li>Take a look on Desmos!</li>
+    </ol>
+  </div>
+
+  <h3>(a) General Solution</h3>
+  <div class="step">
+    <p>Integrate both sides with respect to \(x\):</p>
+    \[y = \int \left(e^{2x} + x^2\right) dx\]
+    <div class="boxed">
+      \[y = \frac{1}{2}\,e^{2x} + \frac{x^3}{3} + C\]
+    </div>
+  </div>
+
+  <h3>(b) Particular Solution with \(y(1) = 3\)</h3>
+  <div class="step">
+    <p>Apply the initial condition \(y(1) = 3\):</p>
+    \[3 = \frac{1}{2}\,e^{2 \cdot 1} + \frac{1^3}{3} + C = \frac{1}{2}\,e^2 + \frac{1}{3} + C\]
+    <p>Solving for \(C\):</p>
+    \[C = 3 - \frac{1}{2}\,e^2 - \frac{1}{3} = \frac{8}{3} - \frac{1}{2}\,e^2\]
+    <p>Therefore the particular solution is:</p>
+    <div class="boxed">
+      \[y = \frac{1}{2}\,e^{2x} + \frac{x^3}{3} + \frac{8}{3} - \frac{1}{2}\,e^2\]
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 5 ============ -->
+<section aria-labelledby="sec-higher">
+  <h2 id="sec-higher">Higher-Order Antiderivative Equations</h2>
+
+  <p>This "solvable by directly integrating" approach also works for equations of the following forms:</p>
+  \[\frac{d^2 y}{dx^2} = f(x), \qquad \frac{d^3 y}{dx^3} = f(x), \qquad \ldots, \qquad \frac{d^n y}{dx^n} = f(x).\]
+
+  <p>We obtain one integration constant per derivative we undo, and so we obtain an <em>n</em>-parameter family for the <em>n</em>th-order "antiderivative equation".</p>
+
+  <div class="example">
+    <div class="example-label">Worked Example — 3rd-Order Equation</div>
+    <p>Solve \(y''' = e^{x/2} + 1\).</p>
+
+    <p><strong>Step 1:</strong> Integrate once:</p>
+    \[y'' = 2e^{x/2} + x + C_1\]
+
+    <p><strong>Step 2:</strong> Integrate again:</p>
+    \[y' = 4e^{x/2} + \frac{x^2}{2} + C_1 x + C_2\]
+
+    <p><strong>Step 3:</strong> Integrate a third time:</p>
+    <div class="boxed">
+      \[y = 8e^{x/2} + \frac{x^2}{2} + \frac{C_1}{2}\,x^2 + C_2\,x + C_3\]
+    </div>
+    <p>This is a <strong>3-parameter family</strong> of solutions (one constant per integration).</p>
+  </div>
+</section>
+
+<!-- ============ SECTION 6 ============ -->
+<section aria-labelledby="sec-kinematics">
+  <h2 id="sec-kinematics">Position, Velocity, and Acceleration</h2>
+
+  <p>We consider a particle moving along the \(x\)-axis with <strong>position/displacement</strong> given by</p>
+  \[x = f(t).\]
+
+  <p>Its <strong>velocity</strong> is</p>
+  \[v = \frac{dx}{dt} = f'(t),\]
+  <p>and its <strong>speed</strong> is \(|v|\). Its <strong>acceleration</strong> is</p>
+  \[a = \frac{dv}{dt} = \frac{d^2 x}{dt^2} = f''(t).\]
+
+  <div class="note">
+    <strong>Sign conventions:</strong> \(v > 0\) means the particle is moving to the right; \(v < 0\) means it is moving to the left.
+  </div>
+
+  <p>If \(m\) is the mass of the particle, <strong>Newton's second law</strong> states</p>
+  <div class="boxed">
+    \[ma(t) = F(t)\]
+  </div>
+  <p>where \(F(t)\) is the force acting on the particle along its line of motion.</p>
+</section>
+
+<!-- ============ SECTION 7 ============ -->
+<section aria-labelledby="sec-const-accel">
+  <h2 id="sec-const-accel">Constant Acceleration</h2>
+
+  <div class="remark">
+    <strong>Context:</strong> Section 1.2 treats the simple case (high-school physics level). Section 2.3 will include position-dependent forces and resistive (velocity-dependent) forces, requiring new ODE techniques from Chapter 1.
+  </div>
+
+  <p>In the special case where the acceleration doesn't depend on time, \(a(t) = a\), we can integrate to obtain</p>
+  <div class="boxed">
+    \[v(t) = at + v_0\]
+  </div>
+  <p>where \(v_0 = v(0)\) is the <strong>initial velocity</strong>. Integrating again:</p>
+  <div class="boxed">
+    \[x(t) = \tfrac{1}{2}\,a\,t^2 + v_0\,t + x_0,\]
+  </div>
+  <p>where \(x_0 = x(0)\) is the <strong>initial position</strong>.</p>
+</section>
+
+<!-- ============ SECTION 8 ============ -->
+<section aria-labelledby="sec-lunar">
+  <h2 id="sec-lunar">Example: Lunar Lander</h2>
+
+  <div class="example">
+    <div class="example-label">Example — Rocket Science</div>
+    <p>A lunar lander is falling freely toward the surface of the moon at a speed of 450 m/s. Its thrusters cause the lander to decelerate at 2.5 m/s² (after the moon's gravitational acceleration is accounted for). At what height above the surface should the thrusters be activated to ensure a "soft touchdown" (\(v = 0\) on impact)?</p>
+  </div>
+
+  <h3>Setup</h3>
+  <p>Let \(x\) measure height above the moon's surface, with \(x = 0\) at the surface. Let \(t = 0\) be the moment the thrusters are activated.</p>
+  <ul>
+    <li>Initial position: \(x(0) = x_0\) (unknown — this is what we want to find)</li>
+    <li>Initial velocity: \(v(0) = -450\) m/s (negative because the lander is falling <em>downward</em>)</li>
+    <li>Thruster acceleration: \(a = +2.5\) m/s² (positive, opposing the downward motion)</li>
+  </ul>
+
+  <h3>Step 1: Find \(v(t)\)</h3>
+  <p>Integrate \(a(t) = 2.5\):</p>
+  \[v(t) = \int 2.5\, dt = 2.5\,t + C\]
+  <p>Using \(v(0) = -450\), we get \(C = -450\):</p>
+  <div class="boxed">
+    \[v(t) = 2.5\,t - 450\]
+  </div>
+
+  <h3>Step 2: Find \(x(t)\)</h3>
+  <p>Integrate \(v(t)\):</p>
+  \[x(t) = \int (2.5\,t - 450)\, dt = 1.25\,t^2 - 450\,t + C\]
+  <p>Using \(x(0) = x_0\):</p>
+  <div class="boxed">
+    \[x(t) = 1.25\,t^2 - 450\,t + x_0\]
+  </div>
+
+  <h3>Step 3: Apply landing conditions</h3>
+  <p>Let \(T\) be the landing time. We need two conditions:</p>
+  <ul>
+    <li>\(v(T) = 0\) — soft landing (zero velocity at impact)</li>
+    <li>\(x(T) = 0\) — the lander reaches the surface</li>
+  </ul>
+
+  <p><strong>From \(v(T) = 0\):</strong></p>
+  \[0 = 2.5\,T - 450 \quad \Longrightarrow \quad T = \frac{450}{2.5} = 180 \text{ s}\]
+
+  <p><strong>From \(x(T) = 0\):</strong></p>
+  \[0 = 1.25(180)^2 - 450(180) + x_0\]
+  \[x_0 = 450(180) - 1.25(180)^2 = 81000 - 40500\]
+
+  <div class="boxed">
+    \[x_0 = 40{,}500 \text{ m}\]
+  </div>
+  <p>The thrusters should be activated at a height of <strong>40,500 meters</strong> above the surface.</p>
+</section>
+
+<!-- ============ SECTION 9 ============ -->
+<section aria-labelledby="sec-units">
+  <h2 id="sec-units">Units</h2>
+
+  <table>
+    <thead>
+      <tr><th>Quantity</th><th>FPS Units</th><th>MKS Units</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Force</td><td>pound (lb)</td><td>newton (N)</td></tr>
+      <tr><td>Mass</td><td>slug</td><td>kilogram (kg)</td></tr>
+      <tr><td>Distance</td><td>foot (ft)</td><td>meter (m)</td></tr>
+      <tr><td>Time</td><td>second (s)</td><td>second (s)</td></tr>
+      <tr><td>\(g\)</td><td>32 ft/s²</td><td>9.8 m/s²</td></tr>
+    </tbody>
+  </table>
+
+  <p>The <strong>weight</strong> of an object is the force exerted by gravity on the object, so at sea level on Earth the weight is \(mg\).</p>
+
+  <div class="note">
+    <strong>Quick reference:</strong> On Earth, an object with mass 1 kg has weight 9.8 N. An object with mass 1 slug has weight 32 lb.
+  </div>
+</section>
+
+<!-- ============ SECTION 10 ============ -->
+<section aria-labelledby="sec-projectile">
+  <h2 id="sec-projectile">Example: Projectile Motion</h2>
+
+  <div class="example">
+    <div class="example-label">Example</div>
+    <p>A projectile is fired straight upward with an initial velocity of 100 m/s from the top of a building 20 m high and falls to the ground at the base of the building. Find:</p>
+    <ol type="a">
+      <li>its maximum height above the ground</li>
+      <li>when it passes the top of the building (on the way down)</li>
+      <li>its total time in the air</li>
+    </ol>
+  </div>
+
+  <h3>Setup</h3>
+  <p>Let \(x\) measure height above the ground (upward positive), with \(t = 0\) at launch.</p>
+  <ul>
+    <li>Acceleration: \(a(t) = -9.8\) m/s² (gravity acts downward)</li>
+    <li>Initial velocity: \(v(0) = 100\) m/s</li>
+    <li>Initial position: \(x(0) = 20\) m (top of the building)</li>
+  </ul>
+
+  <h3>Finding \(v(t)\) and \(x(t)\)</h3>
+  <p>Integrate the acceleration:</p>
+  \[v(t) = \int (-9.8)\, dt = -9.8\,t + C\]
+  <p>With \(v(0) = 100\):</p>
+  <div class="boxed">
+    \[v(t) = -9.8\,t + 100\]
+  </div>
+
+  <p>Integrate the velocity:</p>
+  \[x(t) = \int (-9.8\,t + 100)\, dt = -4.9\,t^2 + 100\,t + C\]
+  <p>With \(x(0) = 20\):</p>
+  <div class="boxed">
+    \[x(t) = -4.9\,t^2 + 100\,t + 20\]
+  </div>
+
+  <h3>(a) Maximum Height</h3>
+  <p>The maximum height occurs when \(v(t) = 0\) (the projectile momentarily stops before falling back down):</p>
+  \[0 = -9.8\,t_1 + 100 \quad \Longrightarrow \quad t_1 = \frac{100}{9.8} \approx 10.204 \text{ s}\]
+  <p>Substitute into \(x(t)\):</p>
+  <div class="boxed">
+    \[x(t_1) = -4.9\left(\frac{100}{9.8}\right)^2 + 100\left(\frac{100}{9.8}\right) + 20 \approx 530.4 \text{ m}\]
+  </div>
+
+  <h3>(b) When It Passes the Top of the Building</h3>
+  <p>Set \(x(t) = 20\) and solve:</p>
+  \[20 = -4.9\,t^2 + 100\,t + 20\]
+  \[0 = t(-4.9\,t + 100)\]
+  <p>So \(t = 0\) (launch) or:</p>
+  <div class="boxed">
+    \[t = \frac{100}{4.9} \approx 20.408 \text{ s}\]
+  </div>
+
+  <h3>(c) Total Time in the Air</h3>
+  <p>Set \(x(t) = 0\) (ground level) and solve using the quadratic formula:</p>
+  \[0 = -4.9\,t^2 + 100\,t + 20\]
+  <p>Apply the quadratic formula and choose the positive root:</p>
+  \[t = \frac{-100 \pm \sqrt{100^2 + 4(4.9)(20)}}{2(-4.9)} = \frac{-100 \pm \sqrt{10392}}{-9.8}\]
+  <div class="boxed">
+    \[t \approx 20.604 \text{ s}\]
+  </div>
+</section>
+
+</main>
+</body>
+</html>

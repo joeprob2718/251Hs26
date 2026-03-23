@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 251H — Section 2.2: Equilibrium Solutions and Stability</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(','\\)']],
+      displayMath: [['\\[','\\]']],
+      tags: 'ams'
+    },
+    options: { enableMenu: false }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Fira+Code:wght@400;500&display=swap');
+
+  :root {
+    --bg: #faf8f5;
+    --text: #2c2825;
+    --heading: #1a1715;
+    --accent: #3b3089;
+    --accent-light: #ebe8f4;
+    --border: #d5cfc7;
+    --note-bg: #fff7e6;
+    --note-border: #e6c44d;
+    --example-bg: #f0f4f8;
+    --example-border: #6b8fad;
+    --star-color: #c44d2b;
+    --stable-color: #2e7d32;
+    --unstable-color: #c62828;
+    --semi-color: #e65100;
+    --maxw: 48rem;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 1.1rem;
+    padding: 2rem 1.25rem 5rem;
+  }
+
+  main { max-width: var(--maxw); margin: 0 auto; }
+
+  header {
+    text-align: center;
+    padding: 2.5rem 0 2rem;
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: 2.5rem;
+  }
+  header .course {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.85rem;
+    color: var(--heading);
+    line-height: 1.3;
+  }
+
+  section { margin-bottom: 2.5rem; }
+
+  h2 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--heading);
+    margin-bottom: 1rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 {
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--heading);
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  .MathJax { font-size: 1.05em !important; }
+
+  .note {
+    background: var(--note-bg);
+    border-left: 4px solid var(--note-border);
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .note .label {
+    font-weight: 700;
+    color: var(--star-color);
+    margin-bottom: 0.25rem;
+    display: block;
+  }
+
+  .example {
+    background: var(--example-bg);
+    border-left: 4px solid var(--example-border);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .example .label {
+    font-weight: 700;
+    color: var(--example-border);
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+  }
+
+  .formula-box {
+    background: var(--accent-light);
+    border: 2px solid var(--accent);
+    border-radius: 6px;
+    padding: 1rem 1.5rem;
+    margin: 1.25rem 0;
+    text-align: center;
+  }
+
+  .def-box {
+    background: #f5f0fa;
+    border: 2px solid #7e57c2;
+    border-radius: 6px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.25rem 0;
+  }
+  .def-box .label {
+    font-weight: 700;
+    color: #5e35b1;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+
+  .stable { color: var(--stable-color); font-weight: 700; }
+  .unstable { color: var(--unstable-color); font-weight: 700; }
+  .semi { color: var(--semi-color); font-weight: 700; }
+
+  .phase-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 1.5rem;
+    font-size: 1rem;
+  }
+  .phase-table th, .phase-table td {
+    border: 1px solid var(--border);
+    padding: 0.5rem 0.75rem;
+    text-align: center;
+  }
+  .phase-table th {
+    background: var(--accent-light);
+    font-weight: 600;
+  }
+
+  ol.steps {
+    padding-left: 1.5rem;
+    margin: 0.75rem 0 1rem;
+  }
+  ol.steps li { margin-bottom: 0.75rem; }
+
+  ul { padding-left: 1.5rem; margin: 0.5rem 0 1rem; }
+  ul li { margin-bottom: 0.4rem; }
+
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    z-index: 100;
+    border-radius: 0 0 4px 0;
+  }
+  .skip-link:focus { left: 0; }
+
+  footer {
+    margin-top: 3rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #888;
+    border-top: 1px solid var(--border);
+    padding-top: 1.25rem;
+  }
+
+  @media print {
+    body { background: #fff; font-size: 11pt; padding: 0; }
+    .formula-box, .def-box { border-color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#content">Skip to main content</a>
+
+<main id="content">
+
+<header>
+  <div class="course">Math 251H</div>
+  <h1>Section 2.2: Equilibrium Solutions and Stability</h1>
+</header>
+
+<!-- ===== Population models recap ===== -->
+<section aria-labelledby="pop-models">
+  <h2 id="pop-models">Background: Population Models (Section 2.1)</h2>
+  <p>In Section 2.1, we introduced two population models:</p>
+  <ul>
+    <li><strong>Exponential growth:</strong> \(\dfrac{dP}{dt} = kP\)</li>
+    <li><strong>Logistic growth:</strong> \(\dfrac{dP}{dt} = kP(M - P)\), where \(M\) is the carrying capacity.</li>
+  </ul>
+  <p>We now develop tools to understand the long-term behavior of solutions to these (and other) equations <em>without</em> solving them explicitly.</p>
+</section>
+
+<!-- ===== Equilibrium solutions ===== -->
+<section aria-labelledby="equilibrium">
+  <h2 id="equilibrium">Equilibrium Solutions</h2>
+
+  <div class="def-box">
+    <span class="label">Definition</span>
+    An <strong>equilibrium solution</strong> (also called a <em>fixed point</em> or <em>constant solution</em>) of the differential equation
+    \[
+      \frac{dy}{dx} = F(x, y)
+    \]
+    is a solution of the form \(y = \text{const}\).
+  </div>
+
+  <p>
+    Graphically, an equilibrium solution is a horizontal line in the \(xy\)-plane.
+    If the system starts at an equilibrium value, it stays there forever.
+  </p>
+</section>
+
+<!-- ===== Autonomous DEs ===== -->
+<section aria-labelledby="autonomous">
+  <h2 id="autonomous">Autonomous Differential Equations</h2>
+
+  <div class="def-box">
+    <span class="label">Definition</span>
+    An <strong>autonomous</strong> differential equation does not explicitly involve the independent variable. It has the form
+    \[
+      \frac{dy}{dx} = f(y).
+    \]
+    Other parameters may appear, but \(x\) itself does not appear anywhere on the right-hand side.
+  </div>
+
+  <h3>Equilibrium Solutions of Autonomous Equations</h3>
+  <p>
+    For an autonomous equation \(\dfrac{dy}{dx} = f(y)\), the equilibrium solutions correspond exactly to the <strong>zeros of \(f(y)\)</strong>.
+  </p>
+  <p>
+    Indeed, if \(f(a) = 0\), then the constant function \(y = a\) solves the DE. We can verify: if \(y = a\) for all \(x\), then \(\dfrac{dy}{dx} = 0\), and substituting gives
+  </p>
+  \[
+    0 \stackrel{?}{=} f(a) = 0. \quad\checkmark
+  \]
+</section>
+
+<!-- ===== Stability ===== -->
+<section aria-labelledby="stability">
+  <h2 id="stability">Stability of Equilibrium Solutions</h2>
+
+  <div class="def-box">
+    <span class="label">Definition — Stable Equilibrium</span>
+    An equilibrium solution \(y^*\) of \(\dfrac{dy}{dx} = f(y)\) is <span class="stable">stable</span> if for all initial values \(y(0)\) close enough to \(y^*\), the solution \(y(x)\) satisfies
+    \[
+      \lim_{x \to \infty} y(x) = y^*.
+    \]
+    A stable equilibrium "attracts" nearby solutions.
+  </div>
+
+  <p>For \(y^*\) to be <span class="stable">stable</span>, we need:</p>
+  <ul>
+    <li>\(f(y) > 0\) for all \(y\) slightly <em>less</em> than \(y^*\) (solutions below \(y^*\) are increasing toward it), and</li>
+    <li>\(f(y) < 0\) for all \(y\) slightly <em>greater</em> than \(y^*\) (solutions above \(y^*\) are decreasing toward it).</li>
+  </ul>
+
+  <div class="def-box">
+    <span class="label">Definition — Unstable Equilibrium</span>
+    If the opposite holds — \(f(y) < 0\) for \(y\) slightly less than \(y^*\) and \(f(y) > 0\) for \(y\) slightly greater than \(y^*\) — then \(y^*\) is an <span class="unstable">unstable</span> equilibrium. Nearby solutions are "pushed away."
+  </div>
+
+  <div class="def-box">
+    <span class="label">Definition — Semistable Equilibrium</span>
+    If \(f(y)\) has the same sign on both sides of \(y^*\) (attracting from one side, repelling from the other), then \(y^*\) is <span class="semi">semistable</span>.
+  </div>
+
+  <p>
+    You can summarize this information on a <strong>phase line</strong>: a number line for \(y\) with equilibrium points marked, and arrows indicating the direction of motion (increasing or decreasing) in each interval.
+  </p>
+</section>
+
+<!-- ===== Example 1 ===== -->
+<section aria-labelledby="ex1">
+  <h2 id="ex1">Example 1</h2>
+  <div class="example">
+    <span class="label">Problem</span>
+    Find and classify the equilibrium solutions to
+    \[
+      \frac{dy}{dx} = 4 - y^2.
+    \]
+  </div>
+
+  <h3>Solution</h3>
+  <p><strong>Find equilibria:</strong> Set \(f(y) = 4 - y^2 = 0\):</p>
+  \[
+    4 - y^2 = 0 \;\Longrightarrow\; (2+y)(2-y) = 0 \;\Longrightarrow\; y = -2 \text{ or } y = 2.
+  \]
+
+  <p><strong>Sign analysis of \(f(y) = (2+y)(2-y)\):</strong></p>
+
+  <table class="phase-table" aria-label="Sign chart for f(y) = 4 minus y squared">
+    <tr>
+      <th>Interval</th>
+      <th>\(y < -2\)</th>
+      <th>\(-2 < y < 2\)</th>
+      <th>\(y > 2\)</th>
+    </tr>
+    <tr>
+      <td>Sign of \(f(y)\)</td>
+      <td>\((-)(+) < 0\)</td>
+      <td>\((+)(+) > 0\)</td>
+      <td>\((+)(-) < 0\)</td>
+    </tr>
+    <tr>
+      <td>Solutions are</td>
+      <td>decreasing</td>
+      <td>increasing</td>
+      <td>decreasing</td>
+    </tr>
+  </table>
+
+  <p><strong>Phase line:</strong></p>
+  \[
+    \xleftarrow{\quad} \underset{-2}{\circ} \xrightarrow{\quad} \underset{2}{\bullet} \xleftarrow{\quad}
+  \]
+
+  <p><strong>Classification:</strong></p>
+  <ul>
+    <li>\(y = 2\) is <span class="stable">stable</span>: \(f > 0\) below and \(f < 0\) above — nearby solutions are attracted to it.</li>
+    <li>\(y = -2\) is <span class="unstable">unstable</span>: \(f < 0\) below and \(f > 0\) above — nearby solutions are repelled from it.</li>
+  </ul>
+</section>
+
+<!-- ===== Qualitative Analysis ===== -->
+<section aria-labelledby="qualitative">
+  <h2 id="qualitative">Putting It All Together: Qualitative Analysis</h2>
+  <p>
+    For an autonomous DE \(\dfrac{dy}{dx} = f(y)\) (assuming \(f'\) is continuous), the zeros of \(f(y)\) give the equilibrium solutions, and sign analysis tells us the increasing/decreasing behavior of non-equilibrium solutions.
+  </p>
+  <p>
+    This approach — obtaining information about solutions without computing their exact formulas — is called <strong>qualitative analysis</strong>. It is a quick and powerful way to understand the general behavior of solutions.
+  </p>
+  <p>
+    Solutions will either veer off toward \(\pm\infty\), or their limit as \(x \to \infty\) will be a stable equilibrium value (approached asymptotically, never reached in finite time). Solutions can also approach the "stable side" of a semistable equilibrium.
+  </p>
+</section>
+
+<!-- ===== Example 2 ===== -->
+<section aria-labelledby="ex2">
+  <h2 id="ex2">Example 2</h2>
+  <div class="example">
+    <span class="label">Problem</span>
+    Find and classify the equilibrium solutions to
+    \[
+      \frac{dy}{dx} = 4y^2 - y^4.
+    \]
+  </div>
+
+  <h3>Solution</h3>
+  <p><strong>Find equilibria:</strong> Factor \(f(y) = 4y^2 - y^4 = y^2(4 - y^2) = y^2(2+y)(2-y)\). Setting this to zero:</p>
+  \[
+    y = 0, \quad y = -2, \quad y = 2.
+  \]
+
+  <p><strong>Sign analysis of \(f(y) = y^2(2+y)(2-y)\):</strong></p>
+
+  <table class="phase-table" aria-label="Sign chart for f(y) = 4y^2 minus y^4">
+    <tr>
+      <th>Interval</th>
+      <th>\(y < -2\)</th>
+      <th>\(-2 < y < 0\)</th>
+      <th>\(0 < y < 2\)</th>
+      <th>\(y > 2\)</th>
+    </tr>
+    <tr>
+      <td>Sign of \(f(y)\)</td>
+      <td>\((+)(-)(+) < 0\)</td>
+      <td>\((+)(+)(+) > 0\)</td>
+      <td>\((+)(+)(+) > 0\)</td>
+      <td>\((+)(+)(-) < 0\)</td>
+    </tr>
+    <tr>
+      <td>Solutions are</td>
+      <td>decreasing</td>
+      <td>increasing</td>
+      <td>increasing</td>
+      <td>decreasing</td>
+    </tr>
+  </table>
+
+  <p><strong>Phase line:</strong></p>
+  \[
+    \xleftarrow{\quad} \underset{-2}{\circ} \xrightarrow{\quad} \underset{0}{\odot} \xrightarrow{\quad} \underset{2}{\bullet} \xleftarrow{\quad}
+  \]
+
+  <p><strong>Classification:</strong></p>
+  <ul>
+    <li>\(y = -2\) is <span class="unstable">unstable</span>: \(f < 0\) below, \(f > 0\) above.</li>
+    <li>\(y = 0\) is <span class="semi">semistable</span>: \(f > 0\) on both sides (solutions increase toward and away from it on different sides — here, solutions increase on both sides, so it's attracting from the left and repelling to the right from the perspective of approaching it, but since \(f>0\) on both sides, solutions pass through; it attracts from below and repels above).</li>
+    <li>\(y = 2\) is <span class="stable">stable</span>: \(f > 0\) below, \(f < 0\) above.</li>
+  </ul>
+</section>
+
+<!-- ===== Falling object ===== -->
+<section aria-labelledby="falling">
+  <h2 id="falling">Application: Falling Object with Air Resistance</h2>
+  <p>Consider an object falling under gravity with air resistance proportional to velocity. By Newton's second law (\(ma = F\)):</p>
+
+  <div class="formula-box">
+    \[
+      m\frac{dv}{dt} = mg - kv,
+    \]
+  </div>
+
+  <p>where \(m > 0\) is mass, \(g > 0\) is gravitational acceleration, \(k > 0\) is the drag coefficient, and \(v(t)\) is the downward velocity.</p>
+
+  <div class="note">
+    <span class="label">Physical setup</span>
+    <ul>
+      <li>When \(v > 0\) (falling down): gravity pulls down (\(mg\)), air resistance pushes up (\(-kv\)).</li>
+      <li>When \(v < 0\) (moving up): both gravity and air resistance point downward.</li>
+    </ul>
+  </div>
+
+  <p><strong>Equilibrium:</strong> Set \(mg - kv = 0\), giving \(v = \dfrac{mg}{k}\).</p>
+
+  <p><strong>Phase line analysis:</strong> Writing \(\dfrac{dv}{dt} = mg - kv\) as a function of \(v\), this is linear with negative slope (\(-k\)), so:</p>
+  <ul>
+    <li>For \(v < \dfrac{mg}{k}\): \(\dfrac{dv}{dt} > 0\) (velocity increasing).</li>
+    <li>For \(v > \dfrac{mg}{k}\): \(\dfrac{dv}{dt} < 0\) (velocity decreasing).</li>
+  </ul>
+
+  <p>Therefore \(v = \dfrac{mg}{k}\) is a <span class="stable">stable</span> equilibrium. This is the <strong>terminal velocity</strong> — all solutions approach it as \(t \to \infty\), regardless of the initial velocity.</p>
+</section>
+
+<!-- ===== Newton's cooling ===== -->
+<section aria-labelledby="cooling">
+  <h2 id="cooling">Application: Newton's Law of Cooling</h2>
+  <p>Newton's law of cooling states that the rate of change of an object's temperature is proportional to the temperature difference between the object and its surroundings. If the surroundings remain at constant temperature \(T_0\):</p>
+
+  <div class="formula-box">
+    \[
+      \frac{dT}{dt} = k(T_0 - T), \qquad k > 0.
+    \]
+  </div>
+
+  <p><strong>Equilibrium:</strong> Set \(k(T_0 - T) = 0\), giving \(T = T_0\).</p>
+
+  <p><strong>Stability:</strong> Writing the right side as \(kT_0 - kT\), this is a linear function of \(T\) with negative slope \(-k\). So:</p>
+  <ul>
+    <li>For \(T < T_0\): \(\dfrac{dT}{dt} > 0\) (object warms up).</li>
+    <li>For \(T > T_0\): \(\dfrac{dT}{dt} < 0\) (object cools down).</li>
+  </ul>
+
+  <p>Therefore \(T = T_0\) is <span class="stable">stable</span>. All solutions approach the ambient temperature. The general solution is \(T(t) = T_0 + Ce^{-kt}\), confirming that \(\displaystyle\lim_{t\to\infty} T(t) = T_0\).</p>
+</section>
+
+<!-- ===== Logistic model ===== -->
+<section aria-labelledby="logistic">
+  <h2 id="logistic">Application: Logistic Population Model</h2>
+  <p>The logistic model is</p>
+  <div class="formula-box">
+    \[
+      \frac{dP}{dt} = kP(M - P), \qquad k > 0,\; M > 0.
+    \]
+  </div>
+
+  <p><strong>Equilibria:</strong> Set \(kP(M-P) = 0\), giving \(P = 0\) and \(P = M\).</p>
+
+  <p><strong>Sign analysis:</strong> \(f(P) = kP(M-P)\) is a downward-opening parabola (leading coefficient \(-k < 0\)) with zeros at \(P = 0\) and \(P = M\):</p>
+
+  <table class="phase-table" aria-label="Sign chart for logistic model">
+    <tr>
+      <th>Interval</th>
+      <th>\(P < 0\)</th>
+      <th>\(0 < P < M\)</th>
+      <th>\(P > M\)</th>
+    </tr>
+    <tr>
+      <td>Sign of \(f(P)\)</td>
+      <td>\(< 0\)</td>
+      <td>\(> 0\)</td>
+      <td>\(< 0\)</td>
+    </tr>
+  </table>
+
+  <p><strong>Classification:</strong></p>
+  <ul>
+    <li>\(P = 0\) is <span class="unstable">unstable</span>: any positive initial population grows away from zero.</li>
+    <li>\(P = M\) is <span class="stable">stable</span>: populations are attracted to the carrying capacity.</li>
+  </ul>
+</section>
+
+<!-- ===== Bifurcations ===== -->
+<section aria-labelledby="bifurcations">
+  <h2 id="bifurcations">Bifurcations</h2>
+
+  <p>Many models contain physical or biological parameters. When a parameter is varied, the number and/or type of equilibria may change.</p>
+
+  <div class="def-box">
+    <span class="label">Definition</span>
+    A <strong>bifurcation point</strong> is a parameter value at which a qualitative change in the behavior of equilibrium solutions occurs (equilibria appear, disappear, or change stability).
+  </div>
+
+  <p>
+    A <strong>bifurcation diagram</strong> plots the equilibrium values of the dependent variable against the parameter. It is essentially "all the phase lines for different parameter values stacked horizontally." Stable equilibria are drawn as solid curves and unstable equilibria as dashed curves.
+  </p>
+
+  <h3>General Procedure</h3>
+  <p>For the autonomous equation with parameter \(r\),</p>
+  \[
+    \frac{dx}{dt} = f(x, r),
+  \]
+  <ol class="steps">
+    <li>Set \(f(x, r) = 0\) and solve for \(x\) in terms of \(r\). Sketch these curves in the \(rx\)-plane — these are the equilibrium curves.</li>
+    <li>The equilibrium curves divide the \(rx\)-plane into regions. Since \(f\) is continuous, \(f\) has constant sign in each region. Check one test point per region to determine the sign.</li>
+    <li>Use the signs (arrows pointing up where \(f > 0\), down where \(f < 0\)) to classify each equilibrium branch as stable, unstable, or semistable.</li>
+    <li>Identify bifurcation points: parameter values where the number or type of equilibria changes.</li>
+  </ol>
+</section>
+
+<!-- ===== Example: Transcritical ===== -->
+<section aria-labelledby="ex-transcritical">
+  <h2 id="ex-transcritical">Example 3 — Transcritical Bifurcation</h2>
+  <div class="example">
+    <span class="label">Problem</span>
+    Consider
+    \[
+      \frac{dx}{dt} = rx - x^2,
+    \]
+    where \(r\) is a parameter. Sketch the phase lines for \(r = -2, -1, 0, 1, 2\). At what value of \(r\) does a bifurcation occur? Describe the qualitative change and sketch the bifurcation diagram.
+  </div>
+
+  <h3>Solution</h3>
+  <p><strong>Find equilibria:</strong> \(f(x,r) = rx - x^2 = x(r - x) = 0\), giving \(x = 0\) and \(x = r\).</p>
+
+  <p><strong>Phase lines for specific \(r\) values:</strong></p>
+
+  <p><em>\(r = -2\):</em> \(\dfrac{dx}{dt} = -2x - x^2 = -x(2+x)\). Equilibria at \(x = -2\) and \(x = 0\). Sign analysis: \((-)(+)(-)=(-)\) for \(x < -2\), \((+)(-)=(+)\) for \(-2 < x < 0\), \((-)(-)=(-)\) for \(x > 0\). So \(x = -2\) is <span class="unstable">unstable</span>, \(x = 0\) is <span class="stable">stable</span>.</p>
+
+  <p><em>\(r = -1\):</em> Equilibria at \(x = -1\) and \(x = 0\). Same pattern: \(x = -1\) is <span class="unstable">unstable</span>, \(x = 0\) is <span class="stable">stable</span>.</p>
+
+  <p><em>\(r = 0\):</em> \(\dfrac{dx}{dt} = -x^2\). Only equilibrium at \(x = 0\). Since \(-x^2 \le 0\) everywhere (negative on both sides of 0), \(x = 0\) is <span class="semi">semistable</span>.</p>
+
+  <p><em>\(r = 1\):</em> Equilibria at \(x = 0\) and \(x = 1\). Sign analysis shows \(x = 0\) is <span class="unstable">unstable</span>, \(x = 1\) is <span class="stable">stable</span>.</p>
+
+  <p><em>\(r = 2\):</em> Equilibria at \(x = 0\) and \(x = 2\). Again \(x = 0\) is <span class="unstable">unstable</span>, \(x = 2\) is <span class="stable">stable</span>.</p>
+
+  <p><strong>Bifurcation occurs at \(r = 0\).</strong></p>
+
+  <div class="note">
+    <span class="label">Description of the bifurcation</span>
+    <ul>
+      <li>For \(r < 0\): There is an unstable equilibrium at \(x = r\) (to the left of the origin) and a stable equilibrium at \(x = 0\).</li>
+      <li>As \(r \to 0\): The unstable equilibrium at \(x = r\) moves toward \(x = 0\).</li>
+      <li>At \(r = 0\): The two equilibria collide at \(x = 0\), forming a single semistable equilibrium.</li>
+      <li>For \(r > 0\): Now \(x = 0\) is unstable, and the new equilibrium at \(x = r\) (to the right of the origin) is stable. The stabilities have swapped.</li>
+    </ul>
+    This is called a <strong>transcritical bifurcation</strong> — two equilibrium branches exchange stability as they pass through each other.
+  </div>
+
+  <p><strong>Bifurcation diagram:</strong> In the \(rx\)-plane, the two equilibrium curves are \(x = 0\) (horizontal line) and \(x = r\) (diagonal line). They cross at the origin. For \(r < 0\), the \(x = 0\) branch is stable (solid) and \(x = r\) is unstable (dashed). For \(r > 0\), they switch.</p>
+</section>
+
+<!-- ===== Example: Saddle-node ===== -->
+<section aria-labelledby="ex-harvest">
+  <h2 id="ex-harvest">Example 4 — Harvesting and Saddle-Node Bifurcation</h2>
+  <div class="example">
+    <span class="label">Problem</span>
+    Consider a fish population modeled by
+    \[
+      \frac{dP}{dt} = P(4 - P) - h,
+    \]
+    where \(k = 1\), \(M = 4\) (logistic model), and \(h\) represents constant harvesting of \(h\) fish per year. Draw a bifurcation diagram and determine which values of \(h\) are sustainable.
+  </div>
+
+  <h3>Solution</h3>
+  <p><strong>Find equilibria:</strong> Set \(P(4 - P) - h = 0\), i.e., \(h = P(4 - P) = -P^2 + 4P\).</p>
+
+  <p>Completing the square:</p>
+  \[
+    h = -(P^2 - 4P) = -(P^2 - 4P + 4 - 4) = -(P-2)^2 + 4.
+  \]
+
+  <p>This is a left-opening parabola in the \(hP\)-plane with vertex at \((h, P) = (4, 2)\).</p>
+
+  <p>Solving for \(P\) in terms of \(h\): from \(h - 4 = -(P-2)^2\), we get</p>
+  \[
+    P = 2 \pm \sqrt{4 - h}.
+  \]
+  <p>This requires \(h \le 4\) for real solutions.</p>
+
+  <p><strong>Sign analysis:</strong></p>
+  <ul>
+    <li>Inside the parabola (\(h < P(4-P)\), i.e., \(h < -(P-2)^2 + 4\)): \(f > 0\), solutions increase.</li>
+    <li>Outside the parabola (\(h > P(4-P)\)): \(f < 0\), solutions decrease.</li>
+  </ul>
+
+  <p>The upper branch \(P = 2 + \sqrt{4-h}\) is <span class="stable">stable</span> (arrows point toward it from both sides) and the lower branch \(P = 2 - \sqrt{4-h}\) is <span class="unstable">unstable</span>.</p>
+
+  <p><strong>Bifurcation point: \(h = 4\).</strong></p>
+
+  <div class="note">
+    <span class="label">Classification of harvesting rates</span>
+    <ul>
+      <li><strong>For \(0 < h < 4\):</strong> Two equilibrium solutions exist (one stable, one unstable). Fishing is <strong>sustainable</strong> as long as the initial population \(P(0)\) is above the unstable equilibrium, i.e., \(P(0) > 2 - \sqrt{4 - h}\). The population will approach the stable equilibrium \(P = 2 + \sqrt{4-h}\).</li>
+      <li><strong>At \(h = 4\):</strong> The two equilibria collide to form a single semistable equilibrium at \(P = 2\). This is the threshold — a <strong>saddle-node bifurcation</strong>.</li>
+      <li><strong>For \(h > 4\):</strong> No equilibrium solutions exist. \(\dfrac{dP}{dt} < 0\) for all \(P\), so the population always decreases — <strong>unsustainable</strong> harvesting leads to extinction regardless of the initial population.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== Pitchfork bifurcations ===== -->
+<section aria-labelledby="pitchfork">
+  <h2 id="pitchfork">Example 5 — Pitchfork Bifurcations</h2>
+  <div class="example">
+    <span class="label">Problem</span>
+    Analyze the bifurcation diagrams for the equations
+    \[
+      \text{(i)}\;\; \frac{dx}{dt} = rx - x^3 \qquad\text{and}\qquad \text{(ii)}\;\; \frac{dx}{dt} = rx + x^3.
+    \]
+  </div>
+
+  <h3>(i) Supercritical Pitchfork: \(\dfrac{dx}{dt} = rx - x^3\)</h3>
+
+  <p><strong>Equilibria:</strong> \(x(r - x^2) = 0\), so \(x = 0\) always, and \(x = \pm\sqrt{r}\) when \(r > 0\).</p>
+
+  <p><strong>For \(r \le 0\):</strong> Only \(x = 0\). Since \(f(x) = x(r - x^2)\) and \(r - x^2 < 0\) for all \(x \ne 0\) when \(r \le 0\), the sign of \(f\) is opposite to the sign of \(x\). So \(x = 0\) is <span class="stable">stable</span>.</p>
+
+  <p><strong>For \(r = 0\):</strong> \(\dfrac{dx}{dt} = -x^3\). Only equilibrium at \(x=0\), which is <span class="stable">stable</span> (solutions decrease for \(x>0\), increase for \(x<0\)).</p>
+
+  <p><strong>For \(r > 0\):</strong> Three equilibria: \(x = -\sqrt{r}\), \(x = 0\), \(x = \sqrt{r}\). Sign analysis shows \(x = 0\) becomes <span class="unstable">unstable</span>, while \(x = \pm\sqrt{r}\) are both <span class="stable">stable</span>.</p>
+
+  <p><strong>Bifurcation at \(r = 0\):</strong> A single stable equilibrium splits into an unstable one flanked by two new stable ones. This is the <strong>supercritical pitchfork bifurcation</strong> — considered "safe" because the system transitions smoothly to nearby stable states.</p>
+
+  <h3>(ii) Subcritical Pitchfork: \(\dfrac{dx}{dt} = rx + x^3\)</h3>
+
+  <p><strong>Equilibria:</strong> \(x(r + x^2) = 0\), so \(x = 0\) always, and \(x = \pm\sqrt{-r}\) when \(r < 0\).</p>
+
+  <p><strong>For \(r < 0\):</strong> Three equilibria: \(x = 0\) is <span class="stable">stable</span>, and \(x = \pm\sqrt{-r}\) are both <span class="unstable">unstable</span>.</p>
+
+  <p><strong>For \(r \ge 0\):</strong> Only \(x = 0\), which is <span class="unstable">unstable</span>.</p>
+
+  <p><strong>Bifurcation at \(r = 0\):</strong> Two unstable equilibria collapse into the origin, causing the single remaining equilibrium to become unstable. This is the <strong>subcritical pitchfork bifurcation</strong> — considered "dangerous" because the system loses all stable equilibria and solutions may blow up.</p>
+
+  <div class="note">
+    <span class="label">Physical example</span>
+    Pitchfork bifurcations arise in structural mechanics. A toy model: let \(x(t)\) represent the horizontal deviation at the top of a skyscraper, and \(r\) an "age parameter" reflecting wear and tear. As \(r\) increases through zero, the upright equilibrium can become unstable.
+  </div>
+</section>
+
+<!-- ===== Summary ===== -->
+<section aria-labelledby="summary">
+  <h2 id="summary">Summary of Bifurcation Types</h2>
+
+  <table class="phase-table" aria-label="Summary of bifurcation types">
+    <tr>
+      <th>Bifurcation</th>
+      <th>Normal Form</th>
+      <th>What Happens</th>
+    </tr>
+    <tr>
+      <td><strong>Saddle-node</strong></td>
+      <td>\(\dot{x} = r - x^2\)</td>
+      <td>Two equilibria (one stable, one unstable) collide and annihilate</td>
+    </tr>
+    <tr>
+      <td><strong>Transcritical</strong></td>
+      <td>\(\dot{x} = rx - x^2\)</td>
+      <td>Two equilibria exchange stability as they pass through each other</td>
+    </tr>
+    <tr>
+      <td><strong>Supercritical pitchfork</strong></td>
+      <td>\(\dot{x} = rx - x^3\)</td>
+      <td>One stable equilibrium becomes unstable; two new stable ones appear ("safe")</td>
+    </tr>
+    <tr>
+      <td><strong>Subcritical pitchfork</strong></td>
+      <td>\(\dot{x} = rx + x^3\)</td>
+      <td>Two unstable equilibria collapse into the origin, which becomes unstable ("dangerous")</td>
+    </tr>
+  </table>
+</section>
+
+<footer>
+  Math 251H — Section 2.2 Lecture Notes
+</footer>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 251H — Section 2.3: Acceleration and Velocity Models</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(','\\)']],
+      displayMath: [['\\[','\\]']],
+      tags: 'ams'
+    },
+    options: { enableMenu: false }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Fira+Code:wght@400;500&display=swap');
+
+  :root {
+    --bg: #faf8f5;
+    --text: #2c2825;
+    --heading: #1a1715;
+    --accent: #3b3089;
+    --accent-light: #ebe8f4;
+    --border: #d5cfc7;
+    --note-bg: #fff7e6;
+    --note-border: #e6c44d;
+    --example-bg: #f0f4f8;
+    --example-border: #6b8fad;
+    --star-color: #c44d2b;
+    --maxw: 48rem;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 1.1rem;
+    padding: 2rem 1.25rem 5rem;
+  }
+
+  main { max-width: var(--maxw); margin: 0 auto; }
+
+  header {
+    text-align: center;
+    padding: 2.5rem 0 2rem;
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: 2.5rem;
+  }
+  header .course {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-weight: 700;
+    font-size: 1.85rem;
+    color: var(--heading);
+    line-height: 1.3;
+  }
+
+  section { margin-bottom: 2.5rem; }
+
+  h2 {
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--heading);
+    margin-bottom: 1rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 {
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--heading);
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  .note {
+    background: var(--note-bg);
+    border-left: 4px solid var(--note-border);
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .note .label {
+    font-weight: 700;
+    color: var(--star-color);
+    margin-bottom: 0.25rem;
+    display: block;
+  }
+
+  .example {
+    background: var(--example-bg);
+    border-left: 4px solid var(--example-border);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .example .label {
+    font-weight: 700;
+    color: var(--example-border);
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+  }
+
+  .formula-box {
+    background: var(--accent-light);
+    border: 2px solid var(--accent);
+    border-radius: 6px;
+    padding: 1rem 1.5rem;
+    margin: 1.25rem 0;
+    text-align: center;
+  }
+
+  .def-box {
+    background: #f5f0fa;
+    border: 2px solid #7e57c2;
+    border-radius: 6px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.25rem 0;
+  }
+  .def-box .label {
+    font-weight: 700;
+    color: #5e35b1;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+
+  ul, ol { padding-left: 1.5rem; margin: 0.5rem 0 1rem; }
+  li { margin-bottom: 0.5rem; }
+
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    z-index: 100;
+    border-radius: 0 0 4px 0;
+  }
+  .skip-link:focus { left: 0; }
+
+  footer {
+    margin-top: 3rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #888;
+    border-top: 1px solid var(--border);
+    padding-top: 1.25rem;
+  }
+
+  @media print {
+    body { background: #fff; font-size: 11pt; padding: 0; }
+    .formula-box, .def-box { border-color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#content">Skip to main content</a>
+
+<main id="content">
+
+<header>
+  <div class="course">Math 251H</div>
+  <h1>Section 2.3: Acceleration and Velocity Models</h1>
+</header>
+
+<!-- ===== Introduction ===== -->
+<section aria-labelledby="intro">
+  <h2 id="intro">Introduction</h2>
+  <p>
+    In Section 1.2, we solved basic position–velocity–acceleration problems with <strong>constant acceleration</strong>. Newton's second law reduced to
+  </p>
+  \[
+    m\frac{dv}{dt} = \text{constant},
+  \]
+  <p>
+    which could be immediately integrated (it's "not really a differential equation"). Integrating once gives \(v(t)\), and integrating again gives the position \(x(t)\).
+  </p>
+  <p>
+    Now that we know how to solve separable and linear first-order equations, we can consider more interesting scenarios:
+  </p>
+  <ul>
+    <li><strong>Constant gravity + speed-dependent air resistance:</strong> The resistive force has the form \(F_R = k|v|^p\) where \(1 \le p \le 2\) is physically relevant, depending on the object's shape and the speed regime.</li>
+    <li><strong>Variable gravitational acceleration:</strong> Using the "real" inverse-square law for gravity, rather than the sea-level approximation \(F = mg\) with \(g = 9.8\;\text{m/s}^2\).</li>
+  </ul>
+</section>
+
+<!-- ===== Example 1: No air resistance ===== -->
+<section aria-labelledby="ex-no-air">
+  <h2 id="ex-no-air">Example 1 — Constant Gravity, No Air Resistance</h2>
+  <div class="example">
+    <span class="label">Problem</span>
+    A crossbow bolt is fired straight upward from the ground (\(y_0 = 0\)) with initial velocity \(v_0 = 49\;\text{m/s}\). Gravitational acceleration is \(g = 9.8\;\text{m/s}^2\). Find the bolt's height function \(y(t)\).
+  </div>
+
+  <h3>Solution</h3>
+  <p>Taking upward as positive, the only force is gravity (downward), so by Newton's second law (\(ma = F\)):</p>
+  \[
+    m\frac{dv}{dt} = -9.8\,m \quad\Longrightarrow\quad \frac{dv}{dt} = -9.8.
+  \]
+
+  <p>Integrate directly:</p>
+  \[
+    v(t) = -9.8t + C.
+  \]
+  <p>Applying \(v(0) = 49\) gives \(C = 49\), so</p>
+  \[
+    v(t) = -9.8t + 49.
+  \]
+
+  <p>Integrate again to find position:</p>
+  \[
+    y(t) = \int v(t)\,dt = -4.9t^2 + 49t + C.
+  \]
+  <p>Applying \(y(0) = 0\) gives \(C = 0\), so</p>
+  <div class="formula-box">
+    \[
+      \boxed{y(t) = -4.9t^2 + 49t.}
+    \]
+  </div>
+</section>
+
+<!-- ===== Example 2: Linear air resistance ===== -->
+<section aria-labelledby="ex-linear-air">
+  <h2 id="ex-linear-air">Example 2 — Gravity with Linear Air Resistance</h2>
+  <div class="example">
+    <span class="label">Problem</span>
+    Consider the same bolt (\(y(0)=0\), \(v(0)=49\;\text{m/s}\)). Now the air resistance force is proportional to velocity, with proportionality constant \(0.04m\) (where \(m\) is the mass). Find the bolt's height function.
+  </div>
+
+  <h3>Setting Up the ODE</h3>
+  <p>By Newton's second law:</p>
+  \[
+    m\frac{dv}{dt} = -9.8m - 0.04m\,v.
+  \]
+
+  <div class="note">
+    <span class="label">Understanding the forces</span>
+    <ul>
+      <li><strong>When the arrow goes up (\(v > 0\)):</strong> Both gravity and air resistance point downward — they cooperate to reduce the upward velocity.</li>
+      <li><strong>When the arrow comes down (\(v < 0\)):</strong> Gravity points down but air resistance points up — they oppose each other.</li>
+    </ul>
+    In both cases, the equation \(\dfrac{dv}{dt} = -9.8 - 0.04v\) correctly handles the signs.
+  </div>
+
+  <p>Dividing by \(m\), we obtain the IVP:</p>
+  <div class="formula-box">
+    \[
+      \frac{dv}{dt} = -9.8 - 0.04v, \qquad v(0) = 49.
+    \]
+  </div>
+
+  <h3>Solving via Integrating Factor</h3>
+  <p>This is both separable and linear. Using the linear method, rewrite in standard form:</p>
+  \[
+    \frac{dv}{dt} + 0.04\,v = -9.8.
+  \]
+
+  <p><strong>Integrating factor:</strong> \(\mu(t) = e^{\int 0.04\,dt} = e^{0.04t}\).</p>
+
+  <p><strong>Multiply both sides:</strong></p>
+  \[
+    e^{0.04t}\frac{dv}{dt} + 0.04\,e^{0.04t}\,v = -9.8\,e^{0.04t}.
+  \]
+
+  <p><strong>Recognize product rule:</strong></p>
+  \[
+    \frac{d}{dt}\!\left(e^{0.04t}\,v\right) = -9.8\,e^{0.04t}.
+  \]
+
+  <p><strong>Integrate:</strong> (using \(\frac{1}{0.04} = 25\))</p>
+  \[
+    e^{0.04t}\,v = \int(-9.8\,e^{0.04t})\,dt = -9.8 \cdot 25\,e^{0.04t} + C = -245\,e^{0.04t} + C.
+  \]
+  \[
+    v = -245 + Ce^{-0.04t}.
+  \]
+
+  <p><strong>Apply \(v(0) = 49\):</strong></p>
+  \[
+    49 = -245 + C \quad\Longrightarrow\quad C = 294.
+  \]
+
+  <div class="formula-box">
+    \[
+      \boxed{v(t) = -245 + 294\,e^{-0.04t}.}
+    \]
+  </div>
+
+  <h3>Finding the Position</h3>
+  <p>Integrate \(v(t)\) to get \(y(t)\):</p>
+  \[
+    y(t) = \int v(t)\,dt = -245t - \frac{294}{0.04}\,e^{-0.04t} + C = -245t - 25(294)\,e^{-0.04t} + C.
+  \]
+
+  <p>Apply \(y(0) = 0\):</p>
+  \[
+    0 = -25(294) + C \quad\Longrightarrow\quad C = 25(294).
+  \]
+
+  <div class="formula-box">
+    \[
+      \boxed{y(t) = -245t - 25(294)\,e^{-0.04t} + 25(294).}
+    \]
+  </div>
+</section>
+
+<!-- ===== Example 3: Motorboat with quadratic resistance ===== -->
+<section aria-labelledby="ex-motorboat">
+  <h2 id="ex-motorboat">Example 3 — Motorboat with Quadratic Water Resistance</h2>
+  <div class="example">
+    <span class="label">Problem</span>
+    A motorboat starts from rest (\(v(0) = 0\)). Its motor provides a constant acceleration of \(4\;\text{ft/s}^2\), but water resistance causes a deceleration of \(\dfrac{v^2}{400}\;\text{ft/s}^2\). Find the limiting velocity \(\displaystyle\lim_{t\to\infty} v(t)\).
+  </div>
+
+  <h3>Solution</h3>
+  <p>The net acceleration equation is (phrased in terms of acceleration, not force):</p>
+  \[
+    \frac{dv}{dt} = 4 - \frac{v^2}{400}, \qquad v(0) = 0, \quad v \ge 0.
+  \]
+
+  <p>This is separable, but solving explicitly leads to messy partial fractions. Instead, we use a <strong>phase line analysis</strong> to predict the long-term behavior.</p>
+
+  <p><strong>Find equilibria:</strong> Set \(4 - \dfrac{v^2}{400} = 0\):</p>
+  \[
+    v^2 = 1600 \quad\Longrightarrow\quad v = \pm 40.
+  \]
+  <p>Since \(v \ge 0\), the relevant equilibrium is \(v = 40\).</p>
+
+  <p><strong>Sign analysis:</strong></p>
+  <ul>
+    <li>For \(0 \le v < 40\): \(\dfrac{dv}{dt} > 0\) (velocity increasing).</li>
+    <li>For \(v > 40\): \(\dfrac{dv}{dt} < 0\) (velocity decreasing).</li>
+  </ul>
+
+  <p>Therefore \(v = 40\) is a <strong>stable equilibrium</strong>. Since the boat starts at \(v(0) = 0\), which is below the equilibrium, its velocity increases toward 40.</p>
+
+  <div class="formula-box">
+    \[
+      \boxed{\lim_{t \to \infty} v(t) = 40 \;\text{ft/s}.}
+    \]
+  </div>
+
+  <div class="note">
+    <span class="label">Key insight</span>
+    We didn't need to find the explicit formula for \(v(t)\) — the phase line analysis from Section 2.2 gave us the limiting behavior directly!
+  </div>
+</section>
+
+<!-- ===== Escape velocity ===== -->
+<section aria-labelledby="escape">
+  <h2 id="escape">Escape Velocity</h2>
+
+  <h3>The Inverse-Square Law</h3>
+  <p>Instead of the sea-level approximation \(F = mg\), the "real" Newtonian gravitational force is</p>
+  <div class="formula-box">
+    \[
+      F = \frac{GMm}{r^2},
+    \]
+  </div>
+  <p>where \(m\) and \(M\) are the masses of the two objects, \(r\) is the distance between their centers of mass, and \(G \approx 6.67 \times 10^{-11}\;\text{N}\!\cdot\!\text{m}^2/\text{kg}^2\) is the universal gravitational constant.</p>
+
+  <p>To see how the constant \(g = 9.8\;\text{m/s}^2\) arises, substitute \(r = R_E = 6.371 \times 10^6\;\text{m}\) and \(M = M_E = 5.97 \times 10^{24}\;\text{kg}\):</p>
+  \[
+    F = \frac{6.67 \times 10^{-11} \cdot 5.97 \times 10^{24}}{(6.378 \times 10^6)^2}\,m \approx 9.8\,m.
+  \]
+  <p>This approximation works near Earth's surface, but for problems involving rocket escape velocity we need the full inverse-square law.</p>
+
+  <h3>Setting Up the ODE</h3>
+  <p>Consider a rocket launched from Earth's surface. After the booster engines are detached, the only force is gravitational attraction:</p>
+  \[
+    m\frac{dv}{dt} = -\frac{GMm}{r^2}.
+  \]
+  <p>Dividing by \(m\):</p>
+  \[
+    \frac{dv}{dt} = -\frac{GM}{r^2}.
+  \]
+
+  <p>Since \(v = \dfrac{dr}{dt}\), this is really \(\dfrac{d^2r}{dt^2} = -\dfrac{GM}{r^2}\), a <strong>second-order nonlinear</strong> ODE for \(r(t)\). We don't have standard methods for this type of equation.</p>
+
+  <h3>The Chain Rule Trick</h3>
+  <p>Suppose \(v(t) > 0\), so \(r(t)\) is increasing and invertible. We can write velocity as a function of position: \(v = v(r)\). By the chain rule:</p>
+
+  <div class="def-box">
+    <span class="label">Chain rule trick</span>
+    \[
+      \frac{dv}{dt} = \frac{dv}{dr}\cdot\frac{dr}{dt} = \frac{dv}{dr}\cdot v = v\frac{dv}{dr}.
+    \]
+  </div>
+
+  <p>This converts our second-order ODE for \(r(t)\) into a <strong>first-order separable</strong> equation for \(v(r)\):</p>
+  \[
+    v\frac{dv}{dr} = -\frac{GM}{r^2}.
+  \]
+
+  <div class="note">
+    <span class="label">Note</span>
+    This trick — converting acceleration from a function of time to a function of position — is also used in EMech 212 and Phys 419.
+  </div>
+
+  <h3>Solving by Separation</h3>
+  <p>Separate and integrate:</p>
+  \[
+    \int v\,dv = \int\!\left(-\frac{GM}{r^2}\right)dr.
+  \]
+  \[
+    \frac{v^2}{2} = \frac{GM}{r} + C.
+  \]
+
+  <div class="note">
+    <span class="label">Energy conservation</span>
+    Multiplying through by \(m\) and rearranging gives
+    \[
+      \frac{mv^2}{2} - \frac{GMm}{r} = C_1,
+    \]
+    which says <strong>kinetic energy + gravitational potential energy = constant</strong>. We have just derived conservation of energy from Newton's second law!
+  </div>
+
+  <h3>Applying the Initial Condition</h3>
+  <p>Use \(v = v_0\) when \(r = R\) (launched from Earth's surface):</p>
+  \[
+    C = \frac{v_0^2}{2} - \frac{GM}{R}.
+  \]
+  <p>Substituting back:</p>
+  \[
+    \frac{v^2}{2} = \frac{GM}{r} + \frac{v_0^2}{2} - \frac{GM}{R},
+  \]
+  <p>or equivalently,</p>
+  <div class="formula-box">
+    \[
+      v^2 = v_0^2 - \frac{2GM}{R} + \frac{2GM}{r}.
+    \]
+  </div>
+  <p>Note that \(\dfrac{2GM}{r} \to 0\) as \(r \to \infty\).</p>
+
+  <h3>Two Cases</h3>
+
+  <p><strong>Case 1:</strong> If \(v_0^2 - \dfrac{2GM}{R} < 0\), there exists some \(r = r_1\) at which \(v^2 = 0\), meaning \(v = 0\). The rocket stops and is pulled back to Earth.</p>
+
+  <p><strong>Case 2:</strong> If \(v_0^2 - \dfrac{2GM}{R} \ge 0\), then \(v^2 > 0\) for all \(r \ge R\). Since \(v(r)\) is continuous and \(v_0 = v(R) > 0\), the velocity can never pass through zero, so \(v > 0\) for all \(r \ge R\). The rocket never stops moving away from Earth.</p>
+
+  <h3>The Escape Velocity Formula</h3>
+  <p>The critical threshold is \(v_0^2 - \dfrac{2GM}{R} = 0\), giving:</p>
+
+  <div class="formula-box">
+    \[
+      \boxed{v_{\text{escape}} = \sqrt{\frac{2GM}{R}}\,.}
+    \]
+  </div>
+
+  <p>This is the minimum initial velocity needed so that \(v > 0\) for all \(r \ge R\) (equivalently, for all \(t \ge 0\)). Provided \(v_0 > \sqrt{2GM/R}\), one can show (see textbook problem 2.3.27) that \(\displaystyle\lim_{t\to\infty} r(t) = \infty\), so the rocket truly "escapes" Earth.</p>
+
+  <div class="note">
+    <span class="label">Subtle point</span>
+    Just because \(v(t) > 0\) for all \(t\) does not automatically guarantee \(\lim_{t\to\infty} r(t) = \infty\) — it is possible for \(r(t)\) to increase but approach a finite limit. However, for this problem it can be verified that \(r(t) \to \infty\) when \(v_0 \ge \sqrt{2GM/R}\).
+  </div>
+</section>
+
+<!-- ===== Velocity-dependent vs position-dependent forces ===== -->
+<section aria-labelledby="force-types">
+  <h2 id="force-types">Velocity-Dependent vs. Position-Dependent Forces</h2>
+
+  <p>When the force depends on <strong>velocity</strong> (like air or water resistance), Newton's second law gives a first-order ODE of the form</p>
+  \[
+    \frac{dv}{dt} = f(v),
+  \]
+  <p>which we solve using standard first-order techniques (separable or linear).</p>
+
+  <p>These velocity-dependent forces are <strong>non-conservative</strong> — they do not arise from a potential energy. Resistive forces convert kinetic/potential energy into heat. The total energy of the universe is conserved, but the <em>mechanical energy</em> (kinetic + potential) is not constant in time.</p>
+
+  <p>When the force depends on <strong>position</strong> (like gravity via the inverse-square law), we get a second-order ODE. The chain rule trick \(\dfrac{dv}{dt} = v\dfrac{dv}{dr}\) converts it into a first-order separable equation for \(v(r)\), and the resulting conservation law is energy conservation.</p>
+</section>
+
+<!-- ===== Example 4: Coasting with linear drag ===== -->
+<section aria-labelledby="ex-coast-linear">
+  <h2 id="ex-coast-linear">Example 4 — Coasting Boat with Linear Drag</h2>
+  <div class="example">
+    <span class="label">Problem</span>
+    A motorboat coasts (no motor acceleration) and experiences water resistance proportional to its speed:
+    \[
+      \frac{dv}{dt} = -kv, \qquad k > 0.
+    \]
+    Find \(v(t)\) and \(x(t)\) in terms of the initial position \(x_0\) and initial velocity \(v_0 > 0\). Does the boat travel a finite distance, or does it coast infinitely far?
+  </div>
+
+  <h3>Solution</h3>
+  <p>This is the standard exponential decay equation \(\dfrac{dv}{dt} = -kv\), with solution</p>
+  <div class="formula-box">
+    \[
+      \boxed{v(t) = v_0\,e^{-kt}.}
+    \]
+  </div>
+
+  <p>Integrate to find position:</p>
+  \[
+    x(t) = \int v_0\,e^{-kt}\,dt = -\frac{v_0}{k}\,e^{-kt} + C.
+  \]
+  <p>Apply \(x(0) = x_0\):</p>
+  \[
+    x_0 = -\frac{v_0}{k} + C \quad\Longrightarrow\quad C = x_0 + \frac{v_0}{k}.
+  \]
+
+  <div class="formula-box">
+    \[
+      \boxed{x(t) = -\frac{v_0}{k}\,e^{-kt} + x_0 + \frac{v_0}{k}.}
+    \]
+  </div>
+
+  <h3>Does the boat travel a finite distance?</h3>
+  <p>As \(t \to \infty\), \(e^{-kt} \to 0\), so</p>
+  \[
+    \lim_{t\to\infty} x(t) = x_0 + \frac{v_0}{k}.
+  \]
+  <p><strong>Yes — the boat travels a finite total distance</strong> of \(\dfrac{v_0}{k}\) from its starting point, even though \(v(t) > 0\) for all \(t \ge 0\) (the velocity never reaches zero in finite time).</p>
+
+  <div class="note">
+    <span class="label">Note on uniqueness</span>
+    The fact that \(v(t) = v_0 e^{-kt} > 0\) for all finite \(t\) means the boat never actually stops in finite time. There is no "stopping time" \(T\) at which \(v(T) = 0\). For air/water resistance proportional to \(|v|^p\) with \(1 \le p \le 2\), this is always the case — if a solution reached \(v = 0\) in finite time and then stayed at \(v = 0\), it would cross the equilibrium solution \(v \equiv 0\), violating uniqueness of solutions (since \(f(v) = -kv^p\) satisfies the conditions for unique solutions in this range).
+  </div>
+</section>
+
+<!-- ===== Example 5: Coasting with quadratic drag ===== -->
+<section aria-labelledby="ex-coast-quad">
+  <h2 id="ex-coast-quad">Example 5 — Coasting Boat with Quadratic Drag</h2>
+  <div class="example">
+    <span class="label">Problem</span>
+    A motorboat coasts and experiences water resistance proportional to its speed <em>squared</em>:
+    \[
+      \frac{dv}{dt} = -kv^2, \qquad k > 0.
+    \]
+    Find \(v(t)\) and \(x(t)\) in terms of \(x_0\) and \(v_0 > 0\). Does the boat travel a finite distance?
+  </div>
+
+  <h3>Solution</h3>
+  <p>This is separable. Separate variables:</p>
+  \[
+    \frac{dv}{v^2} = -k\,dt \quad\Longrightarrow\quad \int v^{-2}\,dv = \int -k\,dt.
+  \]
+  \[
+    -\frac{1}{v} = -kt + C_1 \quad\Longrightarrow\quad \frac{1}{v} = kt + C_1.
+  \]
+  <p>Apply \(v(0) = v_0\): \(\dfrac{1}{v_0} = C_1\). So</p>
+  \[
+    \frac{1}{v} = kt + \frac{1}{v_0} = \frac{kv_0 t + 1}{v_0}.
+  \]
+
+  <div class="formula-box">
+    \[
+      \boxed{v(t) = \frac{v_0}{1 + kv_0 t}.}
+    \]
+  </div>
+
+  <p>Integrate to find position:</p>
+  \[
+    x(t) = \int \frac{v_0}{1 + kv_0 t}\,dt = \frac{1}{k}\ln(1 + kv_0 t) + C.
+  \]
+  <p>Apply \(x(0) = x_0\): \(C = x_0\).</p>
+
+  <div class="formula-box">
+    \[
+      \boxed{x(t) = x_0 + \frac{1}{k}\ln(1 + kv_0 t).}
+    \]
+  </div>
+
+  <h3>Does the boat travel a finite distance?</h3>
+  <p>As \(t \to \infty\):</p>
+  \[
+    \lim_{t\to\infty} x(t) = x_0 + \frac{1}{k}\lim_{t\to\infty}\ln(1 + kv_0 t) = \infty.
+  \]
+  <p><strong>No — the boat coasts infinitely far!</strong> Even though the velocity \(v(t) \to 0\) as \(t \to \infty\), the boat slows down so gradually that the total distance traveled is unbounded.</p>
+
+  <div class="note">
+    <span class="label">Comparison</span>
+    <ul>
+      <li><strong>Linear drag</strong> (\(F_R \propto v\)): velocity decays exponentially → boat travels a <strong>finite</strong> total distance.</li>
+      <li><strong>Quadratic drag</strong> (\(F_R \propto v^2\)): velocity decays like \(1/t\) → boat travels an <strong>infinite</strong> total distance.</li>
+    </ul>
+    The quadratic-drag velocity decays more slowly, allowing the integral of \(v(t)\) (i.e., total displacement) to diverge.
+  </div>
+</section>
+
+<footer>
+  Math 251H — Section 2.3 Lecture Notes
+</footer>
+
+</main>
+</body>
+</html>

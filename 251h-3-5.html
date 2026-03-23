@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 251H — 3.5: Inhomogeneous Equations: Undetermined Coefficients</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    tags: 'ams'
+  },
+  options: {
+    renderActions: {
+      addMenu: []
+    }
+  }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400&display=swap');
+
+  :root {
+    --bg: #faf8f5;
+    --text: #2a2520;
+    --accent: #3b3080;
+    --accent-light: #eae7f6;
+    --border: #d5d0c8;
+    --heading: #1a1540;
+    --example-bg: #f2f0eb;
+    --example-border: #b8a88a;
+    --note-bg: #eef1f8;
+    --note-border: #7a82b0;
+    --warn-bg: #fdf0ed;
+    --warn-border: #c44b2b;
+    --highlight: #c44b2b;
+    --max-w: 52rem;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 17px; scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    padding: 2rem 1.5rem 6rem;
+  }
+
+  .container { max-width: var(--max-w); margin: 0 auto; }
+
+  header {
+    text-align: center;
+    padding: 3rem 0 2.5rem;
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: 3rem;
+  }
+  header .course {
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: var(--heading);
+    line-height: 1.25;
+  }
+
+  nav.toc {
+    background: var(--accent-light);
+    border-radius: 6px;
+    padding: 1.25rem 1.75rem;
+    margin-bottom: 3rem;
+  }
+  nav.toc h2 {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+  nav.toc ol {
+    padding-left: 1.25rem;
+    font-size: 0.95rem;
+  }
+  nav.toc li { margin-bottom: 0.25rem; }
+  nav.toc a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  nav.toc a:hover, nav.toc a:focus { border-bottom-color: var(--accent); }
+
+  section { margin-bottom: 3rem; }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--heading);
+    margin-bottom: 1rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--heading);
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  .math-block {
+    overflow-x: auto;
+    margin: 1.25rem 0;
+    padding: 0.5rem 0;
+  }
+
+  .example {
+    background: var(--example-bg);
+    border-left: 4px solid var(--example-border);
+    border-radius: 0 6px 6px 0;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .example-title {
+    font-weight: 700;
+    color: var(--highlight);
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+  }
+
+  .note {
+    background: var(--note-bg);
+    border-left: 4px solid var(--note-border);
+    border-radius: 0 6px 6px 0;
+    padding: 1.1rem 1.4rem;
+    margin: 1.5rem 0;
+  }
+  .note-title {
+    font-weight: 700;
+    color: var(--note-border);
+    margin-bottom: 0.3rem;
+  }
+
+  .warn {
+    background: var(--warn-bg);
+    border-left: 4px solid var(--warn-border);
+    border-radius: 0 6px 6px 0;
+    padding: 1.1rem 1.4rem;
+    margin: 1.5rem 0;
+  }
+  .warn-title {
+    font-weight: 700;
+    color: var(--warn-border);
+    margin-bottom: 0.3rem;
+  }
+
+  .step-list {
+    list-style: none;
+    padding-left: 0;
+    counter-reset: steps;
+    margin: 1rem 0;
+  }
+  .step-list > li {
+    position: relative;
+    padding: 0.75rem 0 0.75rem 2.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    counter-increment: steps;
+  }
+  .step-list > li:last-child { border-bottom: none; }
+  .step-list > li::before {
+    content: 'Step ' counter(steps);
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  .cases-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 1rem 0;
+  }
+  .cases-list > li {
+    position: relative;
+    padding: 0.5rem 0 0.5rem 1.6rem;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .cases-list > li:last-child { border-bottom: none; }
+  .cases-list > li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  mjx-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+  }
+
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    z-index: 100;
+    border-radius: 0 0 4px 0;
+  }
+  .skip-link:focus { left: 0; }
+
+  @media print {
+    body { background: #fff; font-size: 11pt; padding: 0; }
+    header { border-bottom-color: #000; }
+    nav.toc, .skip-link { display: none; }
+    .example, .note, .warn { break-inside: avoid; }
+  }
+
+  @media (max-width: 600px) {
+    html { font-size: 15px; }
+    header h1 { font-size: 1.6rem; }
+    .example, .note, .warn { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<div class="container" id="main" role="main">
+
+<header>
+  <div class="course">Math 251H</div>
+  <h1>3.5: Inhomogeneous Equations — Undetermined Coefficients</h1>
+</header>
+
+<nav class="toc" aria-label="Table of contents">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#overview">Overview &amp; Vocabulary</a></li>
+    <li><a href="#process">The Three-Step Process</a></li>
+    <li><a href="#why">Why \(y = y_c + y_p\) Works</a></li>
+    <li><a href="#ansatz">How to Build the \(y_p\) Ansatz</a></li>
+    <li><a href="#solving">Solving for the Coefficients</a></li>
+    <li><a href="#ex1">Example: No Matchup (Trig Source)</a></li>
+    <li><a href="#incorrect">Incorrect Ansatz &rarr; Inconsistent System</a></li>
+    <li><a href="#ex-matchup">Example: Matchup Case (Resonance)</a></li>
+    <li><a href="#ex-form1">Example: Form of \(y_p\) — Exponential Source</a></li>
+    <li><a href="#ex-form2">Example: Form of \(y_p\) — Matchup with \(y_c\)</a></li>
+    <li><a href="#ex-form3">Example: Form of \(y_p\) — Multiple Source Terms</a></li>
+    <li><a href="#ex-form4">Example: Fourth-Order Equation</a></li>
+    <li><a href="#shortcuts">Shortcut Rules for the Initial Guess</a></li>
+  </ol>
+</nav>
+
+<!-- ============================================================ -->
+<section id="overview">
+<h2>1. Overview &amp; Vocabulary</h2>
+
+<p>
+We have been solving constant-coefficient <em>homogeneous</em> differential equations of the form
+</p>
+<div class="math-block">\[ a_n y^{(n)} + a_{n-1} y^{(n-1)} + \cdots + a_1 y' + a_0 y = 0. \]</div>
+
+<p>
+The <strong>method of undetermined coefficients</strong> is a technique to solve <em>inhomogeneous</em> equations of the form
+</p>
+<div class="math-block">\[ a_n y^{(n)} + a_{n-1} y^{(n-1)} + \cdots + a_1 y' + a_0 y = f(x), \]</div>
+<p>
+where \(f(x)\) (the <em>source term</em>, <em>inhomogeneity</em>, or <em>external force</em>) is a linear combination of the types of functions that appear in general solutions of constant-coefficient ODEs: exponentials, sines, cosines, polynomials, and products thereof.
+</p>
+
+<div class="note">
+  <div class="note-title">Applicability</div>
+  <p>
+    Undetermined coefficients works when \(f(x)\) is built from \(e^{ax}\), \(\cos(bx)\), \(\sin(bx)\), polynomials in \(x\), and products of these. It does <em>not</em> apply to source terms like \(\tan x\), \(\sqrt{x}\), \(\ln x\), etc., because those functions keep producing new independent terms under differentiation.
+  </p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="process">
+<h2>2. The Three-Step Process</h2>
+
+<ol class="step-list">
+  <li>
+    <strong>Find the complementary solution \(y_c\).</strong>
+    Solve the associated homogeneous equation \(P\!\left(\frac{d}{dx}\right) y = 0\) using previously discussed techniques (characteristic polynomial, etc.). The result \(y_c\) is the <em>general solution</em> of the homogeneous problem — it contains all the free constants \(c_1, c_2, \ldots\)
+  </li>
+  <li>
+    <strong>Find a particular solution \(y_p\).</strong>
+    Formulate an "undetermined coefficients ansatz" for \(y_p\) based on the form of \(f(x)\). Substitute this ansatz into the inhomogeneous DE, match coefficients on linearly independent terms, and solve the resulting linear system to pin down the undetermined coefficients. The result \(y_p\) is <em>one</em> specific solution of the inhomogeneous equation — it has <em>no free constants</em>.
+  </li>
+  <li>
+    <strong>Combine: \(y = y_c + y_p\).</strong>
+    This is the <em>general solution</em> of the inhomogeneous problem. Apply initial conditions <strong>only at this stage</strong> to determine the constants in \(y_c\).
+  </li>
+</ol>
+
+<div class="warn">
+  <div class="warn-title">Important</div>
+  <p>
+    Apply initial conditions only <em>after</em> forming \(y = y_c + y_p\). We need the full solution \(y = y_c + y_p\) to satisfy the initial data — not \(y_c\) alone.
+  </p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="why">
+<h2>3. Why \(y = y_c + y_p\) Works</h2>
+
+<p>
+Since \(y_c\) solves the homogeneous equation and \(y_p\) solves the inhomogeneous equation, the linearity (superposition) of the differential operator gives:
+</p>
+<div class="math-block">\[
+P\!\left(\frac{d}{dx}\right)(y_c + y_p)
+= P\!\left(\frac{d}{dx}\right) y_c + P\!\left(\frac{d}{dx}\right) y_p
+= 0 + f(x) = f(x).
+\]</div>
+<p>
+So \(y = y_c + y_p\) indeed solves the inhomogeneous problem. This is analogous to the linear algebra fact that if \(A\vec{x} = \vec{b}\) has a particular solution \(\vec{x}_p\), then every solution is of the form \(\vec{x}_p + \vec{x}_c\) where \(\vec{x}_c\) is in the null space of \(A\).
+</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="ansatz">
+<h2>4. How to Build the \(y_p\) Ansatz</h2>
+
+<p>
+The source \(f(x)\) must be a linear combination of functions of the form
+</p>
+<div class="math-block">\[ e^{ax},\quad e^{ax}\cos(bx),\quad e^{ax}\sin(bx), \]</div>
+<p>
+(where \(a = 0\) is allowed, covering pure polynomials and trig), as well as polynomial multiples:
+</p>
+<div class="math-block">\[ x^n e^{ax},\quad x^n e^{ax}\cos(bx),\quad x^n e^{ax}\sin(bx), \qquad n \text{ a positive integer}. \]</div>
+<p>
+These are precisely the functions for which the process of repeated differentiation eventually stops producing new linearly independent terms.
+</p>
+
+<h3>Building the initial guess</h3>
+<p>
+For each term in \(f(x)\), take derivatives indefinitely and collect all <em>distinct linearly independent functions</em> that appear. The <strong>initial guess</strong> for \(y_p\) is an arbitrary linear combination of those functions, with undetermined coefficients \(A, B, C, \ldots\)
+</p>
+
+<h3>The matchup adjustment</h3>
+<p>
+If any term in the initial guess also appears in \(y_c\), substitution into the DE will cause those terms to cancel and we'll have "nothing to work with" — leading to an inconsistent system. To fix this, multiply the <em>offending group</em> of terms by the minimum power of \(x\) needed so that no term in \(y_p\) coincides with any term in \(y_c\) (or with other groups in \(y_p\)).
+</p>
+
+<div class="note">
+  <div class="note-title">Why find \(y_c\) first?</div>
+  <p>
+    You must always compute \(y_c\) before constructing \(y_p\), because you need to check for matchups. The two steps cannot be done in arbitrary order.
+  </p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="solving">
+<h2>5. Solving for the Coefficients</h2>
+
+<p>
+Once you have the final \(y_p\) ansatz (after any matchup adjustments), substitute it into the inhomogeneous DE. Both sides will be linear combinations of the same linearly independent functions. Matching corresponding coefficients (just like in partial fractions) yields a linear system of equations. Solve this system by elimination, substitution, or row reduction to find the undetermined coefficients.
+</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="ex1">
+<h2>6. Example: No Matchup (Trig Source)</h2>
+
+<div class="example">
+  <div class="example-title">Example</div>
+  <p>Solve the initial value problem</p>
+  <div class="math-block">\[ y'' + 5y' + 6y = 156\cos(2x), \qquad y(0) = 2,\quad y'(0) = 4. \]</div>
+
+  <h3>Step 1: Find \(y_c\)</h3>
+  <p>
+    Characteristic equation: \(r^2 + 5r + 6 = (r+2)(r+3) = 0\), so \(r = -2, -3\).
+  </p>
+  <div class="math-block">\[ y_c = c_1 e^{-2x} + c_2 e^{-3x}. \]</div>
+
+  <h3>Step 2: Find \(y_p\)</h3>
+  <p>
+    The source is \(f(x) = 156\cos(2x)\). Taking derivatives: \(f'(x) = -312\sin(2x)\), \(f''(x) = -624\cos(2x)\), and then nothing new appears. The linearly independent terms are \(\cos(2x)\) and \(\sin(2x)\).
+  </p>
+  <p><strong>Initial guess:</strong> \(y_p = A\cos(2x) + B\sin(2x)\).</p>
+  <p>Checking against \(y_c\): no terms in common, so <strong>no adjustment needed</strong>.</p>
+
+  <p>Compute derivatives and substitute:</p>
+  <div class="math-block">\[
+  y_p' = -2A\sin(2x) + 2B\cos(2x), \qquad
+  y_p'' = -4A\cos(2x) - 4B\sin(2x).
+  \]</div>
+  <p>Substituting into \(y'' + 5y' + 6y = 156\cos(2x)\):</p>
+  <div class="math-block">\[
+  (-4A + 10B + 6A)\cos(2x) + (-4B - 10A + 6B)\sin(2x) = 156\cos(2x).
+  \]</div>
+  <div class="math-block">\[
+  (2A + 10B)\cos(2x) + (-10A + 2B)\sin(2x) = 156\cos(2x) + 0\cdot\sin(2x).
+  \]</div>
+  <p>Matching coefficients on the linearly independent functions \(\cos(2x)\) and \(\sin(2x)\):</p>
+  <div class="math-block">\[
+  \begin{cases}
+  2A + 10B = 156 \\
+  -10A + 2B = 0
+  \end{cases}
+  \]</div>
+  <p>From the second equation: \(B = 5A\). Substituting: \(2A + 50A = 156\), so \(A = 3\) and \(B = 15\).</p>
+  <div class="math-block">\[ \boxed{y_p = 3\cos(2x) + 15\sin(2x).} \]</div>
+
+  <h3>Step 3: General solution and initial conditions</h3>
+  <div class="math-block">\[ y = y_c + y_p = c_1 e^{-2x} + c_2 e^{-3x} + 3\cos(2x) + 15\sin(2x). \]</div>
+  <div class="math-block">\[ y' = -2c_1 e^{-2x} - 3c_2 e^{-3x} - 6\sin(2x) + 30\cos(2x). \]</div>
+  <p>Applying \(y(0) = 2\) and \(y'(0) = 4\):</p>
+  <div class="math-block">\[
+  \begin{cases}
+  c_1 + c_2 + 3 = 2 \\
+  -2c_1 - 3c_2 + 30 = 4
+  \end{cases}
+  \quad\Longrightarrow\quad
+  \begin{cases}
+  c_1 + c_2 = -1 \\
+  -2c_1 - 3c_2 = -26
+  \end{cases}
+  \]</div>
+  <p>Solving: \(c_1 = -29\), \(c_2 = 28\). (You can verify by elimination.) The final answer is</p>
+  <div class="math-block">\[ y = -29e^{-2x} + 28e^{-3x} + 3\cos(2x) + 15\sin(2x). \]</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="incorrect">
+<h2>7. Incorrect Ansatz Leads to an Inconsistent System</h2>
+
+<p>
+If the ansatz is missing necessary terms, or if it duplicates terms from \(y_c\), the coefficient-matching step will produce a system of equations with no solution. Here are illustrations of each mistake.
+</p>
+
+<div class="example">
+  <div class="example-title">Example — Missing linearly independent terms</div>
+  <p>
+    Trying \(y_p = A\cos(2x)\) alone (without a \(\sin(2x)\) term) for \(y'' + 5y' + 6y = 3\cos(2x)\) leads to:
+  </p>
+  <div class="math-block">\[ 2A\cos(2x) - 10A\sin(2x) = 3\cos(2x) + 0\cdot\sin(2x), \]</div>
+  <p>
+    giving \(2A = 3\) and \(-10A = 0\) — which is inconsistent. The fix: include both \(A\cos(2x)\) and \(B\sin(2x)\).
+  </p>
+</div>
+
+<div class="example">
+  <div class="example-title">Example — Matchup with \(y_c\) (not adjusted)</div>
+  <p>
+    For \(y'' + 4y = 3\cos(2x)\), the complementary solution is \(y_c = c_1\cos(2x) + c_2\sin(2x)\). Trying \(y_p = A\cos(2x) + B\sin(2x)\) gives:
+  </p>
+  <div class="math-block">\[
+  (-4A\cos 2x - 4B\sin 2x) + 4(A\cos 2x + B\sin 2x) = 3\cos(2x),
+  \]</div>
+  <div class="math-block">\[ 0 = 3\cos(2x) \quad \text{for all } x \quad — \text{impossible!} \]</div>
+  <p>
+    The \(y_p\) terms cancel perfectly because they solve the homogeneous equation. The fix: multiply by \(x\) to get the adjusted ansatz \(y_p = Ax\cos(2x) + Bx\sin(2x)\).
+  </p>
+</div>
+
+<div class="note">
+  <div class="note-title">Analogy with partial fractions</div>
+  <p>
+    This is exactly analogous to using the wrong form in a partial fraction decomposition. For instance, trying \(\frac{1}{x^3+x} = \frac{A}{x} + \frac{B}{x^2+1}\) (missing the linear numerator \(Bx + C\) over the irreducible quadratic) leads to an inconsistent system \(A = 0,\; B = 0,\; A = 1\).
+  </p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="ex-matchup">
+<h2>8. Example: Matchup Case (Resonance)</h2>
+
+<div class="example">
+  <div class="example-title">Example</div>
+  <p>Solve the initial value problem</p>
+  <div class="math-block">\[ y'' + 4y = 3\cos(2x), \qquad y(0) = 2,\quad y'(0) = 4. \]</div>
+
+  <h3>Step 1: Find \(y_c\)</h3>
+  <p>
+    Characteristic equation: \(r^2 + 4 = 0\), so \(r = \pm 2i\).
+  </p>
+  <div class="math-block">\[ y_c = c_1\cos(2x) + c_2\sin(2x). \]</div>
+
+  <h3>Step 2: Find \(y_p\)</h3>
+  <p>
+    Source: \(f(x) = 3\cos(2x)\). The linearly independent terms from its derivatives are \(\cos(2x)\) and \(\sin(2x)\).
+  </p>
+  <p><strong>Initial guess:</strong> \(y_p = A\cos(2x) + B\sin(2x)\).</p>
+  <p>
+    <strong>Matchup!</strong> Both \(\cos(2x)\) and \(\sin(2x)\) appear in \(y_c\). Multiply by \(x\):
+  </p>
+  <p><strong>Adjusted guess:</strong> \(y_p = Ax\cos(2x) + Bx\sin(2x)\).</p>
+
+  <p>Computing derivatives (product rule):</p>
+  <div class="math-block">\[
+  y_p' = A\cos(2x) + B\sin(2x) - 2Ax\sin(2x) + 2Bx\cos(2x).
+  \]</div>
+  <div class="math-block">\[
+  y_p'' = -4A\sin(2x) + 4B\cos(2x) - 4Ax\cos(2x) - 4Bx\sin(2x).
+  \]</div>
+
+  <p>Substituting into \(y'' + 4y = 3\cos(2x)\):</p>
+  <div class="math-block">\[
+  \bigl(-4A\sin(2x) + 4B\cos(2x) \underbrace{- 4Ax\cos(2x) - 4Bx\sin(2x)}_{\text{cancel with } 4y_p}\bigr)
+  + 4\bigl(Ax\cos(2x) + Bx\sin(2x)\bigr) = 3\cos(2x).
+  \]</div>
+  <p>
+    As expected, the \(x\cos(2x)\) and \(x\sin(2x)\) terms cancel. What remains:
+  </p>
+  <div class="math-block">\[ -4A\sin(2x) + 4B\cos(2x) = 0\cdot\sin(2x) + 3\cos(2x). \]</div>
+  <p>Matching coefficients:</p>
+  <div class="math-block">\[
+  -4A = 0 \;\Longrightarrow\; A = 0, \qquad
+  4B = 3 \;\Longrightarrow\; B = \tfrac{3}{4}.
+  \]</div>
+  <div class="math-block">\[ \boxed{y_p = \frac{3}{4}\,x\sin(2x).} \]</div>
+
+  <h3>Step 3: General solution</h3>
+  <div class="math-block">\[ y = y_c + y_p = c_1\cos(2x) + c_2\sin(2x) + \frac{3}{4}\,x\sin(2x). \]</div>
+  <p>Apply \(y(0) = 2\) and \(y'(0) = 4\) to find \(c_1\) and \(c_2\).</p>
+
+  <div class="note">
+    <div class="note-title">Resonance</div>
+    <p>
+      Notice that the particular solution \(y_p = \frac{3}{4}x\sin(2x)\) grows without bound as \(x \to \infty\). This is the phenomenon of <strong>resonance</strong>: when the source frequency matches the system's natural frequency, the response amplitude grows linearly in time (in the undamped case).
+    </p>
+  </div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="ex-form1">
+<h2>9. Example: Form of \(y_p\) — Exponential Source</h2>
+
+<div class="example">
+  <div class="example-title">Example</div>
+  <p>Determine the form of \(y_p\) for</p>
+  <div class="math-block">\[ y'' - 2y' + 2y = xe^{2x}. \]</div>
+
+  <h3>Step 1: \(y_c\)</h3>
+  <p>
+    Characteristic equation: \(r^2 - 2r + 2 = 0\), i.e., \((r-1)^2 + 1 = 0\), giving \(r = 1 \pm i\).
+  </p>
+  <div class="math-block">\[ y_c = c_1 e^x\cos x + c_2 e^x\sin x. \]</div>
+
+  <h3>Step 2: Initial guess for \(y_p\)</h3>
+  <p>
+    Source: \(f(x) = xe^{2x}\). Taking derivatives: \(f'(x) = e^{2x} + 2xe^{2x}\), \(f''(x) = 4e^{2x} + 4xe^{2x}\), and nothing new appears beyond this. The linearly independent terms are \(xe^{2x}\) and \(e^{2x}\).
+  </p>
+  <p><strong>Initial guess:</strong> \(y_p = Axe^{2x} + Be^{2x}\).</p>
+  <p>Checking against \(y_c\): the complementary solution involves \(e^x\cos x\) and \(e^x\sin x\), which are entirely different. <strong>No matchup</strong>, so no adjustment is needed.</p>
+  <div class="math-block">\[ \boxed{y_p = Axe^{2x} + Be^{2x}.} \]</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="ex-form2">
+<h2>10. Example: Form of \(y_p\) — Matchup with \(y_c\)</h2>
+
+<div class="example">
+  <div class="example-title">Example</div>
+  <p>Determine the form of \(y_p\) for</p>
+  <div class="math-block">\[ y'' - 2y' + 2y = e^x\sin x. \]</div>
+
+  <h3>Step 1: \(y_c\)</h3>
+  <p>Same as above: \(r = 1 \pm i\), so</p>
+  <div class="math-block">\[ y_c = c_1 e^x\cos x + c_2 e^x\sin x. \]</div>
+
+  <h3>Step 2: Initial guess for \(y_p\)</h3>
+  <p>
+    Source: \(f(x) = e^x\sin x\). Taking derivatives: \(f'(x) = e^x\cos x + e^x\sin x\), and then nothing new. The linearly independent terms are \(e^x\sin x\) and \(e^x\cos x\).
+  </p>
+  <p><strong>Initial guess:</strong> \(y_p = Ae^x\cos x + Be^x\sin x\).</p>
+  <p>
+    <strong>Matchup!</strong> Both terms appear in \(y_c\). Multiply by \(x\):
+  </p>
+  <div class="math-block">\[ \boxed{y_p = Axe^x\cos x + Bxe^x\sin x.} \]</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="ex-form3">
+<h2>11. Example: Form of \(y_p\) — Multiple Source Terms</h2>
+
+<div class="example">
+  <div class="example-title">Example</div>
+  <p>Determine the form of \(y_p\) for</p>
+  <div class="math-block">\[ y'' + 4y = 3x\cos(2x) + e^{3x}. \]</div>
+
+  <h3>Step 1: \(y_c\)</h3>
+  <p>\(r^2 + 4 = 0\), so \(r = \pm 2i\).</p>
+  <div class="math-block">\[ y_c = c_1\cos(2x) + c_2\sin(2x). \]</div>
+
+  <h3>Step 2: Initial guess for \(y_p\)</h3>
+  <p>
+    Source: \(f(x) = 3x\cos(2x) + e^{3x}\). Treat each part separately.
+  </p>
+  <p>
+    <strong>From \(3x\cos(2x)\):</strong> Differentiating repeatedly yields the linearly independent terms \(x\cos(2x)\), \(x\sin(2x)\), \(\cos(2x)\), and \(\sin(2x)\). Initial guess contribution: \(Ax\cos(2x) + Bx\sin(2x) + C\cos(2x) + D\sin(2x)\).
+  </p>
+  <p>
+    <strong>From \(e^{3x}\):</strong> Differentiating gives only \(e^{3x}\). Initial guess contribution: \(Ee^{3x}\).
+  </p>
+  <p><strong>Combined initial guess:</strong></p>
+  <div class="math-block">\[ y_p = Ax\cos(2x) + Bx\sin(2x) + C\cos(2x) + D\sin(2x) + Ee^{3x}. \]</div>
+
+  <p>
+    <strong>Matchup check:</strong> The terms \(C\cos(2x)\) and \(D\sin(2x)\) match \(y_c\). To fix, we need to multiply the <em>entire group</em> of trig terms that share the same frequency by \(x\). But \(Ax\cos(2x)\) and \(Bx\sin(2x)\) are already present, so we must go up to \(x^2\) for the matching pair. The \(e^{3x}\) term has no matchup.
+  </p>
+
+  <p><strong>Adjusted guess:</strong></p>
+  <div class="math-block">\[ \boxed{y_p = Ax\cos(2x) + Bx\sin(2x) + Cx^2\cos(2x) + Dx^2\sin(2x) + Ee^{3x}.} \]</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="ex-form4">
+<h2>12. Example: Fourth-Order Equation</h2>
+
+<div class="example">
+  <div class="example-title">Example</div>
+  <p>Determine the form of \(y_p\) for</p>
+  <div class="math-block">\[ y^{(4)} + 9y'' = (x^2 + 1)\sin(3x) + xe^{2x}. \]</div>
+
+  <h3>Step 1: \(y_c\)</h3>
+  <p>
+    Characteristic equation: \(r^4 + 9r^2 = r^2(r^2 + 9) = 0\), giving \(r = 0\) (double) and \(r = \pm 3i\).
+  </p>
+  <div class="math-block">\[ y_c = c_1 + c_2 x + c_3\cos(3x) + c_4\sin(3x). \]</div>
+
+  <h3>Step 2: Initial guess for \(y_p\)</h3>
+  <p>
+    <strong>From \((x^2+1)\sin(3x)\):</strong> The linearly independent derivative terms are \(x^2\sin(3x)\), \(x^2\cos(3x)\), \(x\sin(3x)\), \(x\cos(3x)\), \(\sin(3x)\), and \(\cos(3x)\). Initial guess contribution:
+  </p>
+  <div class="math-block">\[ (Ax^2 + Bx + C)\sin(3x) + (Dx^2 + Ex + F)\cos(3x). \]</div>
+
+  <p>
+    <strong>From \(xe^{2x}\):</strong> Terms are \(xe^{2x}\) and \(e^{2x}\). Contribution: \((Gx + H)e^{2x}\).
+  </p>
+
+  <p>
+    <strong>Matchup check:</strong> The terms \(\sin(3x)\) and \(\cos(3x)\) (the \(C\) and \(F\) pieces) appear in \(y_c\). Multiply the entire trig group by \(x\) — but that would create \(x\sin(3x)\) and \(x\cos(3x)\), which are already present in the guess. So multiply by \(x\) once more? Actually, we multiply the <em>whole group</em> uniformly: the polynomial coefficients \(Ax^2 + Bx + C\) all gain an extra factor of \(x\), becoming \(Ax^3 + Bx^2 + Cx\). The \(e^{2x}\) terms have no matchup.
+  </p>
+
+  <p><strong>Adjusted guess:</strong></p>
+  <div class="math-block">\[ \boxed{y_p = (Ax^2 + Bx + Cx^3)\sin(3x) + (Dx^2 + Ex + Fx^3)\cos(3x) + (Gx + H)e^{2x}.} \]</div>
+  <p>(Equivalently, rewriting with the powers in order: \(y_p = (Ax^3 + Bx^2 + Cx)\sin(3x) + (Dx^3 + Ex^2 + Fx)\cos(3x) + (Gx + H)e^{2x}\), where the letters have been relabeled.)</p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="shortcuts">
+<h2>13. Shortcut Rules for the Initial Guess</h2>
+
+<p>
+Here are quick rules for forming the initial \(y_p\) guess from the source term \(f(x)\), <em>before</em> checking for matchups with \(y_c\):
+</p>
+
+<ul class="cases-list">
+  <li>
+    <strong>Term with \(e^{ax}\):</strong> Include \(e^{ax}\) — no other new terms needed from this factor alone.
+  </li>
+  <li>
+    <strong>Term with \(\cos(bx)\) or \(\sin(bx)\):</strong> Always include <em>both</em> \(\cos(bx)\) and \(\sin(bx)\).
+  </li>
+  <li>
+    <strong>Term with \(x^n\):</strong> Include all lower powers \(x^{n-1}, x^{n-2}, \ldots, x, 1\) as well.
+  </li>
+  <li>
+    <strong>Products:</strong> Combine the above rules. For example, \(x^2 e^{3x}\cos(5x)\) produces an initial guess of the form \((Ax^2 + Bx + C)e^{3x}\cos(5x) + (Dx^2 + Ex + F)e^{3x}\sin(5x)\).
+  </li>
+</ul>
+
+<p>
+After forming the initial guess, check for matchups with \(y_c\) and multiply the offending group by the minimum power of \(x\) to eliminate all overlaps.
+</p>
+
+<div class="note">
+  <div class="note-title">Why the extra \(x\) works (annihilator viewpoint)</div>
+  <p>
+    The matchup adjustment can be understood via annihilators. The idea is to convert the inhomogeneous equation into a higher-order homogeneous equation by applying a differential operator that "annihilates" the source. For example, to solve \(y'' + 4y = 3\cos(2x)\), apply \(\left(\frac{d^2}{dx^2} + 4\right)\) to both sides to get the fourth-order homogeneous equation \(y^{(4)} + 8y'' + 16y = 0\), whose characteristic equation \((r^2+4)^2 = 0\) has roots \(r = \pm 2i\) (each double). The general solution of this fourth-order equation is \(c_1\cos(2x) + c_2\sin(2x) + c_3 x\cos(2x) + c_4 x\sin(2x)\). The first two terms are \(y_c\); the "new" terms \(x\cos(2x)\) and \(x\sin(2x)\) form the \(y_p\) ansatz.
+  </p>
+</div>
+</section>
+
+</div><!-- .container -->
+</body>
+</html>

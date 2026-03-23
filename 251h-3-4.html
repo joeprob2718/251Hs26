@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 251H — 3.4: Mechanical Vibrations</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    tags: 'ams'
+  },
+  options: {
+    renderActions: {
+      addMenu: []
+    }
+  }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400&display=swap');
+
+  :root {
+    --bg: #faf8f5;
+    --text: #2a2520;
+    --accent: #3b3080;
+    --accent-light: #eae7f6;
+    --border: #d5d0c8;
+    --heading: #1a1540;
+    --example-bg: #f2f0eb;
+    --example-border: #b8a88a;
+    --note-bg: #eef1f8;
+    --note-border: #7a82b0;
+    --highlight: #c44b2b;
+    --max-w: 52rem;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 17px; scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    padding: 2rem 1.5rem 6rem;
+  }
+
+  .container { max-width: var(--max-w); margin: 0 auto; }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 3rem 0 2.5rem;
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: 3rem;
+  }
+  header .course {
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--heading);
+    line-height: 1.25;
+  }
+
+  /* Table of contents */
+  nav.toc {
+    background: var(--accent-light);
+    border-radius: 6px;
+    padding: 1.25rem 1.75rem;
+    margin-bottom: 3rem;
+  }
+  nav.toc h2 {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+  nav.toc ol {
+    padding-left: 1.25rem;
+    font-size: 0.95rem;
+  }
+  nav.toc li { margin-bottom: 0.25rem; }
+  nav.toc a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  nav.toc a:hover, nav.toc a:focus { border-bottom-color: var(--accent); }
+
+  /* Sections */
+  section { margin-bottom: 3rem; }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--heading);
+    margin-bottom: 1rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--heading);
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  /* Math display blocks */
+  .math-block {
+    overflow-x: auto;
+    margin: 1.25rem 0;
+    padding: 0.5rem 0;
+  }
+
+  /* Example blocks */
+  .example {
+    background: var(--example-bg);
+    border-left: 4px solid var(--example-border);
+    border-radius: 0 6px 6px 0;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .example-title {
+    font-weight: 700;
+    color: var(--highlight);
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+  }
+
+  /* Note / remark blocks */
+  .note {
+    background: var(--note-bg);
+    border-left: 4px solid var(--note-border);
+    border-radius: 0 6px 6px 0;
+    padding: 1.1rem 1.4rem;
+    margin: 1.5rem 0;
+  }
+  .note-title {
+    font-weight: 700;
+    color: var(--note-border);
+    margin-bottom: 0.3rem;
+  }
+
+  /* Definition list style for cases */
+  .cases-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 1rem 0;
+  }
+  .cases-list > li {
+    position: relative;
+    padding: 0.6rem 0 0.6rem 1.6rem;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .cases-list > li:last-child { border-bottom: none; }
+  .cases-list > li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Responsive MathJax */
+  mjx-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+  }
+
+  /* Skip link for a11y */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    z-index: 100;
+    border-radius: 0 0 4px 0;
+  }
+  .skip-link:focus { left: 0; }
+
+  /* Print styles */
+  @media print {
+    body { background: #fff; font-size: 11pt; padding: 0; }
+    header { border-bottom-color: #000; }
+    nav.toc, .skip-link { display: none; }
+    .example, .note { break-inside: avoid; }
+  }
+
+  @media (max-width: 600px) {
+    html { font-size: 15px; }
+    header h1 { font-size: 1.7rem; }
+    .example, .note { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<div class="container" id="main" role="main">
+
+<header>
+  <div class="course">Math 251H</div>
+  <h1>3.4: Mechanical Vibrations</h1>
+</header>
+
+<nav class="toc" aria-label="Table of contents">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#setup">The Mass–Spring–Dashpot System</a></li>
+    <li><a href="#characteristic">Characteristic Equation &amp; Four Cases</a></li>
+    <li><a href="#trig-identity">Useful Trigonometric Identity</a></li>
+    <li><a href="#undamped">Undamped Motion (\(c=0\))</a></li>
+    <li><a href="#underdamped">Underdamped Motion (\(0 &lt; c &lt; 2\sqrt{km}\))</a></li>
+    <li><a href="#critically-damped">Critically Damped (\(c = 2\sqrt{km}\))</a></li>
+    <li><a href="#overdamped">Overdamped (\(c > 2\sqrt{km}\))</a></li>
+    <li><a href="#summary">Summary of Behavior</a></li>
+  </ol>
+</nav>
+
+<!-- ============================================================ -->
+<section id="setup">
+<h2>1. The Mass–Spring–Dashpot System</h2>
+
+<p>
+Consider a mass \(m\) attached to a spring and a dashpot (shock absorber). Let \(x(t)\) denote the displacement of the mass from its equilibrium position at time \(t\).
+</p>
+
+<p><strong>Forces acting on the mass:</strong></p>
+
+<p>
+The <em>spring</em> exerts a restoring force proportional to the displacement, directed back toward equilibrium:
+</p>
+<div class="math-block">\[ F_S = -kx, \qquad k > 0 \text{ (spring constant)}. \]</div>
+
+<p>
+The <em>dashpot</em> exerts a resistive force proportional to the velocity and opposite to the direction of motion:
+</p>
+<div class="math-block">\[ F_R = -c\,\frac{dx}{dt}, \qquad c > 0 \text{ (damping constant)}. \]</div>
+
+<p>
+Applying Newton's second law \(F = ma\):
+</p>
+<div class="math-block">\[ m\,\frac{d^2x}{dt^2} = F_R + F_S = -c\,\frac{dx}{dt} - kx. \]</div>
+
+<p>
+Rearranging gives the <strong>homogeneous</strong> equation for <em>free vibrations</em> (also called a <strong>damped harmonic oscillator</strong>):
+</p>
+<div class="math-block">\[ \boxed{m\,\frac{d^2x}{dt^2} + c\,\frac{dx}{dt} + kx = 0.} \]</div>
+
+<p>
+If an external force \(F(t)\) is also applied, we instead obtain the <strong>inhomogeneous</strong> equation for <em>driven vibrations</em>:
+</p>
+<div class="math-block">\[ m\,\frac{d^2x}{dt^2} + c\,\frac{dx}{dt} + kx = F(t). \]</div>
+
+<div class="note">
+  <div class="note-title">Analogy: LRC Circuits</div>
+  <p>
+    The same equation governs the current \(I(t)\) in an LRC-circuit:
+    \[ L\,\frac{d^2I}{dt^2} + R\,\frac{dI}{dt} + \frac{1}{C}\,I = F(t), \]
+    where \(F(t) = V'(t)\) is the derivative of the input voltage.
+  </p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="characteristic">
+<h2>2. Characteristic Equation &amp; Four Cases</h2>
+
+<p>
+The characteristic polynomial of \(m x'' + c x' + k x = 0\) is
+</p>
+<div class="math-block">\[ mr^2 + cr + k = 0, \]</div>
+<p>with roots</p>
+<div class="math-block">\[ r_{1,2} = \frac{-c \pm \sqrt{c^2 - 4km}}{2m} = -\frac{c}{2m} \pm \frac{\sqrt{c^2 - 4km}}{2m}. \]</div>
+
+<p>
+Since \(m, k > 0\) and \(c \ge 0\), the discriminant \(\Delta = c^2 - 4km\) determines four cases:
+</p>
+
+<ul class="cases-list">
+  <li>
+    <strong>Undamped</strong> (\(c = 0\)):
+    Roots \(r_{1,2} = \pm\sqrt{k/m}\,i\) are <em>purely imaginary</em>. The motion is an ideal oscillation with no friction.
+  </li>
+  <li>
+    <strong>Underdamped</strong> (\(0 < c < 2\sqrt{km}\)):
+    Roots are <em>complex with negative real part</em>, since \(c^2 - 4km < 0\) and \(-c/(2m) < 0\). Damping is present but not enough to prevent oscillations.
+  </li>
+  <li>
+    <strong>Critically damped</strong> (\(c = 2\sqrt{km}\)):
+    A <em>repeated negative real root</em>, since \(c^2 - 4km = 0\) and \(-c/(2m) < 0\). This is the boundary (bifurcation) between oscillatory and non-oscillatory behavior.
+  </li>
+  <li>
+    <strong>Overdamped</strong> (\(c > 2\sqrt{km}\)):
+    Two <em>distinct negative real roots</em>, since \(c^2 - 4km > 0\) and \(\sqrt{c^2 - 4km} < c\). No oscillations occur.
+  </li>
+</ul>
+</section>
+
+<!-- ============================================================ -->
+<section id="trig-identity">
+<h2>3. Useful Trigonometric Identity</h2>
+
+<p>
+A linear combination of cosine and sine at the same angular frequency \(\omega\) can be written as a single shifted cosine:
+</p>
+<div class="math-block">\[ A\cos(\omega t) + B\sin(\omega t) = \sqrt{A^2 + B^2}\;\cos(\omega t - \alpha). \]</div>
+
+<p>Here \(\tan\alpha = \dfrac{B}{A}\), with the phase angle chosen as:</p>
+
+<div class="math-block">\[
+\alpha = \begin{cases}
+\arctan\!\left(\dfrac{B}{A}\right), & \text{if } (A,B) \text{ is in the 1st or 4th quadrant},\\[6pt]
+\arctan\!\left(\dfrac{B}{A}\right) + \pi, & \text{if } (A,B) \text{ is in the 2nd or 3rd quadrant}.
+\end{cases}
+\]</div>
+
+<p>Key quantities:</p>
+<ul class="cases-list">
+  <li><strong>Amplitude:</strong> \(\sqrt{A^2 + B^2}\)</li>
+  <li><strong>Phase angle (delay angle):</strong> \(\alpha\)</li>
+  <li><strong>Period:</strong> \(\dfrac{2\pi}{\omega}\)</li>
+</ul>
+
+<p>
+This is precisely the polar-coordinate transformation \((A, B) \to (R, \theta)\), where \(R = \sqrt{A^2 + B^2}\) and \(\tan\theta = B/A\). It can be verified using the cosine angle-addition formula \(\cos(a - b) = \cos a\cos b + \sin a\sin b\).
+</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="undamped">
+<h2>4. Undamped Motion (\(c = 0\))</h2>
+
+<p>
+When \(c = 0\), the solution is periodic. Define the <strong>natural (angular/circular) frequency</strong>:
+</p>
+<div class="math-block">\[ \omega_0 = \sqrt{\frac{k}{m}}. \]</div>
+
+<p>The general solution is</p>
+<div class="math-block">\[ x(t) = c_1\cos(\omega_0 t) + c_2\sin(\omega_0 t) = C\cos(\omega_0 t - \alpha), \]</div>
+<p>
+where \(C = \sqrt{c_1^2 + c_2^2}\) is the <strong>amplitude</strong> and \(\tan\alpha = c_2/c_1\) gives the <strong>phase angle</strong>.
+</p>
+
+<p>
+The <strong>period</strong> is \(T = \dfrac{2\pi}{\omega_0}\). Due to the lack of damping, the spring oscillates forever with constant amplitude \(C\).
+</p>
+
+<div class="example">
+  <div class="example-title">Example</div>
+  <p>Consider \(4x'' + 8x = 0,\quad x(0) = 4,\quad x'(0) = 4.\)</p>
+  <p>Solve for \(x(t)\) and determine the amplitude, period, and all positive times the spring is most compressed.</p>
+
+  <h3>Solution</h3>
+  <p>
+    Here \(m = 4\), \(c = 0\), \(k = 8\) (undamped). The characteristic equation is
+    \(4r^2 + 8 = 0\), so \(r^2 = -2\), giving \(r = \pm\sqrt{2}\,i\).
+  </p>
+  <p>General solution:</p>
+  <div class="math-block">\[ x(t) = c_1\cos(\sqrt{2}\,t) + c_2\sin(\sqrt{2}\,t). \]</div>
+  <p>Derivative: \(x'(t) = -\sqrt{2}\,c_1\sin(\sqrt{2}\,t) + \sqrt{2}\,c_2\cos(\sqrt{2}\,t).\)</p>
+  <p>Applying initial conditions:</p>
+  <div class="math-block">\[
+  x(0) = c_1 = 4, \qquad x'(0) = \sqrt{2}\,c_2 = 4 \;\Longrightarrow\; c_2 = \frac{4}{\sqrt{2}} = 2\sqrt{2}.
+  \]</div>
+  <p>Therefore:</p>
+  <div class="math-block">\[ x(t) = 4\cos(\sqrt{2}\,t) + 2\sqrt{2}\sin(\sqrt{2}\,t). \]</div>
+
+  <p>
+    Converting \((A, B) = (4,\; 2\sqrt{2})\) to polar coordinates:
+  </p>
+  <div class="math-block">\[
+  R = \sqrt{4^2 + (2\sqrt{2})^2} = \sqrt{16 + 8} = \sqrt{24}, \qquad
+  \theta = \arctan\!\left(\frac{2\sqrt{2}}{4}\right) = \arctan\!\left(\frac{1}{\sqrt{2}}\right).
+  \]</div>
+  <p>Since \((4, 2\sqrt{2})\) is in the first quadrant, \(\alpha = \arctan(1/\sqrt{2})\). So:</p>
+  <div class="math-block">\[ x(t) = \sqrt{24}\;\cos\!\left(\sqrt{2}\,t - \arctan\!\left(\tfrac{1}{\sqrt{2}}\right)\right). \]</div>
+
+  <p><strong>Results:</strong></p>
+  <ul class="cases-list">
+    <li><strong>Amplitude:</strong> \(\sqrt{24} = 2\sqrt{6}\)</li>
+    <li><strong>Angular frequency:</strong> \(\omega_0 = \sqrt{2}\) rad/sec; Hz frequency \(f = \dfrac{\sqrt{2}}{2\pi}\) cycles/sec</li>
+    <li><strong>Period:</strong> \(T = \dfrac{2\pi}{\sqrt{2}} = \sqrt{2}\,\pi\) sec</li>
+  </ul>
+
+  <p>
+    The spring is <em>most compressed</em> when \(x(t)\) reaches its minimum, i.e., when \(\cos(\cdots) = -1\). This requires
+  </p>
+  <div class="math-block">\[ \sqrt{2}\,t - \arctan\!\left(\tfrac{1}{\sqrt{2}}\right) = (2n+1)\pi, \qquad n \ge 0 \text{ integer}. \]</div>
+  <p>Solving for \(t\):</p>
+  <div class="math-block">\[ t = \frac{(2n+1)\pi + \arctan\!\left(\frac{1}{\sqrt{2}}\right)}{\sqrt{2}}, \qquad n = 0, 1, 2, \ldots \]</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="underdamped">
+<h2>5. Underdamped Motion (\(0 < c < 2\sqrt{km}\))</h2>
+
+<p>
+There is damping, but not enough to prevent oscillations. The complex roots are
+</p>
+<div class="math-block">\[ r_{1,2} = -\frac{c}{2m} \pm \omega_1 i, \]</div>
+<p>where the <strong>pseudofrequency</strong> (angular) is</p>
+<div class="math-block">\[ \omega_1 = \frac{\sqrt{4km - c^2}}{2m} = \sqrt{\frac{k}{m} - \frac{c^2}{4m^2}}. \]</div>
+
+<p>Note that \(\omega_1 < \omega_0 = \sqrt{k/m}\): damping lowers the frequency of oscillation.</p>
+
+<p>The general solution is</p>
+<div class="math-block">\[
+x(t) = c_1 e^{-(c/2m)t}\cos(\omega_1 t) + c_2 e^{-(c/2m)t}\sin(\omega_1 t)
+= C e^{-(c/2m)t}\cos(\omega_1 t - \alpha),
+\]</div>
+<p>
+where \(C = \sqrt{c_1^2 + c_2^2}\) and \(\tan\alpha = c_2/c_1\).
+</p>
+
+<p>Key properties:</p>
+<ul class="cases-list">
+  <li>The <strong>time-varying amplitude</strong> is \(Ce^{-(c/2m)t}\), which decays exponentially.</li>
+  <li>The motion is <strong>not periodic</strong>: \(\displaystyle\lim_{t\to\infty} x(t) = 0\) and \(\displaystyle\lim_{t\to\infty} x'(t) = 0\). Oscillations "die out" but never completely stop.</li>
+  <li>The zero crossings (\(x = 0\)) are evenly spaced, separated by \(\dfrac{\pi}{\omega_1}\).</li>
+  <li>We call \(\omega_1\) the <strong>pseudofrequency</strong> and \(\dfrac{2\pi}{\omega_1}\) the <strong>pseudoperiod</strong>.</li>
+</ul>
+
+<div class="example">
+  <div class="example-title">Example</div>
+  <p>Consider \(x'' + 2x' + 101x = 0,\quad x(0) = 1,\quad x'(0) = -5.\)</p>
+  <p>Find \(x(t)\), the time-varying amplitude, pseudofrequency, pseudoperiod, and all positive times with a local extremum.</p>
+
+  <h3>Solution</h3>
+  <p>
+    Here \(m = 1\), \(c = 2\), \(k = 101\). Characteristic equation:
+    \(r^2 + 2r + 101 = 0\), i.e., \((r+1)^2 + 100 = 0\), giving \(r = -1 \pm 10i\). This is <strong>underdamped</strong>.
+  </p>
+  <p>General solution:</p>
+  <div class="math-block">\[ x(t) = c_1 e^{-t}\cos(10t) + c_2 e^{-t}\sin(10t). \]</div>
+  <p>Derivative:</p>
+  <div class="math-block">\[ x'(t) = -c_1 e^{-t}\cos(10t) - 10c_1 e^{-t}\sin(10t) - c_2 e^{-t}\sin(10t) + 10c_2 e^{-t}\cos(10t). \]</div>
+  <p>From initial conditions: \(c_1 = 1\), and \(-1 + 10c_2 = -5\) gives \(c_2 = -\tfrac{2}{5}\). So:</p>
+  <div class="math-block">\[ x(t) = e^{-t}\!\left(\cos(10t) - \tfrac{2}{5}\sin(10t)\right). \]</div>
+
+  <p>
+    Converting \((X, Y) = (1, -\tfrac{2}{5})\) to polar: fourth quadrant, so
+  </p>
+  <div class="math-block">\[
+  R = \sqrt{1 + \tfrac{4}{25}} = \frac{\sqrt{29}}{5}, \qquad
+  \theta = \arctan\!\left(-\tfrac{2}{5}\right) = -\arctan\!\left(\tfrac{2}{5}\right).
+  \]</div>
+
+  <p>Therefore:</p>
+  <div class="math-block">\[ \boxed{x(t) = \frac{\sqrt{29}}{5}\,e^{-t}\cos\!\left(10t + \arctan\!\left(\tfrac{2}{5}\right)\right).} \]</div>
+
+  <ul class="cases-list">
+    <li><strong>Time-varying amplitude:</strong> \(\dfrac{\sqrt{29}}{5}\,e^{-t}\)</li>
+    <li><strong>Pseudofrequency:</strong> \(\omega_1 = 10\) rad/sec</li>
+    <li><strong>Pseudoperiod:</strong> \(\dfrac{2\pi}{10} = \dfrac{\pi}{5}\) sec</li>
+  </ul>
+
+  <h3>Finding local extrema</h3>
+  <p>
+    Set \(x'(t) = 0\). Differentiating the amplitude-phase form and dividing out the (nonzero) factors \(\dfrac{\sqrt{29}}{5}\,e^{-t}\), we need:
+  </p>
+  <div class="math-block">\[ -\cos\!\left(10t + \arctan\!\tfrac{2}{5}\right) - 10\sin\!\left(10t + \arctan\!\tfrac{2}{5}\right) = 0. \]</div>
+  <p>This gives</p>
+  <div class="math-block">\[ \tan\!\left(10t + \arctan\!\tfrac{2}{5}\right) = -\frac{1}{10}. \]</div>
+  <p>Since tangent is \(\pi\)-periodic:</p>
+  <div class="math-block">\[ 10t + \arctan\!\left(\tfrac{2}{5}\right) = \arctan\!\left(-\tfrac{1}{10}\right) + n\pi, \qquad n \ge 0 \text{ integer}. \]</div>
+  <p>Solving for \(t\):</p>
+  <div class="math-block">\[ t = \frac{-\arctan\!\left(\frac{1}{10}\right) - \arctan\!\left(\frac{2}{5}\right) + n\pi}{10}, \qquad n \ge 1 \text{ (integer, chosen so } t > 0\text{)}. \]</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="critically-damped">
+<h2>6. Critically Damped (\(c = 2\sqrt{km}\))</h2>
+
+<p>
+The characteristic equation has a repeated negative real root \(r = -\dfrac{c}{2m}\). The general solution is
+</p>
+<div class="math-block">\[ x(t) = c_1 e^{rt} + c_2\,t\,e^{rt} = e^{-(c/2m)t}(c_1 + c_2 t). \]</div>
+
+<p>
+Since the roots are real, no cosines or sines appear, and there are <strong>no oscillations</strong>. The mass returns to equilibrium without oscillating, and \(x(t) \to 0\) as \(t \to \infty\).
+</p>
+
+<p>
+The critically damped case (almost) always has exactly one time \(T\) where \(x(T) = 0\), namely \(T = -c_1/c_2\) (provided \(c_2 \neq 0\)). Depending on initial conditions, \(T\) may be positive or negative.
+</p>
+
+<div class="example">
+  <div class="example-title">Example</div>
+  <p>Consider \(x'' + 8x' + 16x = 0,\quad x(0) = 5,\quad x'(0) = -10.\)</p>
+  <p>Determine all positive times at which the mass passes through equilibrium.</p>
+
+  <h3>Solution</h3>
+  <p>
+    Here \(m = 1\), \(c = 8\), \(k = 16\). Characteristic equation: \(r^2 + 8r + 16 = (r+4)^2 = 0\), so \(r = -4\) (double root). This is <strong>critically damped</strong>.
+  </p>
+  <div class="math-block">\[ x(t) = c_1 e^{-4t} + c_2\,t\,e^{-4t}. \]</div>
+  <p>Derivative: \(x'(t) = -4c_1 e^{-4t} + c_2 e^{-4t} - 4c_2 t\,e^{-4t}.\)</p>
+  <p>From \(x(0) = 5\): \(c_1 = 5\). From \(x'(0) = -10\): \(-20 + c_2 = -10\), so \(c_2 = 10\).</p>
+  <div class="math-block">\[ x(t) = 5e^{-4t} + 10t\,e^{-4t} = e^{-4t}(5 + 10t). \]</div>
+  <p>Setting \(x(t) = 0\): since \(e^{-4t} > 0\) always, we need \(5 + 10t = 0\), giving \(t = -\frac{1}{2}\).</p>
+  <p>Since \(t = -\frac{1}{2} < 0\), there are <strong>no positive times</strong> at which the mass passes through equilibrium.</p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="overdamped">
+<h2>7. Overdamped (\(c > 2\sqrt{km}\))</h2>
+
+<p>
+Since \(c^2 - 4km > 0\), the roots are two distinct negative reals \(r_1, r_2\) with \(r_1 \neq r_2\). The general solution is
+</p>
+<div class="math-block">\[ x(t) = c_1 e^{r_1 t} + c_2 e^{r_2 t}. \]</div>
+
+<p>
+Again, no cosines/sines appear, so there are <strong>no oscillations</strong>. The mass may pass through equilibrium <em>at most once</em> (or not at all), depending on initial conditions. In either case \(x(t) \to 0\) as \(t \to \infty\).
+</p>
+
+<div class="example">
+  <div class="example-title">Example</div>
+  <p>Consider \(\tfrac{1}{2}x'' + 3x' + 4x = 0,\quad x(0) = 2,\quad x'(0) = 0.\)</p>
+  <p>Determine all positive times at which the mass passes through equilibrium.</p>
+
+  <h3>Solution</h3>
+  <p>
+    Here \(m = \frac{1}{2}\), \(c = 3\), \(k = 4\). Multiplying through by 2: \(r^2 + 6r + 8 = (r+2)(r+4) = 0\), so \(r = -2, -4\). This is <strong>overdamped</strong>.
+  </p>
+  <div class="math-block">\[ x(t) = c_1 e^{-2t} + c_2 e^{-4t}. \]</div>
+  <p>Derivative: \(x'(t) = -2c_1 e^{-2t} - 4c_2 e^{-4t}.\)</p>
+  <p>From \(x(0) = 2\): \(c_1 + c_2 = 2\). From \(x'(0) = 0\): \(-2c_1 - 4c_2 = 0\), so \(c_1 = -2c_2\).</p>
+  <p>Solving: \(c_2 = -2\), \(c_1 = 4\).</p>
+  <div class="math-block">\[ x(t) = 4e^{-2t} - 2e^{-4t}. \]</div>
+  <p>Setting \(x(t) = 0\): \(4e^{-2t} = 2e^{-4t}\). Multiplying both sides by \(e^{4t}\):</p>
+  <div class="math-block">\[ 4e^{2t} = 2 \;\Longrightarrow\; e^{2t} = \tfrac{1}{2} \;\Longrightarrow\; t = \tfrac{1}{2}\ln\!\left(\tfrac{1}{2}\right) < 0. \]</div>
+  <p>Since \(t < 0\), there are <strong>no positive times</strong> at which the mass passes through equilibrium.</p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="summary">
+<h2>8. Summary of Behavior</h2>
+
+<p>
+<strong>Undamped</strong> and <strong>underdamped</strong> systems pass through the equilibrium position \(x = 0\) infinitely many times. For the undamped case the behavior repeats exactly and is truly periodic; for the underdamped case there is a pseudoperiod related to the spacing of zero crossings, but the amplitude decays exponentially.
+</p>
+
+<p>
+<strong>Critically damped</strong> systems generically have exactly one time \(T\) with \(x(T) = 0\) (namely \(T = -c_1/c_2\)), which may be positive or negative depending on initial conditions.
+</p>
+
+<p>
+<strong>Overdamped</strong> systems may have at most one zero crossing, and for some initial conditions will have none at all.
+</p>
+
+<div class="example">
+  <div class="example-title">Example — Determining oscillation from \(c\)</div>
+  <p>Consider \(x'' + cx' + 5x = 0,\quad x(0) = 1,\quad x'(0) = 0.\)</p>
+  <ol>
+    <li style="margin-bottom:0.75rem;">
+      <em>For what values of \(c\) will the mass oscillate and pass through equilibrium infinitely many times?</em><br>
+      We need the undamped or underdamped case: \(c^2 - 4km < 0\), i.e., \(c^2 - 20 < 0\).
+      <div class="math-block">\[ \boxed{0 \le c < \sqrt{20} = 2\sqrt{5}.} \]</div>
+    </li>
+    <li>
+      <em>If \(c = 6\), can any choice of \(x'(0)\) produce infinite oscillations?</em><br>
+      <strong>No.</strong> With \(c = 6 > 2\sqrt{5}\), the system is overdamped regardless of initial conditions. The characteristic roots are \(r = \frac{-6 \pm \sqrt{36 - 20}}{2} = \frac{-6 \pm 4}{2} = -1, -5\), both real and negative. Changing \(x'(0)\) changes the coefficients \(c_1, c_2\) but cannot change the nature of the roots.
+    </li>
+  </ol>
+</div>
+
+</section>
+
+</div><!-- .container -->
+</body>
+</html>

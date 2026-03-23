@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 251H — Sections 2.4–2.6: Euler's Method, Improved Euler's Method, and Runge–Kutta</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(','\\)']],
+      displayMath: [['\\[','\\]']],
+      tags: 'ams'
+    },
+    options: { enableMenu: false }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Fira+Code:wght@400;500&display=swap');
+
+  :root {
+    --bg: #faf8f5;
+    --text: #2c2825;
+    --heading: #1a1715;
+    --accent: #3b3089;
+    --accent-light: #ebe8f4;
+    --border: #d5cfc7;
+    --note-bg: #fff7e6;
+    --note-border: #e6c44d;
+    --example-bg: #f0f4f8;
+    --example-border: #6b8fad;
+    --star-color: #c44d2b;
+    --algo-bg: #f0faf0;
+    --algo-border: #4caf50;
+    --maxw: 48rem;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 1.1rem;
+    padding: 2rem 1.25rem 5rem;
+  }
+
+  main { max-width: var(--maxw); margin: 0 auto; }
+
+  header {
+    text-align: center;
+    padding: 2.5rem 0 2rem;
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: 2.5rem;
+  }
+  header .course {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-weight: 700;
+    font-size: 1.75rem;
+    color: var(--heading);
+    line-height: 1.3;
+  }
+
+  section { margin-bottom: 2.5rem; }
+
+  h2 {
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--heading);
+    margin-bottom: 1rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 {
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--heading);
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  .note {
+    background: var(--note-bg);
+    border-left: 4px solid var(--note-border);
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .note .label {
+    font-weight: 700;
+    color: var(--star-color);
+    margin-bottom: 0.25rem;
+    display: block;
+  }
+
+  .example {
+    background: var(--example-bg);
+    border-left: 4px solid var(--example-border);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .example .label {
+    font-weight: 700;
+    color: var(--example-border);
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+  }
+
+  .formula-box {
+    background: var(--accent-light);
+    border: 2px solid var(--accent);
+    border-radius: 6px;
+    padding: 1rem 1.5rem;
+    margin: 1.25rem 0;
+    text-align: center;
+  }
+
+  .algo-box {
+    background: var(--algo-bg);
+    border: 2px solid var(--algo-border);
+    border-radius: 6px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.25rem 0;
+  }
+  .algo-box .label {
+    font-weight: 700;
+    color: #2e7d32;
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+  }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 1.5rem;
+    font-size: 1rem;
+  }
+  .comparison-table th, .comparison-table td {
+    border: 1px solid var(--border);
+    padding: 0.5rem 0.75rem;
+    text-align: center;
+  }
+  .comparison-table th {
+    background: var(--accent-light);
+    font-weight: 600;
+  }
+
+  ul, ol { padding-left: 1.5rem; margin: 0.5rem 0 1rem; }
+  li { margin-bottom: 0.5rem; }
+
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    z-index: 100;
+    border-radius: 0 0 4px 0;
+  }
+  .skip-link:focus { left: 0; }
+
+  footer {
+    margin-top: 3rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #888;
+    border-top: 1px solid var(--border);
+    padding-top: 1.25rem;
+  }
+
+  @media print {
+    body { background: #fff; font-size: 11pt; padding: 0; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#content">Skip to main content</a>
+
+<main id="content">
+
+<header>
+  <div class="course">Math 251H</div>
+  <h1>Sections 2.4, 2.5, &amp; 2.6: Numerical Methods<br>Euler's Method, Improved Euler, and Runge–Kutta</h1>
+</header>
+
+<!-- ===== Motivation ===== -->
+<section aria-labelledby="motivation">
+  <h2 id="motivation">Why Numerical Methods?</h2>
+  <p>
+    Numerical methods are an important tool in analyzing differential equations. We may want more quantitative information than is available through geometric methods (slope fields, phase lines for autonomous equations), or we may want to explore systems to get a feel for their behavior.
+  </p>
+  <p>
+    The methods discussed here apply to first-order DEs, but they extend naturally to first-order systems — a form into which all ODEs of any order can be written.
+  </p>
+</section>
+
+<!-- ===== Euler's Method ===== -->
+<section aria-labelledby="euler">
+  <h2 id="euler">Euler's Method (Section 2.4)</h2>
+
+  <h3>The Idea</h3>
+  <p>Consider the initial value problem</p>
+  \[
+    \frac{dy}{dx} = f(x,y), \qquad y(x_0) = y_0.
+  \]
+  <p>
+    We know both \(y(x_0)\) and \(y'(x_0) = f(x_0, y_0)\). Using the linear (tangent line) approximation:
+  </p>
+  \[
+    y(x_0 + \Delta x) \approx y_0 + f(x_0, y_0)\,\Delta x,
+  \]
+  <p>
+    provided \(\Delta x\) is small. Define \(x_1 := x_0 + \Delta x\) and \(y_1 := y_0 + f(x_0, y_0)\,\Delta x\). Then repeat from \((x_1, y_1)\) to approximate the value at \(x_2 = x_1 + \Delta x\):
+  </p>
+  \[
+    y(x_2) \approx y_2 := y_1 + f(x_1, y_1)\,\Delta x.
+  \]
+  <p>Continue this process indefinitely. This is <strong>Euler's method</strong>.</p>
+
+  <div class="algo-box">
+    <span class="label">Algorithm — Euler's Method</span>
+    <p>Choose a step size \(\Delta x > 0\). Recursively define for \(n \ge 0\):</p>
+    \[
+      \begin{aligned}
+        x_{n+1} &= x_n + \Delta x, \\[4pt]
+        y_{n+1} &= y_n + f(x_n, y_n)\,\Delta x.
+      \end{aligned}
+    \]
+    <p>Then \(y_n \approx y(x_n)\) is a reasonable approximation to the exact solution at \(x_n\).</p>
+  </div>
+
+  <p>
+    Geometrically, each step follows the tangent line at the current point \((x_n, y_n)\) for one step of width \(\Delta x\). The <strong>local error</strong> is the discrepancy between the tangent line approximation and the true solution curve after one step.
+  </p>
+
+  <div class="note">
+    <span class="label">Alternative notation</span>
+    Euler's method can also be written as:
+    \[
+      k_1 = f(x_n, y_n), \qquad y_{n+1} = y_n + k_1\,\Delta x.
+    \]
+    This notation will be useful when comparing with higher-order methods.
+  </div>
+</section>
+
+<!-- ===== Euler Example ===== -->
+<section aria-labelledby="euler-example">
+  <h2 id="euler-example">Example — Euler's Method</h2>
+  <div class="example">
+    <span class="label">Problem</span>
+    Approximate \(y(0.5)\) using Euler's method with step sizes \(\Delta x = 0.25\) and \(\Delta x = 0.1\), for the IVP
+    \[
+      \frac{dy}{dx} = x - y, \qquad y(0) = 1.
+    \]
+    Compare with the exact solution \(y = 2e^{-x} + x - 1\).
+  </div>
+
+  <p>The exact value is \(y(0.5) = 2e^{-0.5} + 0.5 - 1 \approx 0.71306\ldots\)</p>
+
+  <h3>With \(\Delta x = 0.25\) (2 steps)</h3>
+
+  <p>\(x_0 = 0,\; y_0 = 1.\)</p>
+
+  <p><strong>Step 1:</strong> \(x_1 = 0.25\).</p>
+  \[
+    y_1 = y_0 + f(x_0, y_0)\,\Delta x = 1 + (0 - 1)(0.25) = 0.75.
+  \]
+
+  <p><strong>Step 2:</strong> \(x_2 = 0.5\).</p>
+  \[
+    y_2 = y_1 + f(x_1, y_1)\,\Delta x = 0.75 + (0.25 - 0.75)(0.25) = 0.625.
+  \]
+
+  <div class="formula-box">
+    \[
+      y(0.5) \approx y_2 = 0.625 \qquad\text{(Euler, } \Delta x = 0.25\text{)}
+    \]
+  </div>
+
+  <h3>With \(\Delta x = 0.1\) (5 steps)</h3>
+  <p>Carrying out 5 steps of Euler's method from \(x_0 = 0\) to \(x_5 = 0.5\):</p>
+
+  <div class="formula-box">
+    \[
+      y(0.5) \approx y_5 = 0.68098 \qquad\text{(Euler, } \Delta x = 0.1\text{)}
+    \]
+  </div>
+
+  <p>Smaller step sizes give better approximations — the \(\Delta x = 0.1\) result is closer to the exact value \(0.71306\ldots\)</p>
+</section>
+
+<!-- ===== Improved Euler ===== -->
+<section aria-labelledby="improved-euler">
+  <h2 id="improved-euler">Improved Euler Method (Section 2.5)</h2>
+
+  <h3>The Idea</h3>
+  <p>
+    Euler's method uses the slope at the <em>beginning</em> of each interval. The <strong>improved Euler method</strong> (also called <em>Heun's method</em>) improves on this by averaging two slopes: the slope at the beginning and the slope at the end (estimated via a trial Euler step).
+  </p>
+
+  <div class="algo-box">
+    <span class="label">Algorithm — Improved Euler Method</span>
+    <p>Choose a step size \(\Delta x > 0\). Recursively define for \(n \ge 0\):</p>
+    \[
+      \begin{aligned}
+        x_{n+1} &= x_n + \Delta x, \\[4pt]
+        k_1 &= f(x_n,\, y_n), \\[4pt]
+        u_{n+1} &= y_n + k_1\,\Delta x, & &\text{(trial step — same as Euler)} \\[4pt]
+        k_2 &= f(x_{n+1},\, u_{n+1}), \\[4pt]
+        y_{n+1} &= y_n + \tfrac{1}{2}(k_1 + k_2)\,\Delta x. & &\text{(real step — uses average slope)}
+      \end{aligned}
+    \]
+    <p>Then \(y_n \approx y(x_n)\).</p>
+  </div>
+
+  <p>
+    Geometrically: compute the slope \(k_1\) at the current point, take a tentative Euler step to get the "trial" point \((x_{n+1}, u_{n+1})\), compute the slope \(k_2\) there, and then take the real step using the <em>average</em> of \(k_1\) and \(k_2\).
+  </p>
+</section>
+
+<!-- ===== Improved Euler Example ===== -->
+<section aria-labelledby="improved-euler-example">
+  <h2 id="improved-euler-example">Example — Improved Euler Method</h2>
+  <div class="example">
+    <span class="label">Problem</span>
+    Approximate \(y(0.5)\) using the improved Euler method with step sizes \(\Delta x = 0.25\) and \(\Delta x = 0.1\), for the same IVP:
+    \[
+      \frac{dy}{dx} = x - y, \qquad y(0) = 1.
+    \]
+    The exact solution is \(y = 2e^{-x} + x - 1\), so \(y(0.5) \approx 0.71306\ldots\)
+  </div>
+
+  <h3>With \(\Delta x = 0.25\) (2 steps)</h3>
+
+  <div class="formula-box">
+    \[
+      y(0.5) \approx y_2 = 0.7207\ldots \qquad\text{(Improved Euler, } \Delta x = 0.25\text{)}
+    \]
+  </div>
+
+  <h3>With \(\Delta x = 0.1\) (5 steps)</h3>
+
+  <div class="formula-box">
+    \[
+      y(0.5) \approx y_5 = 0.7142\ldots \qquad\text{(Improved Euler, } \Delta x = 0.1\text{)}
+    \]
+  </div>
+
+  <p>Both results are much closer to the exact value than the corresponding Euler method results with the same step sizes.</p>
+</section>
+
+<!-- ===== Comparison table ===== -->
+<section aria-labelledby="comparison">
+  <h2 id="comparison">Comparison of Results</h2>
+
+  <table class="comparison-table" aria-label="Comparison of Euler and improved Euler approximations to y(0.5)">
+    <tr>
+      <th>Method</th>
+      <th>\(\Delta x = 0.25\)</th>
+      <th>\(\Delta x = 0.1\)</th>
+      <th>Exact</th>
+    </tr>
+    <tr>
+      <td>Euler</td>
+      <td>0.625</td>
+      <td>0.68098</td>
+      <td rowspan="2">\(0.71306\ldots\)</td>
+    </tr>
+    <tr>
+      <td>Improved Euler</td>
+      <td>0.7207</td>
+      <td>0.7142</td>
+    </tr>
+  </table>
+
+  <p>The improved Euler method is dramatically more accurate for the same step size.</p>
+</section>
+
+<!-- ===== Error Analysis ===== -->
+<section aria-labelledby="error">
+  <h2 id="error">Error Analysis and Order of Accuracy</h2>
+
+  <p>Using Taylor approximations, one can show the following bounds on the <strong>global error</strong> (the difference between the exact and approximate values):</p>
+
+  <h3>Euler's Method — First Order</h3>
+  <div class="formula-box">
+    \[
+      |y(x_n) - y_n| = \mathcal{O}(\Delta x).
+    \]
+  </div>
+  <p>The error is proportional to the step size. Doubling the number of steps (halving \(\Delta x\)) makes the approximation roughly <strong>twice</strong> as accurate.</p>
+
+  <h3>Improved Euler's Method — Second Order</h3>
+  <div class="formula-box">
+    \[
+      |y(x_n) - y_n| = \mathcal{O}\!\left((\Delta x)^2\right).
+    \]
+  </div>
+  <p>The error is proportional to the <em>square</em> of the step size. Doubling the number of steps makes the approximation roughly <strong>four times</strong> as accurate.</p>
+
+  <div class="note">
+    <span class="label">Big-\(\mathcal{O}\) notation</span>
+    The statement \(y = \mathcal{O}(x)\) means "the size of \(y\) is at most proportional to \(|x|\)," i.e., there exists a constant \(C\) (independent of \(x\)) such that \(|y| \le C|x|\) for \(|x|\) sufficiently small.
+  </div>
+</section>
+
+<!-- ===== Runge-Kutta ===== -->
+<section aria-labelledby="runge-kutta">
+  <h2 id="runge-kutta">The Runge–Kutta Method (Section 2.6)</h2>
+
+  <p>
+    One can construct numerical algorithms of any desired order, allowing greater accuracy without requiring very small values of \(\Delta x\). This matters because making \(\Delta x\) smaller requires more steps to get from \(y(x_0)\) to \(y(x_f)\).
+  </p>
+  <p>
+    However, increasing the order requires more function evaluations per step (Euler needs 1, improved Euler needs 2). The practical sweet spot is around <strong>fourth order</strong>.
+  </p>
+
+  <div class="algo-box">
+    <span class="label">Algorithm — Classical Fourth-Order Runge–Kutta (RK4)</span>
+    <p>For \(n \ge 0\):</p>
+    \[
+      \begin{aligned}
+        k_1 &= f(x_n,\, y_n), \\[4pt]
+        k_2 &= f\!\left(x_n + \tfrac{\Delta x}{2},\, y_n + k_1\,\tfrac{\Delta x}{2}\right), \\[4pt]
+        k_3 &= f\!\left(x_n + \tfrac{\Delta x}{2},\, y_n + k_2\,\tfrac{\Delta x}{2}\right), \\[4pt]
+        k_4 &= f\!\left(x_n + \Delta x,\, y_n + k_3\,\Delta x\right), \\[6pt]
+        y_{n+1} &= y_n + \tfrac{1}{6}\!\left(k_1 + 2k_2 + 2k_3 + k_4\right)\Delta x.
+      \end{aligned}
+    \]
+    <p>This is a <strong>fourth-order</strong> method: \(|y(x_n) - y_n| = \mathcal{O}\!\left((\Delta x)^4\right)\).</p>
+  </div>
+
+  <p>
+    Doubling the number of steps with RK4 makes the approximation roughly <strong>16 times</strong> as accurate. It requires 4 function evaluations per step, which is an excellent trade-off for the accuracy gained.
+  </p>
+
+  <p>
+    The most commonly used algorithms in practice are the fourth-order Runge–Kutta (RK4) or a hybrid <strong>fourth/fifth order Dormand–Prince</strong> method that implements <em>variable step sizes</em> for efficient, accurate calculations. In MATLAB, this is the <code>ode45</code> solver.
+  </p>
+</section>
+
+<!-- ===== Summary ===== -->
+<section aria-labelledby="summary">
+  <h2 id="summary">Summary of Methods</h2>
+
+  <table class="comparison-table" aria-label="Summary of numerical methods">
+    <tr>
+      <th>Method</th>
+      <th>Order</th>
+      <th>Function evals per step</th>
+      <th>Error</th>
+      <th>Halving \(\Delta x\) improves by</th>
+    </tr>
+    <tr>
+      <td>Euler</td>
+      <td>1st</td>
+      <td>1</td>
+      <td>\(\mathcal{O}(\Delta x)\)</td>
+      <td>\(2\times\)</td>
+    </tr>
+    <tr>
+      <td>Improved Euler</td>
+      <td>2nd</td>
+      <td>2</td>
+      <td>\(\mathcal{O}((\Delta x)^2)\)</td>
+      <td>\(4\times\)</td>
+    </tr>
+    <tr>
+      <td>Runge–Kutta (RK4)</td>
+      <td>4th</td>
+      <td>4</td>
+      <td>\(\mathcal{O}((\Delta x)^4)\)</td>
+      <td>\(16\times\)</td>
+    </tr>
+  </table>
+</section>
+
+<footer>
+  Math 251H — Sections 2.4, 2.5, &amp; 2.6 Lecture Notes
+</footer>
+
+</main>
+</body>
+</html>

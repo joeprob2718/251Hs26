@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 251H — 2.6: The Runge-Kutta Method</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #faf8f5;
+    --fg: #1a1a1a;
+    --accent: #3a3ac4;
+    --accent-light: #ebebfa;
+    --muted: #6b6b6b;
+    --border: #ddd8d0;
+    --highlight: #fff7e0;
+    --code-bg: #f0ede8;
+    --section-gap: 3rem;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.75;
+    font-size: 18px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding-bottom: var(--section-gap);
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: var(--section-gap);
+  }
+
+  header .course {
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--fg);
+  }
+
+  /* Sections */
+  section {
+    margin-bottom: var(--section-gap);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-top: 1.8rem;
+    margin-bottom: 0.6rem;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* Definition / formula blocks */
+  .definition {
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .definition .label {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+
+  .example {
+    background: var(--highlight);
+    border-left: 4px solid #c9a227;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .example .label {
+    font-weight: 700;
+    color: #8a6d15;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+
+  .note {
+    background: #f0f7f0;
+    border-left: 4px solid #3a8a3a;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .note .label {
+    font-weight: 700;
+    color: #2a6a2a;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Display math spacing */
+  .math-display {
+    margin: 1.2rem 0;
+    overflow-x: auto;
+  }
+
+  /* Comparison table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+  }
+
+  th, td {
+    padding: 0.65rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    background: var(--accent-light);
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  /* Code blocks */
+  pre {
+    background: var(--code-bg);
+    padding: 1.25rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border);
+  }
+
+  code {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 0.88em;
+    background: var(--code-bg);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+  }
+
+  pre code {
+    background: none;
+    padding: 0;
+  }
+
+  .code-comment { color: var(--muted); }
+
+  /* Accessibility: skip link */
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    z-index: 100;
+    font-size: 0.9rem;
+  }
+  .skip-link:focus { top: 0; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    header h1 { font-size: 1.6rem; }
+    h2 { font-size: 1.25rem; }
+    .container { padding: 2rem 1rem 4rem; }
+    pre { font-size: 0.75rem; padding: 1rem; }
+  }
+
+  /* Print */
+  @media print {
+    body { font-size: 12pt; background: #fff; }
+    .container { max-width: 100%; padding: 0; }
+    header { border-bottom-color: #000; }
+    h2 { color: #000; }
+    .definition, .example, .note { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<div class="container">
+  <header>
+    <div class="course">Math 251H</div>
+    <h1>2.6: The Runge-Kutta Method</h1>
+  </header>
+
+  <main id="main">
+
+    <!-- Error Orders Overview -->
+    <section aria-labelledby="sec-error-orders">
+      <h2 id="sec-error-orders">Error Orders of Numerical Methods</h2>
+
+      <p>
+        Using Taylor approximations, one can show that the maximum possible error (difference between exact and approximate values) for <strong>Euler's method</strong> is proportional to the step size \(\Delta x\):
+      </p>
+      <div class="math-display">
+        \[ |y(x_n) - y_n| = \mathcal{O}(\Delta x). \]
+      </div>
+      <p>
+        Recall that \(\Delta x = \dfrac{x_n - x_0}{n}\) is the step size when taking \(n\) steps from \(x_0\) to \(x_n\). Therefore, by doubling the number of steps you can expect to become <em>twice</em> as accurate with Euler's method.
+      </p>
+
+      <p>
+        The <strong>improved Euler method</strong> is second order:
+      </p>
+      <div class="math-display">
+        \[ |y(x_n) - y_n| = \mathcal{O}\!\left((\Delta x)^2\right). \]
+      </div>
+      <p>
+        By doubling the number of steps you can expect to become <em>four times</em> as accurate.
+      </p>
+
+      <p>
+        One can construct algorithms of any desired order, gaining accuracy without requiring extremely small values of \(\Delta x\). This matters because making \(\Delta x\) smaller requires more steps to get from \(y(x_0)\) to \(y(x_{\text{final}})\).
+      </p>
+      <p>
+        However, increasing the order too much requires more computations per step (improved Euler needs two function evaluations per step, while regular Euler needs one). The sweet spot is around <strong>fourth order</strong> — the most commonly used algorithms are the fourth-order Runge-Kutta (RK4) or a hybrid fourth/fifth-order <em>Dormand–Prince</em> method that implements variable step sizes.
+      </p>
+    </section>
+
+    <!-- Recap of Euler Methods -->
+    <section aria-labelledby="sec-recap">
+      <h2 id="sec-recap">Recap: Euler and Improved Euler</h2>
+
+      <p>
+        Let the step size be \(h = \Delta x\). For the IVP \(\dfrac{dy}{dx} = f(x,y),\; y(x_0) = y_0\), recall the recursive definitions for \(n \ge 0\).
+      </p>
+
+      <div class="definition">
+        <div class="label">Euler's Method</div>
+        \[
+          \begin{aligned}
+            x_{n+1} &= x_n + h, \\
+            k &= f(x_n,\, y_n), \\
+            y_{n+1} &= y_n + h\,k.
+          \end{aligned}
+        \]
+      </div>
+
+      <div class="definition">
+        <div class="label">Improved Euler Method</div>
+        \[
+          \begin{aligned}
+            x_{n+1} &= x_n + h, \\
+            k_1 &= f(x_n,\, y_n), \\
+            u_{n+1} &= y_n + h\,k_1, \qquad \text{(trial step)}\\
+            k_2 &= f(x_{n+1},\, u_{n+1}), \\
+            y_{n+1} &= y_n + \tfrac{1}{2}(k_1 + k_2)\,h.
+          \end{aligned}
+        \]
+      </div>
+
+      <p>
+        The improved Euler method averages two slopes: \(k_1\) is the slope \(f(x_n, y_n)\) from regular Euler, and \(k_2\) is the slope at the "trial Euler step" \((x_{n+1}, u_{n+1})\). This yields a second-order method instead of first order.
+      </p>
+    </section>
+
+    <!-- The Runge-Kutta Method -->
+    <section aria-labelledby="sec-rk">
+      <h2 id="sec-rk">The Runge-Kutta Method (RK4)</h2>
+
+      <p>
+        The Runge-Kutta method is a <strong>fourth-order scheme</strong> that uses a weighted average of four slopes.
+      </p>
+
+      <div class="definition">
+        <div class="label">Runge-Kutta Method</div>
+        <p>For the IVP \(\dfrac{dy}{dx} = f(x,y),\; y(x_0)=y_0\), define recursively for \(n \ge 0\):</p>
+        \[
+          \begin{aligned}
+            x_{n+1} &= x_n + h, \\[6pt]
+            k_1 &= f(x_n,\; y_n), \\[4pt]
+            k_2 &= f\!\left(x_n + \tfrac{1}{2}h,\; y_n + \tfrac{1}{2}h\,k_1\right), \\[4pt]
+            k_3 &= f\!\left(x_n + \tfrac{1}{2}h,\; y_n + \tfrac{1}{2}h\,k_2\right), \\[4pt]
+            k_4 &= f\!\left(x_n + h,\; y_n + h\,k_3\right), \\[6pt]
+            y_{n+1} &= y_n + \tfrac{1}{6}\,h\left(k_1 + 2k_2 + 2k_3 + k_4\right).
+          \end{aligned}
+        \]
+        <p style="margin-top:0.75rem;">
+          Note that \(k_2\) and \(k_3\) are weighted more heavily than \(k_1\) and \(k_4\) in the final average.
+        </p>
+      </div>
+    </section>
+
+    <!-- RK4 Example -->
+    <section aria-labelledby="sec-example1">
+      <h2 id="sec-example1">Example: Applying RK4</h2>
+
+      <div class="example">
+        <div class="label">Example</div>
+        <p>Approximate \(y(0.5)\) using step sizes \(h = 0.25\) and \(h = 0.1\), then compare with the exact solution for:</p>
+        \[
+          \frac{dy}{dx} = x - y, \qquad y(0) = 1.
+        \]
+        <p>The exact solution is \(y = 2e^{-x} + x - 1\).</p>
+      </div>
+
+      <p>Results:</p>
+      <table>
+        <thead>
+          <tr><th>Method</th><th>Value</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Exact: \(y(0.5)\)</td><td>\(0.7130613\ldots\)</td></tr>
+          <tr><td>RK4 with \(h=0.25\) (\(y_2\))</td><td>\(0.71309\ldots\)</td></tr>
+          <tr><td>RK4 with \(h=0.1\) (\(y_5\))</td><td>\(0.7130619\ldots\)</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        Even with just two steps (\(h = 0.25\)), the RK4 approximation already agrees with the exact answer to about four decimal places. With five steps (\(h = 0.1\)), we get six-decimal accuracy.
+      </p>
+    </section>
+
+    <!-- Fourth Order Error -->
+    <section aria-labelledby="sec-fourth-order">
+      <h2 id="sec-fourth-order">RK4 is Fourth Order</h2>
+
+      <p>
+        For a fixed final value \(x_{\text{final}} = x_n\), reducing the step size \(\Delta x = h\) yields greater accuracy. The global error satisfies:
+      </p>
+      <div class="math-display">
+        \[ |y(x_n) - y_n| = \mathcal{O}\!\left((\Delta x)^4\right). \]
+      </div>
+
+      <p>Here "big-\(\mathcal{O}\) notation" means</p>
+      <div class="math-display">
+        \[ a = \mathcal{O}\!\left((\Delta x)^4\right) \quad \Longleftrightarrow \quad a \le C\,(\Delta x)^4, \]
+      </div>
+      <p>
+        where \(C\) is a constant independent of \(\Delta x\). The value of \(C\) depends on the partial derivatives of \(f(x,y)\); higher-order methods require more differentiability of \(f\).
+      </p>
+
+      <p>
+        The practical payoff: if you decrease \(\Delta x\) by a factor of 10 (requiring 10× as many steps), the maximum error decreases by a factor of \(10^4 = 10{,}000\). Compare this to Euler's method, where the same 10× increase in computation only reduces error by a factor of 10.
+      </p>
+    </section>
+
+    <!-- Local vs Global Error -->
+    <section aria-labelledby="sec-local-global">
+      <h2 id="sec-local-global">Local Error vs. Global Error</h2>
+
+      <p>
+        The <strong>global (accumulated) error</strong> \(|y(x_n) - y_n|\) is built up from <strong>local errors</strong> \(|y(x_1) - y_1|\) (the error after a single step). Using Taylor expansions, the local errors for each method are:
+      </p>
+
+      <table>
+        <thead>
+          <tr><th>Method</th><th>Local Error</th><th>Global Error</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Euler</td><td>\(\mathcal{O}((\Delta x)^2)\)</td><td>\(\mathcal{O}(\Delta x)\)</td></tr>
+          <tr><td>Improved Euler</td><td>\(\mathcal{O}((\Delta x)^3)\)</td><td>\(\mathcal{O}((\Delta x)^2)\)</td></tr>
+          <tr><td>Runge-Kutta (RK4)</td><td>\(\mathcal{O}((\Delta x)^5)\)</td><td>\(\mathcal{O}((\Delta x)^4)\)</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        Since there are \(n = \mathcal{O}\!\left(\frac{1}{\Delta x}\right)\) steps over which local errors accumulate, the global error is one order less than the local error in each case.
+      </p>
+    </section>
+
+    <!-- Taylor Expansion Review -->
+    <section aria-labelledby="sec-taylor">
+      <h2 id="sec-taylor">Review: Taylor Expansion and Error Bound</h2>
+
+      <p>From Math 141, the \(n\)th-degree Taylor polynomial for \(f(x)\) centered at \(a\) is:</p>
+      <div class="math-display">
+        \[
+          T_n(x) = f(a) + f'(a)(x-a) + \frac{f''(a)}{2}(x-a)^2 + \cdots + \frac{f^{(n)}(a)}{n!}(x-a)^n.
+        \]
+      </div>
+
+      <p>The Taylor remainder (error bound) gives an accuracy guarantee:</p>
+      <div class="math-display">
+        \[
+          |f(x) - T_n(x)| \le \frac{K}{(n+1)!}\,|x - a|^{n+1},
+        \]
+      </div>
+      <p>
+        where \(K = \max |f^{(n+1)}|\) on the interval between \(a\) and \(x\). Abbreviating \(x - a = \Delta x\):
+      </p>
+      <div class="math-display">
+        \[ |f(x) - T_n(x)| = \mathcal{O}\!\left((\Delta x)^{n+1}\right). \]
+      </div>
+    </section>
+
+    <!-- Proof Sketch: Euler Local Error -->
+    <section aria-labelledby="sec-proof">
+      <h2 id="sec-proof">Deriving the Euler Local Error</h2>
+
+      <div class="example">
+        <div class="label">Example</div>
+        <p>Consider an autonomous DE: \(\dfrac{dy}{dx} = f(y),\; y(x_0) = y_0\). Show that the Euler method local error is \(\mathcal{O}((\Delta x)^2)\).</p>
+      </div>
+
+      <p>Taylor-expand the exact solution around \(x_0\) with step size \(h\):</p>
+      <div class="math-display">
+        \[
+          y(x_0 + h) = y(x_0) + y'(x_0)\,h + \tfrac{1}{2}\,y''(x_0)\,h^2 + \mathcal{O}(h^3).
+        \]
+      </div>
+
+      <p>Since \(y(x)\) solves the ODE, we have \(y'(x_0) = f(y_0)\), so:</p>
+      <div class="math-display">
+        \[
+          y(x_0 + h) = \underbrace{y_0 + f(y_0)\,h}_{y_1} + \tfrac{1}{2}\,y''(x_0)\,h^2 + \mathcal{O}(h^3).
+        \]
+      </div>
+
+      <p>Therefore the local error is:</p>
+      <div class="math-display">
+        \[
+          |y(x_1) - y_1| = \tfrac{1}{2}\,|y''(x_0)|\,h^2 + \mathcal{O}(h^3).
+        \]
+      </div>
+
+      <p>To express \(y''(x_0)\) in known terms, use the chain rule on \(y' = f(y)\):</p>
+      <div class="math-display">
+        \[
+          y'' = f'(y)\,y' = f'(y)\,f(y) \quad \Longrightarrow \quad y''(x_0) = f'(y_0)\,f(y_0).
+        \]
+      </div>
+
+      <p>So the local error becomes:</p>
+      <div class="math-display">
+        \[
+          |y(x_1) - y_1| = \tfrac{1}{2}\,|f'(y_0)\,f(y_0)|\,h^2 + \mathcal{O}(h^3).
+        \]
+      </div>
+
+      <p>Taking the limit confirms the leading-order behavior:</p>
+      <div class="math-display">
+        \[
+          \lim_{h \to 0} \frac{|y(x_1) - y_1|}{h^2} = \tfrac{1}{2}\,|f'(y_0)\,f(y_0)|,
+        \]
+      </div>
+      <p>
+        confirming the <strong>local error for Euler is second order</strong>. Since \(n\) is inversely proportional to \(\Delta x\), the accumulated (global) error after \(n\) steps satisfies \(|y_n - y(x_n)| = \mathcal{O}(\Delta x)\).
+      </p>
+    </section>
+
+    <!-- Error Scaling Examples -->
+    <section aria-labelledby="sec-scaling">
+      <h2 id="sec-scaling">Error Scaling Examples</h2>
+
+      <p>
+        Suppose that for a particular ODE, a method with step size \(h = 0.1\) gives global error \(|y(x_n) - y_n| = 5\). What error is expected if we use \(h = 0.001\) instead? The step size shrinks by a factor of 100.
+      </p>
+
+      <table>
+        <thead>
+          <tr><th>Method</th><th>Order</th><th>Error reduction factor</th><th>New expected error</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Euler</td>
+            <td>1st</td>
+            <td>\(100^1 = 100\)</td>
+            <td>\(\frac{5}{100} = 0.05\)</td>
+          </tr>
+          <tr>
+            <td>Improved Euler</td>
+            <td>2nd</td>
+            <td>\(100^2 = 10{,}000\)</td>
+            <td>\(\frac{5}{10{,}000} = 0.0005\)</td>
+          </tr>
+          <tr>
+            <td>Runge-Kutta</td>
+            <td>4th</td>
+            <td>\(100^4 = 10^8\)</td>
+            <td>\(\frac{5}{10^8} = 5 \times 10^{-8}\)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Code Implementations -->
+    <section aria-labelledby="sec-code">
+      <h2 id="sec-code">Code Implementations</h2>
+
+      <p>
+        Below are Python implementations for each method, set up to solve \(y' = F(x,y)\) with \(x_0 = 0\), \(y_0 = 1\), \(x_{\text{final}} = 1\), and \(N = 10\) subdivisions. Edit the function <code>F</code> and parameters for different problems.
+      </p>
+
+      <h3>Euler's Method</h3>
+<pre><code><span class="code-comment"># Program EULER</span>
+N = 10                  <span class="code-comment"># Number of steps</span>
+X = 0.0                 <span class="code-comment"># Initial x</span>
+Y = 1.0                 <span class="code-comment"># Initial y</span>
+X1 = 1.0                <span class="code-comment"># Final x</span>
+H = (X1 - X) / N       <span class="code-comment"># Step size</span>
+
+for I in range(N):
+    F = X + Y           <span class="code-comment"># Function value f(x, y)</span>
+    Y = Y + H * F       <span class="code-comment"># Euler iteration</span>
+    X = X + H           <span class="code-comment"># New x</span>
+    print(X, Y)         <span class="code-comment"># Display results</span>
+</code></pre>
+
+      <h3>Improved Euler Method</h3>
+<pre><code><span class="code-comment"># Program IMPEULER</span>
+def F(X, Y): return X + Y
+
+N = 10                  <span class="code-comment"># Number of steps</span>
+X = 0.0                 <span class="code-comment"># Initial x</span>
+Y = 1.0                 <span class="code-comment"># Initial y</span>
+X1 = 1.0                <span class="code-comment"># Final x</span>
+H = (X1 - X) / N       <span class="code-comment"># Step size</span>
+
+for I in range(N):
+    Y0 = Y              <span class="code-comment"># Save previous y</span>
+    K1 = F(X, Y)        <span class="code-comment"># First slope</span>
+    Y = Y0 + H * K1     <span class="code-comment"># Predictor</span>
+    X = X + H           <span class="code-comment"># New x</span>
+    K2 = F(X, Y)        <span class="code-comment"># Second slope</span>
+    K = (K1 + K2) / 2   <span class="code-comment"># Average slope</span>
+    Y = Y0 + H * K      <span class="code-comment"># Corrector</span>
+    print(X, Y)         <span class="code-comment"># Display results</span>
+</code></pre>
+
+      <h3>Runge-Kutta Method (RK4)</h3>
+<pre><code><span class="code-comment"># Program RK</span>
+def F(X, Y): return X + Y
+
+N = 10                  <span class="code-comment"># Number of steps</span>
+X = 0.0                 <span class="code-comment"># Initial x</span>
+Y = 1.0                 <span class="code-comment"># Initial y</span>
+X1 = 1.0                <span class="code-comment"># Final x</span>
+H = (X1 - X) / N       <span class="code-comment"># Step size</span>
+
+for I in range(N):
+    X0 = X              <span class="code-comment"># Save previous x</span>
+    Y0 = Y              <span class="code-comment"># Save previous y</span>
+    K1 = F(X, Y)        <span class="code-comment"># First slope</span>
+    X = X0 + H / 2      <span class="code-comment"># Midpoint x</span>
+    Y = Y0 + H * K1 / 2 <span class="code-comment"># Midpoint predictor</span>
+    K2 = F(X, Y)        <span class="code-comment"># Second slope</span>
+    Y = Y0 + H * K2 / 2 <span class="code-comment"># Midpoint predictor</span>
+    K3 = F(X, Y)        <span class="code-comment"># Third slope</span>
+    X = X0 + H          <span class="code-comment"># New x</span>
+    Y = Y0 + H * K3     <span class="code-comment"># Endpoint predictor</span>
+    K4 = F(X, Y)        <span class="code-comment"># Fourth slope</span>
+    K = (K1 + 2*K2 + 2*K3 + K4) / 6  <span class="code-comment"># Average slope</span>
+    Y = Y0 + H * K      <span class="code-comment"># Corrector</span>
+    print(X, Y)         <span class="code-comment"># Display results</span>
+</code></pre>
+    </section>
+
+    <!-- Summary -->
+    <section aria-labelledby="sec-summary">
+      <h2 id="sec-summary">Summary</h2>
+
+      <div class="note">
+        <div class="label">Key Takeaways</div>
+        <p>
+          The Runge-Kutta method (RK4) computes four slopes per step and takes their weighted average to achieve <strong>fourth-order accuracy</strong>: the global error scales as \(\mathcal{O}((\Delta x)^4)\). This is the standard workhorse for numerical ODE solving — you don't need to memorize the formulas or compute them by hand, but you should understand <em>why</em> higher-order methods are more efficient and how error scales with step size.
+        </p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+</body>
+</html>

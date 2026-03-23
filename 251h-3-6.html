@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 251H — Section 3.6: Forced Oscillations and Resonance</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        tags: 'ams'
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js" async></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf8f5;
+      --fg: #2a2520;
+      --accent: #8b3a3a;
+      --accent-light: #c06050;
+      --muted: #6b6560;
+      --border: #ddd5cc;
+      --highlight-bg: #f0ebe4;
+      --case-bg: #eef2f7;
+      --case-border: #b0c0d8;
+      --example-bg: #f7f0e8;
+      --example-border: #d4b896;
+      --note-bg: #e8f0e8;
+      --note-border: #96b896;
+      --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+      --sans: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', 'Courier New', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--serif);
+      font-size: 1.125rem;
+      line-height: 1.75;
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--accent-light); }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+    .skip-link {
+      position: absolute; top: -100%; left: 1rem;
+      background: var(--accent); color: #fff; padding: 0.5rem 1rem;
+      border-radius: 4px; font-family: var(--sans); font-size: 0.9rem; z-index: 100;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    header {
+      background: linear-gradient(135deg, #2c3e6b 0%, #3a1f5e 100%);
+      color: #fff;
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+    }
+    header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.3rem;
+    }
+    header .subtitle {
+      font-family: var(--sans);
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      font-weight: 400;
+      opacity: 0.85;
+    }
+    header .course {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      opacity: 0.65;
+      margin-bottom: 0.5rem;
+    }
+
+    nav[aria-label="Table of Contents"] {
+      max-width: 48rem;
+      margin: 2rem auto;
+      padding: 1.5rem 2rem;
+      background: var(--highlight-bg);
+      border-radius: 8px;
+      border-left: 4px solid var(--accent);
+    }
+    nav[aria-label="Table of Contents"] h2 {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    nav[aria-label="Table of Contents"] ol {
+      padding-left: 1.25rem;
+      list-style: decimal;
+    }
+    nav[aria-label="Table of Contents"] li {
+      font-family: var(--sans);
+      font-size: 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    main {
+      max-width: 48rem;
+      margin: 0 auto;
+      padding: 1rem 2rem 4rem;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 3rem 0 1rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid var(--border);
+    }
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 2rem 0 0.75rem;
+    }
+
+    p { margin-bottom: 1rem; }
+
+    .case-box {
+      background: var(--case-bg);
+      border: 1px solid var(--case-border);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .case-box .case-label {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #3a5a8a;
+      margin-bottom: 0.5rem;
+    }
+
+    .example-box {
+      background: var(--example-bg);
+      border: 1px solid var(--example-border);
+      border-left: 4px solid var(--example-border);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .example-box .example-label {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #8a6a3a;
+      margin-bottom: 0.5rem;
+    }
+
+    .note-box {
+      background: var(--note-bg);
+      border: 1px solid var(--note-border);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .note-box .note-label {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #3a6a3a;
+      margin-bottom: 0.5rem;
+    }
+
+    .definition {
+      background: #f5f0fa;
+      border-left: 4px solid #7a5aaa;
+      border-radius: 0 6px 6px 0;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .definition .def-label {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #5a3a8a;
+      margin-bottom: 0.5rem;
+    }
+
+    .display-eq {
+      overflow-x: auto;
+      padding: 0.75rem 0;
+    }
+
+    .footnote {
+      font-size: 0.9rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 0.75rem;
+      margin-top: 2rem;
+    }
+    .footnote sup { font-weight: 600; color: var(--accent); }
+
+    strong { font-weight: 700; }
+    em { font-style: italic; }
+
+    .solution-steps { margin: 1rem 0; }
+    .solution-steps h4 {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin: 1.25rem 0 0.5rem;
+      color: var(--fg);
+    }
+
+    footer {
+      max-width: 48rem;
+      margin: 0 auto;
+      padding: 2rem;
+      border-top: 2px solid var(--border);
+      text-align: center;
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 640px) {
+      main, nav[aria-label="Table of Contents"] { padding-left: 1rem; padding-right: 1rem; }
+      header { padding: 2rem 1rem; }
+      .case-box, .example-box, .note-box, .definition { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<header role="banner">
+  <p class="course">Math 251H</p>
+  <h1>Section 3.6</h1>
+  <p class="subtitle">Forced Oscillations and Resonance</p>
+</header>
+
+<nav aria-label="Table of Contents">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#undamped">Undamped Forced Oscillations</a></li>
+    <li><a href="#resonance">Resonance</a></li>
+    <li><a href="#example">Worked Example</a></li>
+    <li><a href="#practical">Practical Resonance: Damped Forced Oscillations</a></li>
+    <li><a href="#beats">Beats</a></li>
+    <li><a href="#piano">Application: Piano Tuning and the 12-Tone Scale</a></li>
+    <li><a href="#euler">Product-to-Sum from Euler's Formula</a></li>
+    <li><a href="#demoivre">de Moivre's Formula</a></li>
+  </ol>
+</nav>
+
+<main id="main-content">
+
+  <!-- ===== Section 1: Undamped Forced Oscillations ===== -->
+  <h2 id="undamped">1. Undamped Forced Oscillations</h2>
+
+  <p>We consider the inhomogeneous mass–spring system:</p>
+  <div class="display-eq">
+    \[
+      mx'' + cx' + kx = F_0 \cos(\omega t)
+    \]
+  </div>
+  <p>
+    Here \(F_0\) is the <strong>driving force amplitude</strong> and \(\omega\) is the <strong>driving force frequency</strong>.
+  </p>
+
+  <p>In the undamped case (\(c = 0\)), we need to solve</p>
+  <div class="display-eq">
+    \[
+      mx'' + kx = F_0 \cos(\omega t).
+    \]
+  </div>
+  <p>In Section 3.5 we discussed how to use undetermined coefficients to handle this. There are two cases depending on whether the driving frequency \(\omega\) matches the natural frequency \(\omega_0 = \sqrt{k/m}\).</p>
+
+  <div class="case-box">
+    <p class="case-label" role="heading" aria-level="3">Case 1: \(\omega \neq \omega_0 = \sqrt{k/m}\)</p>
+    <p>
+      There is no matchup between the inhomogeneity and \(x_c\), so the general solution is
+    </p>
+    <div class="display-eq">
+      \[
+        x = x_c + x_p
+          = c_1 \cos\!\Bigl(\sqrt{\tfrac{k}{m}}\,t\Bigr)
+          + c_2 \sin\!\Bigl(\sqrt{\tfrac{k}{m}}\,t\Bigr)
+          + A\cos(\omega t) + B\sin(\omega t)
+      \]
+    </div>
+    <p>which can be rewritten as</p>
+    <div class="display-eq">
+      \[
+        x = C\cos\!\Bigl(\sqrt{\tfrac{k}{m}}\,t - \alpha\Bigr)
+          + D\cos(\omega t - \beta).
+      \]
+    </div>
+    <p>
+      The solution is <strong>periodic</strong> (provided the frequency ratio \(\omega/\omega_0\) is rational; otherwise it is <em>quasiperiodic</em>) and <strong>bounded</strong> since
+    </p>
+    <div class="display-eq">
+      \[
+        -(C + D) \le x(t) \le C + D \quad \text{for all } t.
+      \]
+    </div>
+  </div>
+
+  <div class="case-box">
+    <p class="case-label" role="heading" aria-level="3">Case 2: \(\omega = \omega_0 = \sqrt{k/m}\)</p>
+    <p>
+      In this case the driving frequency matches the natural frequency, so we need to <strong>adjust</strong> our \(x_p\) ansatz. This leads to
+    </p>
+    <div class="display-eq">
+      \[
+        x = x_c + x_p
+          = c_1\cos(\omega t) + c_2\sin(\omega t)
+          + At\cos(\omega t) + Bt\sin(\omega t)
+      \]
+    </div>
+    <p>or equivalently</p>
+    <div class="display-eq">
+      \[
+        x = C\cos(\omega t - \alpha) + Dt\cos(\omega t - \beta).
+      \]
+    </div>
+    <p>
+      The time-varying amplitude of the second term is \(D_t = \sqrt{A^2 + B^2}\,t\), which satisfies
+      \(\displaystyle\lim_{t \to \infty} D_t = \infty\).
+      This contrasts with the underdamped case, where the amplitude decayed exponentially.
+    </p>
+    <p>
+      <strong>Key takeaway:</strong> When an undamped mass–spring system is driven at its natural frequency, the time-varying amplitude <strong>grows linearly without bound</strong>.
+    </p>
+    <p>
+      Because no physical system can sustain arbitrarily large oscillations, it would break at some finite time — the classic example is a wine glass shattering when an opera singer hits the "exactly right" note!
+    </p>
+  </div>
+
+  <!-- ===== Section 2: Resonance ===== -->
+  <h2 id="resonance">2. Resonance</h2>
+
+  <p>We consider the forced undamped spring system:</p>
+  <div class="display-eq">
+    \[
+      mx'' + kx = F_0\cos(\omega t).
+    \]
+  </div>
+
+  <div class="definition">
+    <p class="def-label">"Exact Undamped Resonance"</p>
+    <p>
+      If the driving frequency \(\omega\) coincides with the natural frequency \(\omega_0 = \sqrt{k/m}\), the particular solution
+    </p>
+    <div class="display-eq">
+      \[
+        x_p = At\cos(\omega_0 t) + Bt\sin(\omega_0 t)
+            = Ct\cos(\omega_0 t - \alpha)
+      \]
+    </div>
+    <p>has a <strong>linearly-growing</strong> time-varying amplitude.</p>
+  </div>
+
+  <div class="definition">
+    <p class="def-label">"Approximate Undamped Resonance"</p>
+    <p>
+      Even if the driving frequency \(\omega\) isn't exactly equal to \(\omega_0\), for \(\omega \approx \omega_0\) the amplitude \(|C|\) in
+    </p>
+    <div class="display-eq">
+      \[
+        x_p = A\cos(\omega t) + B\sin(\omega t) = C\cos(\omega t - \alpha)
+      \]
+    </div>
+    <p>satisfies</p>
+    <div class="display-eq">
+      \[
+        \lim_{\omega \to \omega_0} |C| = \infty.
+      \]
+    </div>
+  </div>
+
+  <p>
+    A plot of the particular-solution amplitude \(|C|\) against the driving frequency \(\omega\) shows a vertical asymptote at \(\omega = \omega_0\): the amplitude blows up as \(\omega \to \omega_0\).
+  </p>
+
+  <!-- ===== Section 3: Worked Example ===== -->
+  <h2 id="example">3. Worked Example</h2>
+
+  <div class="example-box">
+    <p class="example-label">Example</p>
+    <p>Consider the driven mass–spring system</p>
+    <div class="display-eq">
+      \[
+        x'' + 4x = 3\cos(\omega t), \qquad x(0) = x'(0) = 0,
+      \]
+    </div>
+    <p>where the driving frequency \(\omega\) is unspecified.</p>
+    <ol style="margin:0.5rem 0 0 1.25rem;">
+      <li>Find \(x(t)\) for the two cases \(\omega \neq 2\) and \(\omega = 2\).</li>
+      <li>What happens to the amplitude of \(x_p\) as \(\omega \to 2\)?</li>
+    </ol>
+  </div>
+
+  <div class="solution-steps">
+    <h4>Finding \(x_c\) (same for all \(\omega\))</h4>
+    <p>
+      The complementary equation \(x'' + 4x = 0\) has characteristic equation \(r^2 + 4 = 0\), giving \(r = \pm 2i\). Thus
+    </p>
+    <div class="display-eq">
+      \[
+        x_c = c_1\cos(2t) + c_2\sin(2t).
+      \]
+    </div>
+
+    <h4>Case 1: \(\omega \neq 2\)</h4>
+    <p>
+      The initial guess \(x_p = A\cos(\omega t) + B\sin(\omega t)\) does not match \(x_c\), so no adjustment is needed. Computing derivatives:
+    </p>
+    <div class="display-eq">
+      \[
+        x_p' = -A\omega\sin(\omega t) + B\omega\cos(\omega t),
+      \]
+      \[
+        x_p'' = -A\omega^2\cos(\omega t) - B\omega^2\sin(\omega t).
+      \]
+    </div>
+    <p>Substituting into \(x'' + 4x = 3\cos(\omega t)\):</p>
+    <div class="display-eq">
+      \[
+        (-A\omega^2 + 4A)\cos(\omega t) + (-B\omega^2 + 4B)\sin(\omega t)
+        = 3\cos(\omega t) + 0\sin(\omega t).
+      \]
+    </div>
+    <p>Matching coefficients (valid since \(\omega \neq 2\)):</p>
+    <div class="display-eq">
+      \[
+        A(4 - \omega^2) = 3 \;\Longrightarrow\; A = \frac{3}{4 - \omega^2},
+        \qquad
+        B(4 - \omega^2) = 0 \;\Longrightarrow\; B = 0.
+      \]
+    </div>
+    <p>So \(x_p = \dfrac{3}{4 - \omega^2}\cos(\omega t)\) and the general solution is</p>
+    <div class="display-eq">
+      \[
+        x = c_1\cos(2t) + c_2\sin(2t) + \frac{3}{4 - \omega^2}\cos(\omega t).
+      \]
+    </div>
+    <p>Applying initial conditions \(x(0) = 0\) and \(x'(0) = 0\):</p>
+    <div class="display-eq">
+      \[
+        c_1 + \frac{3}{4 - \omega^2} = 0 \;\Longrightarrow\; c_1 = -\frac{3}{4 - \omega^2},
+        \qquad c_2 = 0.
+      \]
+    </div>
+    <p>Therefore:</p>
+    <div class="display-eq">
+      \[
+        \boxed{\;x(t) = \frac{3}{4 - \omega^2}\bigl(\cos(\omega t) - \cos(2t)\bigr)\;}
+      \]
+    </div>
+
+    <h4>Case 2: \(\omega = 2\)</h4>
+    <p>
+      Now the initial guess \(x_p = A\cos(2t) + B\sin(2t)\) <strong>matches</strong> \(x_c\), so we must adjust:
+    </p>
+    <div class="display-eq">
+      \[
+        x_p = At\cos(2t) + Bt\sin(2t).
+      \]
+    </div>
+    <p>Computing derivatives (product rule):</p>
+    <div class="display-eq">
+      \[
+        x_p' = A\cos(2t) + B\sin(2t) - 2At\sin(2t) + 2Bt\cos(2t),
+      \]
+      \[
+        x_p'' = -4A\sin(2t) + 4B\cos(2t) - 4At\cos(2t) - 4Bt\sin(2t).
+      \]
+    </div>
+    <p>Substituting into \(x'' + 4x = 3\cos(2t)\) and simplifying (the \(t\cos(2t)\) and \(t\sin(2t)\) terms cancel):</p>
+    <div class="display-eq">
+      \[
+        -4A\sin(2t) + 4B\cos(2t) = 0\cdot\sin(2t) + 3\cos(2t).
+      \]
+    </div>
+    <p>Matching coefficients:</p>
+    <div class="display-eq">
+      \[
+        -4A = 0 \;\Longrightarrow\; A = 0,
+        \qquad
+        4B = 3 \;\Longrightarrow\; B = \tfrac{3}{4}.
+      \]
+    </div>
+    <p>So \(x_p = \tfrac{3}{4}\,t\sin(2t)\). Applying initial conditions gives \(c_1 = c_2 = 0\), hence:</p>
+    <div class="display-eq">
+      \[
+        \boxed{\;x(t) = \frac{3}{4}\,t\sin(2t)\;}
+      \]
+    </div>
+
+    <h4>Part 2: Amplitude as \(\omega \to 2\)</h4>
+    <p>From Case 1, the amplitude of \(x_p\) is \(\left|\dfrac{3}{4 - \omega^2}\right|\). As \(\omega \to 2\):</p>
+    <div class="display-eq">
+      \[
+        \lim_{\omega \to 2}\left|\frac{3}{4 - \omega^2}\right| = +\infty.
+      \]
+    </div>
+  </div>
+
+  <!-- ===== Section 4: Practical Resonance ===== -->
+  <h2 id="practical">4. Practical Resonance: Damped Forced Oscillations</h2>
+
+  <p>All real-world scenarios involve friction, so we should consider</p>
+  <div class="display-eq">
+    \[
+      mx'' + cx' + kx = F_0\cos(\omega t)
+    \]
+  </div>
+  <p>where \(c > 0\).</p>
+
+  <p>
+    For \(c > 0\), "true, exact resonance" <strong>cannot</strong> occur — there won't be a matchup between \(x_c\) and \(x_p\), and we don't have \(\displaystyle\lim_{\omega \to \omega_m} |C(\omega)| = \infty\) for any frequency \(\omega_m\).
+  </p>
+
+  <p>
+    However, for \(0 < c < \sqrt{2km} = \dfrac{c_{cr}}{\sqrt{2}}\) (roughly 70% of critical damping), there is a <strong>global maximum</strong> of \(|C(\omega)|\) at a certain frequency \(\omega_m\). This "finite but possibly large" amplitude could still cause problems if it exceeds what the system can sustain.
+  </p>
+
+  <div class="note-box">
+    <p class="note-label">Summary of amplitude vs. driving frequency behavior</p>
+    <ul style="margin:0.5rem 0 0 1.25rem;">
+      <li><strong>When \(c < \sqrt{2km}\):</strong> There exists a frequency \(\omega_{\max}\) at which \(|C(\omega)|\) attains an absolute maximum. The peak can be large enough to be "dangerous."</li>
+      <li><strong>When \(c \ge \sqrt{2km}\):</strong> The function \(C'(\omega) < 0\) for all \(\omega > 0\), so the amplitude is strictly decreasing — no resonance peak.</li>
+    </ul>
+  </div>
+
+  <!-- ===== Section 5: Beats ===== -->
+  <h2 id="beats">5. Beats</h2>
+
+  <p>From Math 141, the <strong>product-to-sum formula</strong> states:</p>
+  <div class="display-eq">
+    \[
+      \sin a\,\sin b = \frac{1}{2}\bigl[\cos(a - b) - \cos(a + b)\bigr].
+    \]
+  </div>
+  <p>Rearranging with \(a = \dfrac{A+B}{2}\) and \(b = \dfrac{A-B}{2}\) yields the <strong>difference-to-product formula</strong>:</p>
+  <div class="display-eq">
+    \[
+      \cos B - \cos A = 2\sin\!\left(\frac{A - B}{2}\right)\sin\!\left(\frac{A + B}{2}\right).
+    \]
+  </div>
+
+  <h3>Applying to the IVP</h3>
+  <p>The solution to</p>
+  <div class="display-eq">
+    \[
+      mx'' + kx = F_0\cos(\omega t), \qquad x(0) = x'(0) = 0
+    \]
+  </div>
+  <p>is</p>
+  <div class="display-eq">
+    \[
+      x(t) = \frac{F_0}{m(\omega_0^2 - \omega^2)}\bigl(\cos(\omega t) - \cos(\omega_0 t)\bigr),
+    \]
+  </div>
+  <p>where \(\omega_0 = \sqrt{k/m}\). Using the difference-to-product formula:</p>
+  <div class="display-eq">
+    \[
+      x(t) = \frac{2F_0}{m(\omega_0^2 - \omega^2)}
+             \sin\!\left(\frac{\omega - \omega_0}{2}\,t\right)
+             \sin\!\left(\frac{\omega + \omega_0}{2}\,t\right).
+    \]
+  </div>
+
+  <p>If \(\omega \approx \omega_0\), then:</p>
+  <ul style="margin:0.5rem 0 1rem 1.25rem;">
+    <li>The average \(\dfrac{\omega + \omega_0}{2} \approx \omega_0\) — a <strong>"fast" oscillation</strong>.</li>
+    <li>The half-difference \(\dfrac{\omega - \omega_0}{2} \approx 0\) — a <strong>"slow" oscillation</strong>.</li>
+  </ul>
+
+  <p>
+    We interpret \(\displaystyle\frac{2F_0}{m(\omega_0^2 - \omega^2)}\sin\!\left(\frac{\omega - \omega_0}{2}\,t\right)\) as a <strong>slowly-varying amplitude</strong> modulating the fast oscillation \(\sin\!\left(\frac{\omega + \omega_0}{2}\,t\right)\). This phenomenon produces <strong>beats</strong>.
+  </p>
+
+  <!-- ===== Section 6: Piano Tuning ===== -->
+  <h2 id="piano">6. Application: Piano Tuning and the 12-Tone Scale</h2>
+
+  <p>
+    Professional piano tuners use these trig identities in practice. Using the standard 12-tone scale, an "equally tempered" instrument averages out the error from the fact that the circle of fifths doesn't perfectly close:
+  </p>
+  <div class="display-eq">
+    \[
+      \frac{3^{12}}{2^{18}} \approx 2.0273 \neq 2.
+    \]
+  </div>
+  <p>
+    Equal temperament ensures each key signature sounds equally "in tune." Instead of tuning perfect fifths, the tuner introduces a small error and listens for the <strong>beats</strong> of nearby frequencies: a 1 Hz beat arises from a frequency difference of 1 Hz. The trig identity is what lets us quantify how close two frequencies are by counting beats.
+  </p>
+  <p>
+    The special frequency ratios of 2 (octaves) and 3/2 (perfect fifths) are ubiquitous across cultures. The fact that \(3^{12}/2^{18} \approx 2\) is the reason our scale has 12 tones. The deeper explanation comes from solving the wave equation with Fourier series.
+  </p>
+
+  <!-- ===== Section 7: Euler ===== -->
+  <h2 id="euler">7. Product-to-Sum from Euler's Formula</h2>
+
+  <p>Recall that Euler's formula, \(e^{ix} = \cos x + i\sin x\), follows from the Maclaurin series. We have</p>
+  <div class="display-eq">
+    \[
+      e^{(a+b)i} = \cos(a+b) + i\sin(a+b),
+    \]
+  </div>
+  <p>and also</p>
+  <div class="display-eq">
+    \[
+      e^{(a+b)i} = e^{ai}\,e^{bi}
+      = (\cos a + i\sin a)(\cos b + i\sin b)
+      = (\cos a\cos b - \sin a\sin b) + i(\sin a\cos b + \sin b\cos a).
+    \]
+  </div>
+
+  <p>Since two complex numbers in standard form are equal only when both their real and imaginary parts agree:</p>
+  <div class="display-eq">
+    \[
+      a + bi = c + di \;\;\text{with } a,b,c,d \text{ real}
+      \;\;\Longrightarrow\;\;
+      \begin{cases} a = c \\ b = d \end{cases}
+    \]
+  </div>
+  <p>we obtain the <strong>angle addition formulas</strong>:</p>
+  <div class="display-eq">
+    \[
+      \begin{cases}
+        \cos(a+b) = \cos a\cos b - \sin a\sin b \\
+        \sin(a+b) = \sin a\cos b + \sin b\cos a
+      \end{cases}
+    \]
+  </div>
+  <p>
+    Using the fact that cosine is even (\(\cos(-b) = \cos b\)) and sine is odd (\(\sin(-b) = -\sin b\)), you can quickly derive the angle <em>subtraction</em> formulas as well.
+  </p>
+
+  <div class="footnote">
+    <p>
+      <sup>†</sup> The matching of real and imaginary parts works because the complex numbers form a 2-dimensional real vector space with basis \(\{1, i\}\). Writing \(z = c_1 \cdot 1 + c_2 \cdot i\) is just like working with vector components, which is why it feels similar to the "linearly independent function coefficient matching" used throughout this section.
+    </p>
+  </div>
+
+  <!-- ===== Section 8: de Moivre ===== -->
+  <h2 id="demoivre">8. de Moivre's Formula</h2>
+
+  <p>
+    de Moivre's formula gives trig identities for \(\cos(n\theta)\) and \(\sin(n\theta)\) via Euler's formula. These reveal linear dependence relations useful in undetermined coefficients computations.
+  </p>
+
+  <h3>Case \(n = 2\)</h3>
+  <p>On one hand, \(e^{2i\theta} = \cos(2\theta) + i\sin(2\theta)\). On the other hand:</p>
+  <div class="display-eq">
+    \[
+      e^{2i\theta} = (e^{i\theta})^2
+      = (\cos\theta + i\sin\theta)^2
+      = (\cos^2\theta - \sin^2\theta) + i(2\sin\theta\cos\theta).
+    \]
+  </div>
+  <p>Therefore:</p>
+  <div class="display-eq">
+    \[
+      \begin{cases}
+        \cos(2\theta) = \cos^2\theta - \sin^2\theta \\
+        \sin(2\theta) = 2\sin\theta\cos\theta
+      \end{cases}
+    \]
+  </div>
+  <p>Using \(\sin^2\theta + \cos^2\theta = 1\) with the \(\cos(2\theta)\) identity gives the <strong>power-reduction formulas</strong>:</p>
+  <div class="display-eq">
+    \[
+      \cos^2\theta = \frac{1}{2} + \frac{1}{2}\cos(2\theta),
+      \qquad
+      \sin^2\theta = \frac{1}{2} - \frac{1}{2}\cos(2\theta).
+    \]
+  </div>
+
+  <h3>Case \(n = 3\)</h3>
+  <p>Similarly, \(e^{3i\theta} = \cos(3\theta) + i\sin(3\theta)\), and:</p>
+  <div class="display-eq">
+    \[
+      e^{3i\theta} = (e^{i\theta})^3
+      = (\cos\theta + i\sin\theta)^3
+      = (\cos^3\theta - 3\cos\theta\sin^2\theta) + i(3\cos^2\theta\sin\theta - \sin^3\theta).
+    \]
+  </div>
+  <p>Therefore:</p>
+  <div class="display-eq">
+    \[
+      \begin{cases}
+        \cos(3\theta) = \cos^3\theta - 3\cos\theta\sin^2\theta
+                      = 4\cos^3\theta - 3\cos\theta \\[6pt]
+        \sin(3\theta) = 3\cos^2\theta\sin\theta - \sin^3\theta
+                      = 3\sin\theta - 4\sin^3\theta
+      \end{cases}
+    \]
+  </div>
+  <p>
+    Rearranging gives identities for \(\cos^3\theta\) and \(\sin^3\theta\). For instance:
+  </p>
+  <div class="display-eq">
+    \[
+      \cos^3\theta = \frac{1}{4}\cos(3\theta) + \frac{3}{4}\cos\theta.
+    \]
+  </div>
+
+</main>
+
+<footer>
+  <p>Math 251H — Section 3.6: Forced Oscillations and Resonance</p>
+</footer>
+
+</body>
+</html>

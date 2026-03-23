@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 251H — Section 1.4: Separable First-Order DEs</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(','\\)']],
+      displayMath: [['\\[','\\]']],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        addMenu: []
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600;8..60,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400&display=swap');
+
+  :root {
+    --bg: #faf8f5;
+    --text: #2c2825;
+    --heading: #1a1614;
+    --accent: #2b4acb;
+    --section-bg: #fff;
+    --border: #e0dcd6;
+    --note-bg: #fff8e1;
+    --note-border: #f0d060;
+    --example-bg: #f0f4ff;
+    --example-border: #7b9cf5;
+    --boxed-bg: #f7f5f2;
+    --pink-note: #fce4ec;
+    --pink-border: #e91e63;
+    --warn-bg: #fff3e0;
+    --warn-border: #ef6c00;
+    --max-w: 820px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.72;
+    color: var(--text);
+    background: var(--bg);
+    padding: 2rem 1.25rem 6rem;
+  }
+
+  main {
+    max-width: var(--max-w);
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    padding: 2.5rem 1.5rem 2rem;
+    margin-bottom: 2.5rem;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 6px;
+  }
+  header .course { font-family: 'Source Sans 3', sans-serif; font-weight: 600; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.85; margin-bottom: 0.3rem; }
+  header h1 { font-size: 1.65rem; font-weight: 700; line-height: 1.3; }
+  header .meta { font-family: 'Source Sans 3', sans-serif; font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.75; }
+
+  section {
+    background: var(--section-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2rem 2.25rem;
+    margin-bottom: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--heading);
+    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--heading);
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  .boxed {
+    background: var(--boxed-bg);
+    border: 2px solid var(--border);
+    border-radius: 5px;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    overflow-x: auto;
+  }
+
+  .example {
+    background: var(--example-bg);
+    border-left: 4px solid var(--example-border);
+    border-radius: 4px;
+    padding: 1.5rem 1.75rem;
+    margin: 1.5rem 0;
+  }
+  .example-label {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+  }
+
+  .note {
+    background: var(--note-bg);
+    border-left: 4px solid var(--note-border);
+    border-radius: 4px;
+    padding: 0.85rem 1.1rem;
+    margin: 1rem 0;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.95rem;
+    color: #5d4e00;
+  }
+  .note strong { color: #7a6400; }
+
+  .remark {
+    background: var(--pink-note);
+    border-left: 4px solid var(--pink-border);
+    border-radius: 4px;
+    padding: 0.85rem 1.1rem;
+    margin: 1rem 0;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.95rem;
+    color: #6e1030;
+  }
+
+  .warning {
+    background: var(--warn-bg);
+    border-left: 4px solid var(--warn-border);
+    border-radius: 4px;
+    padding: 0.85rem 1.1rem;
+    margin: 1rem 0;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.95rem;
+    color: #5d3200;
+  }
+
+  ol, ul { margin: 0.75rem 0 1rem 1.75rem; }
+  li { margin-bottom: 0.5rem; }
+
+  .skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    z-index: 100;
+    font-family: 'Source Sans 3', sans-serif;
+  }
+  .skip-link:focus { top: 0; }
+
+  @media (max-width: 600px) {
+    body { font-size: 16px; padding: 1rem 0.75rem 4rem; }
+    section { padding: 1.25rem 1rem; }
+    header h1 { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#content">Skip to main content</a>
+
+<main id="content" role="main">
+
+<header>
+  <div class="course">Math 251H</div>
+  <h1>Section 1.4: Separable First-Order DEs</h1>
+  <div class="meta">Annotated Lecture Notes</div>
+</header>
+
+<!-- ============ INTRODUCTION ============ -->
+<section aria-labelledby="sec-intro">
+  <h2 id="sec-intro">Introduction</h2>
+
+  <p>Unfortunately, even for first-order ODEs, we won't always be able to make progress solving them. They'll need to be of special types. In this course we'll discuss two solvable types:</p>
+  <ul>
+    <li><strong>First-order separable</strong> (Section 1.4 — this lecture)</li>
+    <li><strong>First-order linear</strong> (Section 1.5)</li>
+  </ul>
+</section>
+
+<!-- ============ DEFINITION ============ -->
+<section aria-labelledby="sec-separable">
+  <h2 id="sec-separable">Separable DEs</h2>
+
+  <p>Recall the general first-order DE</p>
+  \[\frac{dy}{dx} = f(x, y).\]
+
+  <p>For today, we consider the case where \(f(x,y)\) has the special form \(g(x)\,k(y)\), so that the DE is of the form</p>
+
+  <div class="boxed">
+    \[\frac{dy}{dx} = g(x)\,k(y).\]
+  </div>
+
+  <p>This is called a <strong>separable</strong> DE because we can separate the \(x\)-stuff from the \(y\)-stuff.</p>
+
+  <div class="note">
+    <strong>Special case — autonomous ODEs:</strong> An autonomous ODE \(\dfrac{dy}{dx} = k(y)\) is separable with \(g(x) = 1\) (a constant function). So autonomous equations are a special case of separable equations.
+  </div>
+
+  <div class="remark">
+    <strong>Not every first-order ODE is separable!</strong> For example, \(\dfrac{dy}{dx} = x + y\) is <em>not</em> of the form \(g(x)\,k(y)\) — it cannot be factored as a product of a function of \(x\) alone and a function of \(y\) alone. (This one is first-order <em>linear</em>, which we can solve in Section 1.5.) Similarly, \(\dfrac{dy}{dx} = x^2 + y^2\) is neither separable nor linear — we won't be able to solve it with these techniques.
+  </div>
+</section>
+
+<!-- ============ METHOD ============ -->
+<section aria-labelledby="sec-method">
+  <h2 id="sec-method">Solving Separable DEs</h2>
+
+  <p>To solve a separable DE, we "abuse notation" and treat \(\dfrac{dy}{dx}\) as a fraction. Starting from</p>
+  \[\frac{dy}{dx} = g(x)\,k(y),\]
+  <p>we multiply both sides by \(dx\) and divide both sides by \(k(y)\) to obtain</p>
+  \[\frac{1}{k(y)}\, dy = g(x)\, dx,\]
+  <p>and then integrate both sides:</p>
+
+  <div class="boxed">
+    \[\int \frac{1}{k(y)}\, dy = \int g(x)\, dx.\]
+  </div>
+
+  <p>We then proceed with typical antiderivatives, and eventually solve for \(y\).</p>
+
+  <p>Sometimes the algebra steps to isolate \(y\) are difficult or impossible, so we may occasionally only ask for <strong>implicit solutions</strong>, where you stop right after the antiderivatives. An implicit solution describes a relationship between \(x\) and \(y\) without explicitly expressing \(y\) as a function of \(x\).</p>
+
+  <div class="note">
+    <strong>Example of an implicit solution you can't make explicit:</strong> If you arrive at \(x = \ln(2 - x)\), you cannot solve for \(x\) algebraically. Sometimes we have to live with implicit solutions.
+  </div>
+</section>
+
+<!-- ============ JUSTIFICATION ============ -->
+<section aria-labelledby="sec-justify">
+  <h2 id="sec-justify">Justification of the "Fraction" Notation</h2>
+
+  <p>The notation trick of treating \(\dfrac{dy}{dx}\) as a fraction is <em>not</em> actually rigorous — \(\dfrac{dy}{dx}\) is not literally a fraction! (It's the limit \(\displaystyle\lim_{\Delta x \to 0}\frac{\Delta y}{\Delta x}\).) But the trick gives the right answer. Here's why:</p>
+
+  <p>Rewrite \(\dfrac{dy}{dx} = g(x)\,k(y)\) as</p>
+  \[\frac{1}{k(y)}\,\frac{dy}{dx} = g(x).\]
+
+  <p>Integrate both sides with respect to \(x\), recalling that \(y = y(x)\) so that \(y'(x) = \dfrac{dy}{dx}\):</p>
+  \[\int \frac{1}{k\!\big(y(x)\big)}\,y'(x)\, dx = \int g(x)\, dx.\]
+
+  <p>Now implement the substitution \(y = y(x)\), \(dy = y'(x)\,dx\) on the left side:</p>
+  \[\int \frac{1}{k(y)}\, dy = \int g(x)\, dx.\]
+
+  <p>"Treating \(\dfrac{dy}{dx}\) as a fraction" to help us solve separable ODEs is the <strong>same mnemonic device</strong> we use for setting up the differentials when integrating by substitution!</p>
+
+  <div class="note">
+    <strong>Chain rule mnemonic:</strong> This is exactly like the chain rule shorthand: if \(z\) depends on \(y\) and \(y\) depends on \(x\), then \(\dfrac{dz}{dx} = \dfrac{dz}{dy} \cdot \dfrac{dy}{dx}\), which "looks like" canceling fractions.
+  </div>
+</section>
+
+<!-- ============ EXAMPLE 1: dy/dx = ky ============ -->
+<section aria-labelledby="sec-ex-exp">
+  <h2 id="sec-ex-exp">Example: Exponential Growth/Decay</h2>
+
+  <div class="example">
+    <div class="example-label">Example</div>
+    <p>Find all solutions to the differential equation \(\dfrac{dy}{dx} = ky\).</p>
+  </div>
+
+  <h3>Step 1: Separate variables</h3>
+  <p>Assuming \(y \ne 0\) (we divided by \(y\) — we'll come back to this), we get:</p>
+  \[dy = ky\,dx \quad \Longrightarrow \quad \frac{1}{y}\,dy = k\,dx\]
+
+  <h3>Step 2: Integrate both sides</h3>
+  \[\int \frac{1}{y}\,dy = \int k\,dx\]
+
+  <div class="warning">
+    <strong>Important:</strong> You must include the constant of integration \(+C\) at the antidifferentiation step! It is enough to put \(+C\) on <em>one side only</em>. Adding it at the end or guessing where it should go will very likely give the wrong family of functions.
+  </div>
+
+  \[\ln|y| = kx + C_1\]
+  <p>This is the <strong>implicit solution</strong> — it describes a relationship between \(x\) and \(y\).</p>
+
+  <h3>Step 3: Solve for \(y\) explicitly</h3>
+  <p>Exponentiate both sides:</p>
+  \[e^{\ln|y|} = e^{kx + C_1}\]
+  \[|y| = e^{kx} \cdot e^{C_1} = C_2\, e^{kx}\]
+  <p>where \(C_2 = e^{C_1}\) is any <em>positive</em> constant. Dropping the absolute value:</p>
+  \[y = \pm C_2\, e^{kx} = C\,e^{kx}\]
+  <p>where \(C\) is any <em>nonzero</em> constant.</p>
+
+  <h3>Step 4: Check for singular solutions</h3>
+  <p>We assumed \(y \ne 0\) when we divided by \(y\). Does \(y = 0\) work? Check: if \(y = 0\) for all \(x\), then \(\dfrac{dy}{dx} = 0\) and \(ky = k \cdot 0 = 0\). ✓ Yes!</p>
+
+  <p>Notice that \(C = 0\) gives \(y = 0\), so the constant solution is actually included in the formula.</p>
+
+  <div class="boxed">
+    <p><strong>Full list of solutions:</strong> \(y = Ce^{kx}\), where \(C\) is <em>any</em> constant.</p>
+  </div>
+
+  <div class="note">
+    <strong>Useful antiderivative reminder:</strong> \(\displaystyle\int y^p\,dy = \begin{cases} \ln|y| & \text{if } p = -1 \\[6pt] \dfrac{y^{p+1}}{p+1} & \text{if } p \ne -1 \end{cases}\)
+  </div>
+</section>
+
+<!-- ============ EXAMPLE 2: dy/dx = ky^2 ============ -->
+<section aria-labelledby="sec-ex-ky2">
+  <h2 id="sec-ex-ky2">Example: \(y' = ky^2\)</h2>
+
+  <div class="example">
+    <div class="example-label">Example</div>
+    <p>Find all solutions to the differential equation \(\dfrac{dy}{dx} = ky^2\).</p>
+  </div>
+
+  <h3>Step 1: Separate variables</h3>
+  <p>Assuming \(y \ne 0\):</p>
+  \[dy = ky^2\,dx \quad \Longrightarrow \quad \frac{1}{y^2}\,dy = k\,dx\]
+
+  <h3>Step 2: Integrate both sides</h3>
+  \[\int y^{-2}\,dy = \int k\,dx\]
+  \[\frac{y^{-1}}{-1} = kx + C\]
+  \[-\frac{1}{y} = kx + C\]
+
+  <h3>Step 3: Solve for \(y\)</h3>
+  \[y = -\frac{1}{kx + C}\]
+  <p>where \(C\) is any constant.</p>
+
+  <h3>Step 4: Check for singular solutions</h3>
+  <p>We assumed \(y \ne 0\). Check: \(y = 0\) gives \(\dfrac{dy}{dx} = 0\) and \(k \cdot 0^2 = 0\). ✓</p>
+
+  <div class="boxed">
+    <p><strong>Full list of solutions:</strong> \(y = -\dfrac{1}{kx + C}\) for any constant \(C\), <strong>and</strong> \(y = 0\) (constant solution).</p>
+  </div>
+
+  <div class="warning">
+    <strong>Common mistake:</strong> Do NOT try to split \(-\dfrac{1}{y}\) into separate fractions like \(-\dfrac{1}{kx} - \dfrac{1}{C}\). The expression \(\dfrac{1}{a+b} \ne \dfrac{1}{a} + \dfrac{1}{b}\)! Keep the denominator as a single expression \(kx + C\).
+  </div>
+</section>
+
+<!-- ============ SINGULAR SOLUTIONS ============ -->
+<section aria-labelledby="sec-singular">
+  <h2 id="sec-singular">Singular/Exceptional Solutions</h2>
+
+  <p>It is possible for the general solution to miss finitely many solutions — these are called <strong>singular</strong> or <strong>exceptional</strong> solutions.</p>
+
+  <p>You'll know which "missing" solutions to expect by looking through your steps and checking to see anything you <em>divided by</em> — as soon as you divide by something, you are assuming it to be nonzero!</p>
+
+  <p>For a separable equation \(\dfrac{dy}{dx} = g(x)\,k(y)\), the only missing solutions will be <strong>constant solutions</strong> — values \(y = y_0\) where \(k(y_0) = 0\). These are also called <strong>equilibrium solutions</strong> or <strong>fixed points</strong> (we'll study these more in Chapter 2).</p>
+
+  <div class="note">
+    <strong>Procedure:</strong> After finding the general solution via separation of variables, always go back and check whether any constant solutions \(y = y_0\) (where \(k(y_0) = 0\)) are included in your formula or need to be listed separately.
+  </div>
+</section>
+
+<!-- ============ +C WARNING ============ -->
+<section aria-labelledby="sec-plusc">
+  <h2 id="sec-plusc">The Importance of \(+C\) at the Right Step</h2>
+
+  <p>It is <strong>extremely important</strong> to include the additive integration constant at the antidifferentiation step!</p>
+
+  <p>Realizing you forgot and doing \(+C\) at the end, or trying to guess how it should appear, will very likely give you the <strong>wrong family of functions</strong>.</p>
+
+  <div class="remark">
+    <strong>Rule of thumb:</strong> Always introduce the constant of integration immediately when you perform the antiderivative, on one side of the equation. Then carry it through all subsequent algebra.
+  </div>
+</section>
+
+<!-- ============ EXAMPLE 3: LOGISTIC ============ -->
+<section aria-labelledby="sec-ex-logistic">
+  <h2 id="sec-ex-logistic">Example: The Logistic Equation</h2>
+
+  <div class="example">
+    <div class="example-label">Example</div>
+    <p>Find all solutions to the logistic differential equation</p>
+    \[\frac{dP}{dt} = kP(M - P)\]
+    <p>where \(k > 0\) and \(M\) is the carrying capacity.</p>
+  </div>
+
+  <h3>Step 1: Separate variables</h3>
+  <p>Assuming \(P \ne 0\) and \(P \ne M\) (we're dividing by \(P(M - P)\)):</p>
+  \[\frac{1}{P(M - P)}\,dP = k\,dt\]
+
+  <h3>Step 2: Integrate both sides</h3>
+  \[\int \frac{1}{P(M - P)}\,dP = \int k\,dt = kt + C_1\]
+
+  <p>The left-hand integral requires <strong>partial fractions</strong>.</p>
+
+  <h3>Partial fraction decomposition</h3>
+  <p>We want to write</p>
+  \[\frac{1}{P(M - P)} = \frac{A}{P} + \frac{B}{M - P}.\]
+
+  <p>Combining the right side over a common denominator:</p>
+  \[\frac{A(M - P) + BP}{P(M - P)} = \frac{(-A + B)P + AM}{P(M - P)}.\]
+
+  <p>For this to equal \(\dfrac{1}{P(M-P)} = \dfrac{0 \cdot P + 1}{P(M-P)}\) for all \(P\), we need the coefficients of each power of \(P\) to match (two linear functions of \(P\) can only be equal if their slopes and intercepts separately match):</p>
+  \[\begin{cases} -A + B = 0 \\ AM = 1 \end{cases} \quad \Longrightarrow \quad A = \frac{1}{M}, \quad B = \frac{1}{M}.\]
+
+  <h3>Performing the integration</h3>
+  \[\int \left(\frac{1/M}{P} + \frac{1/M}{M - P}\right) dP = kt + C_1\]
+
+  <p>For the second term, use the substitution \(u = M - P\), \(du = -dP\):</p>
+  \[\frac{1}{M}\ln|P| - \frac{1}{M}\ln|M - P| = kt + C_1\]
+
+  <p>Multiply both sides by \(M\):</p>
+  \[\ln|P| - \ln|M - P| = Mkt + C_2 \qquad (C_2 = MC_1)\]
+  \[\ln\left|\frac{P}{M - P}\right| = Mkt + C_2\]
+
+  <h3>Solving for \(P\)</h3>
+  <p>Exponentiate both sides:</p>
+  \[\left|\frac{P}{M - P}\right| = e^{Mkt + C_2} = e^{C_2} \cdot e^{Mkt}\]
+  \[\frac{P}{M - P} = \pm e^{C_2} \cdot e^{Mkt} = C_3\, e^{Mkt}\]
+
+  <p>where \(C_3 = \pm e^{C_2}\) is any nonzero constant. Solving for \(P\):</p>
+  \[P = (M - P)\,C_3\,e^{Mkt} = MC_3\,e^{Mkt} - PC_3\,e^{Mkt}\]
+  \[P + PC_3\,e^{Mkt} = MC_3\,e^{Mkt}\]
+  \[P\!\left(1 + C_3\,e^{Mkt}\right) = MC_3\,e^{Mkt}\]
+  \[P = \frac{MC_3\,e^{Mkt}}{1 + C_3\,e^{Mkt}}\]
+
+  <p>To simplify, multiply numerator and denominator by \(\dfrac{1}{C_3}\,e^{-Mkt}\), letting \(C = \dfrac{1}{C_3}\):</p>
+
+  <div class="boxed">
+    \[P(t) = \frac{M}{C\,e^{-Mkt} + 1}\]
+    <p>where \(C\) is any constant.</p>
+  </div>
+
+  <h3>Singular solutions</h3>
+  <p>We assumed \(P \ne 0\) and \(P \ne M\). Check both:</p>
+  <ul>
+    <li>\(P = 0\) for all \(t\): \(\dfrac{dP}{dt} = 0\) and \(kP(M - P) = 0\). ✓</li>
+    <li>\(P = M\) for all \(t\): \(\dfrac{dP}{dt} = 0\) and \(kM(M - M) = 0\). ✓</li>
+  </ul>
+  <p>Both are equilibrium solutions that should be listed if not already captured by the formula.</p>
+
+  <div class="note">
+    <strong>Looking ahead:</strong> In Chapter 2.2, we'll be able to quickly (without calculus!) get qualitative information about solutions to autonomous ODEs like this one. Sometimes the actual solution formulas are quite tedious — qualitative methods can tell us a lot with much less work.
+  </div>
+</section>
+
+</main>
+</body>
+</html>
