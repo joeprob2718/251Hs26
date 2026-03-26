@@ -7301,7 +7301,6 @@ MathJax = {
 </script>
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"></script>
 
-
 <!-- End of mathjax configuration --><script type="module">
   document.addEventListener("DOMContentLoaded", async () => {
     const diagrams = document.querySelectorAll(".jp-Mermaid > pre.mermaid");
@@ -7542,8 +7541,8 @@ x' &amp;= - c_1 \omega_0 \sin \omega_0 t + c_2 \omega_0 \cos \omega_0 t + \frac{
 Using $x(0) = 0, x'(0) = v_0$ yields $c_1 = 0$, $c_2 \omega_0 = v_0$ and so
 $$ \boxed{x = \frac{v_0}{\omega_0} \sin \omega_0 t + \frac{F_0 t}{2 m \omega_0} \sin \omega_0 t}.$$
 Since there is "exact resonance", there is a time-dependent amplitude in $x_p$ that grows linearly in time (without bound, so the system will eventually break!).</p>
-<h1 id="3.6.20">3.6.20<a class="anchor-link" href="#3.6.20">¶</a></h1><p>This problem just uses dimensional analysis to realize we're being told $\frac k m$, which means we can solve for $\omega_0$ and determine which driving frequency $\omega$ will cause resonance ($\omega = \omega_0$).\[1em]
-The spring constant in Hooke's law relates the force and the displacement from equilibrium:
+<h1 id="3.6.20">3.6.20<a class="anchor-link" href="#3.6.20">¶</a></h1><p>This problem just uses dimensional analysis to realize we're being told $\frac k m$, which means we can solve for $\omega_0$ and determine which driving frequency $\omega$ will cause resonance ($\omega = \omega_0$).</p>
+<p>The spring constant in Hooke's law relates the force and the displacement from equilibrium:
 $$ F_S = -kx,$$
 and since force has units N and $x$ has units m we have that spring constants have units $\frac{\text{N}}{\text{m}}.$  A force of $mg= 9.8m$ N causes the ``spring" to compress $0.005$ m, and so
 $$k = \frac{9.8m}{0.005},$$
@@ -7579,8 +7578,8 @@ $$ \left\{ \begin{array}{rl} -A\omega^2 + 10A  &amp;= 0 \\ -B \omega^2 + 10B &am
 Therefore,
 $$ A = 0, \qquad \qquad B = \dfrac{A_0 \omega^2}{10-\omega^2}$$ and
 $$x_p = \dfrac{A_0 \omega^2}{10-\omega^2}\sin \omega t.$$
-We are told the driving period is 2.25 sec, and so the driving frequency is $f = \frac{1}{2.25}$ Hz, meaning $\omega = 2\pi f = \frac{2\pi}{2.25}$ radians/sec.\[1em]
-Therefore, the "amplitude of forced oscillations" is the amplitude of $x_p$, which is ($A_0 = 3$ in $=0.25$ ft)
+We are told the driving period is 2.25 sec, and so the driving frequency is $f = \frac{1}{2.25}$ Hz, meaning $\omega = 2\pi f = \frac{2\pi}{2.25}$ radians/sec.</p>
+<p>Therefore, the "amplitude of forced oscillations" is the amplitude of $x_p$, which is ($A_0 = 3$ in $=0.25$ ft)
 $$ \dfrac{ 0.25 \cdot \left( \frac{2\pi}{2.25} \right)^2}{10 - \left(\frac{2\pi}{2.25} \right)^2} \approx \boxed{ 0.885 \text{ ft} \approx 10.6 \text{ in}}.$$
 The amplitude of oscillation of this second floor is over three times the size of that of the ground floor in an earthquake!  Think about what would happen to a third floor, fourth floor, ....</p>
 <h1 id="3.6.27">3.6.27<a class="anchor-link" href="#3.6.27">¶</a></h1><p>In class we showed that for undamped motion the driven amplitude $C(\omega)$ satisfies $\lim_{\omega \to \omega_0} |C(\omega)| = \infty.$</p>
